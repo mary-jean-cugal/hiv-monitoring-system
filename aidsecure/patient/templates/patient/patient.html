@@ -1,0 +1,2832 @@
+{% extends "portal/base.html" %}
+{% load static %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<!-- <link href="https://stackpath.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" /> -->
+
+
+
+<!-- css for drop-down menu bar -->
+<style>
+
+@CHARSET "UTF-8";
+    .page-break {
+      page-break-after: always;
+      page-break-inside: avoid;
+      clear:both;
+    }
+    .page-break-before {
+      page-break-before: always;
+      page-break-inside: avoid;
+      clear:both;
+    }
+
+   .body{
+      font-family:"Roboto", Arial, sans-serif;
+   }
+   .dropbtn {
+      right:20%;
+   /* padding: 20px; */
+   font-size: 16px;
+   border: none;
+   cursor: pointer;
+   background: transparent;
+   }
+
+   .dropdown {
+   position: relative;
+   display: inline-block;
+   }
+
+   .dropdown-content {
+   display: none;
+   position: absolute;
+   min-width: 160px;
+   z-index: 1;
+   }
+
+   .dropdown-content a {
+   color: black;
+   padding: 12px 16px;
+   text-decoration: none;
+   display: block;
+   }
+
+   .dropdown-content a:hover {background-color: rgba(0, 0, 0, 0.125);}
+
+   .dropdown:hover .dropdown-content {display: block;}
+
+   .dropdown:hover .dropbtn {background-color:transparent;}
+
+   .menu-content{
+      font-size:small;
+      color:black;
+   }
+   .fa:hover{color:#800000;}
+
+   .collapsible {
+      background-color: white;
+      border:1px solid rgba(0, 0, 0, 0.125);
+      cursor: pointer;
+      padding: 8px;
+      width: 100%;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+   }
+   
+   .collapsible:hover{
+      color:white;
+      background-color: #800000;
+      /* border:1px solid #800000; */
+   }
+   .collapsible:focus{
+      color:white;
+      background-color: #800000;
+   }
+   
+   .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      border:1px solid  #800000;
+      /* background-color: #f1f1f1; */
+   }
+
+      /* for removing patients */
+      /* * {
+      box-sizing: border-box;
+      } */
+
+      /* ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      } */
+
+      .right-icon{
+      /* cursor: pointer; */
+      position: absolute;
+      right:35px;
+      padding-top:3%;
+      /* padding: 25px 20px; */
+      transform: translate(-50%);
+      }
+      .close {
+      /* cursor: pointer; */
+      position: absolute;
+      right:35px;
+      padding-top:3%;
+      /* padding: 25px 20px; */
+      transform: translate(-50%);
+      /* float: right; */
+      }
+      .close:hover{color:#800000;}
+      .myDoc:hover{
+         color:white;
+         background-color:#800000;
+      }
+      /* tables for notif and doctors */
+      .card.card-plain{
+         background-color: transparent;
+         box-shadow: none;
+         border-radius: 0;
+         border-color: transparent;
+      }
+
+   .dot {
+      height: 5px;
+      width: 5px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+   }
+      
+/* Style the tab */
+.patient-details-tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.patient-details-tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  transition: 0.3s;
+  font-size: 13px;
+}
+
+/* Change background color of buttons on hover */
+.patient-details-tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.patient-details-tab button.active {
+   color:white;
+   background-color: #800000;
+}
+
+/* Style the tab content */
+.patient-tab-content {
+  display: none;
+  padding: 6px 0px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+/* end of tabs for patients */
+.p-record-par{
+   margin-left:1rem;
+   margin-right:1rem;
+   margin-bottom:0;
+}
+.patient-content{
+   margin-left:1rem;
+   margin-right:1rem;
+}
+
+#comments-section{
+   padding:3px 12px;
+   border: 1px solid #ccc;
+}
+.card{
+   font-family:"Roboto", Arial, sans-serif;
+}
+.card-header{
+   background-color:rgba(0, 0, 0, 0.125);
+}
+.card-body{
+   background-color:rgba(0, 0, 0, 0.03);
+}
+
+.doc-remarks-header{
+   padding-left: 1rem;
+    margin-bottom: 0px;
+    background-color: rgb(0,0,0,0.03);
+    margin-top: 0px;
+    padding-top: .4rem;
+    padding-bottom: .4rem;
+    margin-left: 0px;
+}
+
+#notification {
+  background: #800000;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  border: solid;
+ 
+}
+
+#notification:hover {
+  background: white;
+  color:#800000;
+}
+
+#notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+#log-out{
+   font-family:"Roboto", Arial, sans-serif;
+}
+#comm{
+   font-family:"Roboto", Arial, sans-serif;
+}
+#log-out:hover{
+   background: white;
+   color:#800000;
+   border: solid;
+} #comm:hover{
+   background: white;
+   color:#800000;
+   border: solid;
+
+}
+
+.notif-bar:hover{
+   box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+   z-index: 1;
+}
+
+.doc-bar:hover{
+   box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+}
+
+.med-active{
+   background-color:#800000;
+   color:#ddd;
+}
+
+.med-title:hover{
+   background-color:#800000;
+   color:#ddd;
+}
+.med-title:active{
+   background-color:#800000;
+   color:#ddd;
+}
+
+/* customized checkbox for indicationg a notif is read or unread */
+/* The container */
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/* profile picture change setting */
+.change-prof-pic-wrapper, #patient-doc-pic-wrapper{
+   width: 200px;
+   height: 200px;
+   overflow: hidden;                       
+}
+
+.change-prof-pic-wrapper, #patient-doc-pic-wrapper img {
+   object-fit: contain;
+   height:250px;
+   width:100%;
+}
+
+/* profile picture setting */
+.prof-pic{
+   max-width: 100%;
+   max-height: 100%;
+}
+
+#userpic{
+   display: inline-block;
+   width: 150px;
+   height: 150px;
+   border-radius: 50%;
+   border:2px solid whitesmoke;
+   object-fit: cover;
+   margin:0px;
+}
+
+#userpic:hover{
+   opacity: 0.5;
+   border:2px solid whitesmoke;
+   margin:0px;
+
+}
+
+#userpic-wrapper{
+   margin:1rem;
+   display: inline-block;
+   width: 155px;
+   height: 155px;
+   border-radius: 50%;
+   border:2px solid whitesmoke;
+   background:white;
+
+}
+
+
+/* doctors profile info */
+.doc-info{
+   margin-top: 0.5rem;
+   width: 200px;
+   float: left;
+}
+.doc-pic{
+   width: 100px;
+   float: left;
+   height: 300px;
+   margin-left:0rem;
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+ <!-- for getting lat and lon on present address -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" /> 
+ <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+  
+	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+     <div class="container">
+         <a class="navbar-brand" href="{%url 'portal' %}"><img src= "{% static 'portal/images/logo-main.png' %}" id="mainLogo" alt=""></a>
+         <ul class="navbar-nav ml-auto">
+            <li  class="nav-item cta" data-toggle="collapse" data-target="#demo">
+               <a id="notification"  >
+                  <i style="font-size:24px" class="fa">&#xf0f3;</i>
+                  <span class="badge">{{patient.patient_new_notifications.count}}</span>
+               </a>
+               <div  class="collapse" style="z-index:1;position: absolute;min-width: 160px;  border: 1px solid lightgray; background-color: lavenderblush; border-radius:10px;" id="demo">
+                  {% for notif in patient.patient_new_notifications.all %}    
+                     <hr style="margin-top:0rem; margin-bottom:0rem;">
+                     <p style="font-size: 12px; margin-bottom:0rem;padding:0.5rem;">&#187; {{notif.notification}}</p>
+                  {% endfor %}
+               </div>
+            </li>
+            <li class="nav-item cta"><a  id="log-out" href="{% url 'patientLogout' %}"  class="nav-link" >Log Out</a></li>
+         </ul>
+     </div>
+   </nav>
+  <!-- END nav -->
+  
+  <div class="container portal-box">
+      <div class="row">
+         <div class="col-md-3 left-portal"  style="font-family:Roboto, Arial, sans-serif;">
+               <div id="userpic-wrapper">
+                  {% if patient.patient_image %}
+                     <img src="{{patient.patient_image.url}}" id="userpic" alt="user profile picture" data-toggle="modal" data-target="#change-prof-pic"> 
+                     {% endif %}
+                  {% if not patient.patient_image %}
+                     <img src="{% static 'portal/images/user.png' %}" id="userpic"  alt="user profile picture"  data-toggle="modal" data-target="#change-prof-pic"> 
+                  {% endif%}
+               </div>               
+               <p id="patients-name" name="patient-name"class="white center bold">{{patient.username}}</p>
+               <p id="patients-status" class="white center">age: {{patient.age}}</p>
+               <p id="patients-status" class="white center">HIV status: {{patient.HIV_status}}</p>
+               <section class="ftco-services">
+                  <div class="list-group">
+                     <div class="nav flex-column nav-pills" id="v-pills-master-tab" role="tablist" aria-orientation="vertical">
+                        <a class="list-group-item active" id="notifications-tab" data-toggle="pill" href="#notifs" role="tab" aria-controls="v-pills-spa" aria-selected="false">Notifications</a>
+                        <a class="list-group-item" id="v-pills-fitness-tab" data-toggle="pill" href="#acc-info" role="tab" aria-controls="v-pills-fitness" aria-selected="false">Profile Information</a>
+                        <a class="list-group-item" id="v-pills-spa-tab" data-toggle="pill" href="#med-records-tab" onclick="SetElementValueFromSessionStorage('patient-firstname','patient-uname-local');"  role="tab" aria-controls="v-pills-spa" aria-selected="false">Medical Records</a>
+                        <a class="list-group-item" id="v-pills-mydocs-tab" data-toggle="pill" href="#v-pills-mydocs" role="tab" aria-controls="v-pills-spa" aria-selected="false">Doctors</a>
+                        <a class="list-group-item" id="personal-records-tab" data-toggle="pill" href="#p-records" role="tab" aria-controls="v-pills-fitness" aria-selected="false">Personal Journal</a>
+                        <a class="list-group-item" id="my-schedules-tab" data-toggle="pill" href="#my-schedules" role="tab" aria-controls="v-pills-fitness" aria-selected="false">Appointments</a>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <!-- modal for adding a pending sched remark -->
+            <div class="modal fade" id="change-prof-pic" tabindex="-1" role="dialog" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content" id="modal-content-{{forloop.counter}}">
+                     <div class="modal-header" style="background-color: #802400;">
+                        <h5 class="modal-title" id="modal-title-{{schedule.patient_username}}" style="color:#ffffff;">Change Profile Picture</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true" style="color:#ffffff;">&times;</span>
+                        </button>
+                     </div>
+
+                     <form method="post"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body"  style="font-size:12px; padding:2rem; max-height: calc(100vh - 210px);overflow-y: auto;">
+                           <div class="change-prof-pic-wrapper" style="height:100%; width:100%; background-color: black; text-align:center;">
+                              {% if patient.patient_image %}
+                                 <img src="{{patient.patient_image.url}}" id="prof-pic-preview" style="max-width: 100%; max-height: 300px;"> 
+                              {% endif %}
+                              {% if not patient.patient_image %}
+                                 <img src="{% static 'portal/images/user.png' %}" id="prof-pic-preview" name="prof-pic-preview" style="max-width: 100%; max-height: 300px;"> 
+                              {% endif%}
+                           </div>
+                           
+                           <div  style="margin:1.5rem; margin-left: 7.5rem;text-align: center;"> 
+                              <input type="file" id="new-prof-pic" name="new-prof-pic" onchange="PreviewImage();"/> 
+                           </div> 
+                        </div>
+                        <div class="modal-footer">
+                           <input id="change-prof-pic-upload" class="btn btn-primary" type="submit" data-dismiss="modal" value="Finish" readonly>
+                           <button id="change-prof-pic-back" class="btn btn-primary" type="button" data-dismiss="modal">back</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            
+            <script>
+               //  post a preview of the uploaded image
+               function PreviewImage() {
+                  var oFReader = new FileReader();
+                  oFReader.readAsDataURL(document.getElementById("new-prof-pic").files[0]);
+                  oFReader.onload = function (oFREvent) {
+                        document.getElementById("prof-pic-preview").src = oFREvent.target.result;
+                        document.getElementById("userpic").src = oFREvent.target.result;
+                  };
+               };
+               
+               $('#change-prof-pic-upload').click(function(e){
+                  event.preventDefault();
+                  if ($('#new-prof-pic')[0].files.length == 0){
+                     alert("you have not chosen any photo.");
+                  }
+                  else{
+                     var formData = new FormData();
+                     $img = $('#new-prof-pic')[0].files[0];
+                     formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                     formData.append('image', $img);
+                     $.ajax({
+                        url: '{% url "patientChangeProfPic" %}', 
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                           alert("Change profile photo success.");
+                        }
+                     });
+
+                  }
+                  
+                  return false;
+               });
+            </script>
+
+            <div class="col-md-9 right-portal" style="padding-bottom:100px; font-family:Roboto, Arial, sans-serif;">            
+               <div class="tab-content pl-md-5" id="v-pills-tabContent">
+                  <div class="tab-pane fade py-5" id="acc-info" role="tabpanel" aria-labelledby="v-pills-master-tab">
+                     <div class="col-md-12" style="border-style: ridge;"> 
+                        <div class="card card-plain" style="padding-top: 1.5rem;">
+                           <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
+                              <h4 class="card-title">Account Information</h4>
+                           </div>
+                           <div class="card-body" style="padding:1rem; margin-bottom:1rem;">
+                              <form id="acc-settings"  method="post"> 
+                                    {% csrf_token %}
+                                    <div class="row">
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="acc-f-name" class="text-black">First Name</label> 
+                                             <input readonly class="form-control acc-field"  id="form-control acc-f-name" name="acc-f-name" value="{{patient.first_name}}">
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="acc-s-name" class="text-black">Last Name</label> 
+                                             <input readonly class="form-control acc-field" id="acc-s-name" name="acc-s-name" value="{{patient.last_name}}">
+                                          </div>
+                                       </div>  
+                                    </div>
+
+                                    <div class="row">
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-age" class="text-black">Age</label>
+                                             <input readonly type="number" class="form-control acc-field" id="p-age" value="{{patient.age}}">
+                                          </div>
+                                       </div> 
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="acc-bdate" class="text-black">Birthdate</label>
+                                             <input readonly id="acc-bdate" class="form-control acc-field"  value="{{patient.birthdate}}">
+                                             <input id="bdate-new" style="display:none;" class="form-control acc-field" type="date">
+
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-phone-number" class="text-black">Cellphone Number</label>
+                                             <input readonly type="tel" pattern="09[1-9]{9}"  class="form-control acc-field" id="cellphone-number" value="{{patient.call_number}}" >
+                                          </div>
+                                       </div>
+                                      
+                                       <div class="col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-email" class="text-black">Email</label>
+                                             <input readonly type="text" class="form-control acc-field" id="p-email" value="{{patient.email}}">
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6"> 
+                                       <div class="form-group">
+                                          <label for="p-home-address" class="text-black">Home Address</label>
+                                          <input readonly type="text" class="form-control acc-field" id="p-home-address" value="{{patient.present_address}}">
+                                       </div>
+                                       </div>
+                                       <div class="col-md-6">
+                                       <div class="form-group">
+                                          <label for="p-present-address" class="text-black">Present Address</label>
+                                          <input readonly type="text" class="form-control acc-field" id="p-present-address"  value="{{patient.present_address}}">
+                                          <input hidden id="prev-add" value="{{patient.location_details.latest.location}}">
+                                          <input hidden id="prev-lat" value="{{patient.location_details.latest.lat}}">
+                                          <input hidden id="prev-lon" value="{{patient.location_details.latest.lon}}">   
+                                          <input hidden id="new-lat" value="{{patient.location_details.latest.lat}}">
+                                          <input hidden id="new-lon" value="{{patient.location_details.latest.lon}}">      
+                                       </div>
+                                       </div>
+                                       <div class = "col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-occupation" class="text-black">Occupation</label>
+                                             <input readonly type="text" class="form-control acc-field" id="p-occupation" value="{{patient.work}}">
+                                          </div>
+                                       </div>
+                                       <div class = "col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-work-address" class="text-black">Address of Work</label>
+                                             <input readonly type="text" class="form-control acc-field" id="p-work-address" value="{{patient.work_address}}">
+                                          </div>  
+                                       </div>
+                                       <div class = "col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-username" class="text-black">Username</label>
+                                             <input readonly type="text" class="form-control acc-field" id="p-username" value="{{patient.username}}">
+                                          </div>  
+                                       </div>
+                                       
+                                       <div class = "col-md-6">
+                                          <div class="form-group">
+                                             <label for="p-password" class="text-black">Password</label>
+                                             <input readonly disabled type="password" class="form-control acc-field" id="p-password" value="{{patient.password}}">
+                                          </div>  
+                                       </div>
+                                       <div style="display:none;margin-left: 52%; width:100%; margin-right: 1rem;" id="ps2">
+                                          <div class="form-group">
+                                             <label for="p-password2" class="text-black">Confirm Password</label>
+                                             <input type="password" class="form-control acc-field" id="p-password2">
+                                             <span id="p-password-message"></span>
+                                          </div>  
+                                       </div>
+                                       <!-- changing address -->
+                                       <div class="form-group">
+                                          <!-- for getting address coordinates -->
+                                          <div hidden class="row" style="padding-bottom:1rem;">
+                                             <label for="lat" style="padding-left:1rem;font-size:1.1rem;margin-bottom:0rem;">Coordinates <a style="font-size: 13px;color:rgb(56, 53, 53);">(auto-generated)</a></label>
+                  
+                                             <input type="text" style="margin-left:1rem;padding-left:4px;background-color: #f6efef;border:none;border-right:solid;border-color:grey;"name="lat" id="lat" size=12 value="" readonly>
+                                             <input type="text" style="background-color: #f6efef;padding-left:4px; border:none;"name="lon" id="lon" size=12 value=""readonly>
+                                            
+                                             <div hidden id="map"></div>
+                                          </div>
+                                         
+                                          
+                                          <div hidden id="search">
+                                             <label for="p_present_address" class="text-black">Present Address</label>
+                                             <input type="text" class="form-control" id="p_present_address" name="p_present_address" placeholder="e.g. 123 St, Lahug, Cebu City"  required>  
+                                             <button style="margin-top: 3px;" type="button" id="searchbtn" onclick="addr_search();">Search address</button>
+                                             <div id="results"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 <div hidden class="form-group">
+                                    <input type="button" id="edit-acc" class="btn btn-primary" value="Edit" readonly>
+                                    <input type="button" id="back-acc" style="display:none;" class="btn btn-primary"value="Go Back" readonly>
+                                    <input type="submit" id="save-acc" style="display:none;" class="btn btn-primary" value="Save" readonly>
+                                 </div>
+                              </form> 
+                           </div>
+                        </div>
+                     </div>   
+                  </div>
+
+                  <!-- HIV/AIDS AND FORMS TAB -->
+                  <div class="tab-pane fade py-5" id="med-records-tab" role="tabpanel" aria-labelledby="v-pills-spa-tab">
+                     <div class="card card-plain"  style="padding-top: 1.5rem; border:solid; border-style: ridge;">
+                        <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125); margin-left:1rem; margin-right:1rem;"> 
+                           <h4 class="card-title">Medical Records</h4>
+                        </div>
+                        <div class="card-body" style="margin-left:1rem; margin-right:1rem; margin-bottom:1rem;" >
+                           <div class="list-group" style="padding-top:0px;">
+
+                              <!-- Medical History -->
+                              <div class="list-group item"> 
+                                 <div class="form-group">
+                                    <form method="POST">
+                                       {% csrf_token %}                                          
+                                       <p  class="collapsible" style="margin-bottom:0rem; margin-left:0rem; padding-top:2%; padding-bottom:2%;"  id="med-hist" name="med-hist"  onclick ="SetElementValueFromSessionStorage('curr-user-name','patient-uname-local');">
+                                          Medical History
+                                          <span class="dot" style="margin-left:560px"></span>
+                                          <span class="dot"></span>
+                                          <span class="dot"></span>
+                                       </p>
+
+                                       <div class="content"  style="font-size: small">
+                                          <input hidden name="curr-user-name" id="curr-user-name" value="">   
+                                          <p style= "padding-left:10px;padding-top:10px;">Exposure: 
+                                             <input class="med-hist-field" id="exposure" name="exposure" readonly  value="{{patient.medical_history.latest.exposure}}">
+                                          </p>
+                                          <p style= "padding-left:10px;padding-top:10px;">HIV Status: 
+                                             <input class="med-hist-field" id="medhist-hiv-status" name="medhist-hiv-status"  readonly required value="{{patient.HIV_status}}">
+                                          </p>
+                                          <p style="padding-left:10px;">Other Medical Condition:
+                                             <input  class="med-hist-field" id="other-med-con-{{forloop.counter}}" name="other-med-con" readonly value="{{patient.medical_history.latest.other_conditions}}"> 
+                                          </p> 
+                                          <p style= "padding-left:10px;">Date Diagnosed/Sample Sent for Confirmatory:
+                                             <input class="med-hist-field" id="date-diagnosed" name="date-diagnosed" readonly value="{{patient.medical_history.latest.date_diagnosed}}">
+                                          </p>
+
+                                          <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                             {% for viewer in patient.medical_history.latest.docs_viewed.all %}
+                                                {{viewer.viewer_name}} |
+                                             {% empty %}
+                                             ...
+                                             {% endfor %}
+                                          </p>
+                                          <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin:0px;">  
+                                          <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+      
+                                          {% for remark in patient.medical_history.latest.doctor_remarks.all %}
+                                             <input hidden id="remark-id-{{remark.pk}}" name="remark-id" value="{{remark.pk}}">
+                                             <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                             <p style="font-size:12px; margin-top: 3px; margin-bottom: 3px;" id="remark-{{forloop.counter}}"><b>{{remark.author}}: </b>{{remark.text}}</p>
+                                          {% empty %}
+                                             <p>No remarks yet..</p>
+                                          {% endfor%}
+                                          <div class="form-group">
+                                             <button  class="btn btn-primary"  id="download-med-hist" name="download-med-hist" type="button" data-toggle="modal" data-target="#ps-ver-{{forloop.counter}}"><i class="fa fa-download"></i> Download</button>                                                   
+                                          </div>  
+                                                                              
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>  
+
+                              <!-- modal to input password before download -->
+                              <div class="modal fade" id="ps-ver-{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                 <div class="modal-dialog" role="document">
+                                    <div class="modal-content" id="modal-content-{{forloop.counter}}">
+                                       <div class="modal-header" style="background-color: #802400;">
+                                          <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> Enter password</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                          </button>
+                                       </div>   
+                                       <div class="modal-body"  style="font-size:12px;">
+                                          <input type="password" required id="ps_verify">
+                                          <span id='p_password_message'></span>
+                                          <!-- content to be downloaded -->
+                                          <div hidden id="medhist-download-content" style="border: 1px solid lightgrey;margin-top: 1rem;">
+                                             {% for medhist in patient.medical_history.all %}
+                                                <h3  id="{{forloop.counter}}"><b>{{forloop.counter}}. Medical History</b></h3>
+                                                <p style= "padding-left:10px;padding-top:10px;"><b>Date Edited: </b> {{medhist.created_on}} </p>
+                                                <p style= "padding-left:10px;padding-top:10px;"><b>Name:</b> {{patient.first_name}} {{patient.last_name}} </p>
+                                                <p style= "padding-left:10px;padding-top:10px;"><b>Address:</b> {{patient.present_address}} </p>
+                                                <p style= "padding-left:10px;padding-top:10px;"><b>Result/ Exposure:</b> {{medhist.exposure}} </p>
+                                                <p style= "padding-left:10px;padding-top:10px;"><b>HIV Status:</b> {{patient.HIV_status}}</p>                                                   
+                                                <p style="padding-left:10px;"><b>Other Medical Condition:</b> {{medhist.other_conditions}} </p>
+                                                <p style= "padding-left:10px;"><b>Date Diagnosed/Sample Sent for Confirmatory:</b> {{medhist.date_diagnosed}}</p>
+                                                <br>
+                                                <p>-----------------------------------------------------------------------------</p>
+                                                
+                                             {% endfor %}
+                                             <br>
+                                             <p style= "padding-left:10px;padding-top:10px;">>>>>>>>>>>>>> Nothing Follows >>>>>>>>>>>>>>>>></p>
+                                          </div>
+                                       </div>
+                                       <div class="modal-footer">
+                                          <button disabled  class="btn btn-primary"  data-dismiss="modal" id="download_btn" onclick="downloadMedHist();">Continue Download</button>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <script>
+                                 // input password before downloading
+                                 $('#ps_verify').on('keyup', function () {
+                                    if ($('#ps_verify').val() != ''){
+                                       if ($('#ps_verify').val() == "{{patient.password}}" ) {
+                                          $('#p_password_message').html('Correct Password').css('color', 'green');
+                                             $("#download_btn").removeAttr('disabled');
+                                       }else{
+                                          $('#p_password_message').html('Incorrect Password').css('color', 'red');
+                                          $("#download_btn").attr("disabled", true);
+                                       }
+                                    }
+                                 });  
+
+                                 var base64Img = null;
+                                 margins = {
+                                 top: 70,
+                                 bottom: 40,
+                                 left: 30,
+                                 width: 550
+                                 };
+                                 function downloadMedHist(){
+                                    console.log("download prof clicked!");
+
+                                    var pdf = new jsPDF('p', 'pt', 'a4');
+                                    pdf.setFontSize(25);
+                                    pdf.fromHTML(document.getElementById('medhist-download-content'), 
+                                       margins.left, // x coord
+                                       margins.top,{width: margins.width}, margins);
+                                    //footer
+                                    var pageSize = pdf.internal.pageSize;
+                                    var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                                    var date_now = new Date();
+                                    if (typeof pdf.putTotalPages === 'function') { // Total page number plugin only available in jspdf v1.0+
+                                       str = "{{patient.username}} Medical History as of: "  + date_now.toDateString();
+                                    }
+                                    pdf.setFontSize(10);
+                                    pdf.text(str, 10, pageHeight - 5);
+                                    pdf.save("medical-history-{{patient.first_name}}-{{patient.last_name}}.pdf");
+                                 }
+                              </script>  
+                              <!-- end of Medical History  -->
+                              
+                              <!-- ICR FORM -->
+                              <div class="list-group item">
+                                 <form  id="icr-form-field" method="post">
+                                    {% csrf_token %}
+                                    <p  class="collapsible"  name="icr-form" id="icr-form"  style="margin-top:1rem; margin-bottom:0rem; margin-left:0rem; padding-top:2%; padding-bottom:2%;" onclick ="SetElementValueFromSessionStorage('patient-firstname','patient-uname-local');">
+                                       Individual Client Record for Referrals/Walk-in Clients
+                                       <span class="dot" style="margin-left:320px"></span>
+                                       <span class="dot"></span>
+                                       <span class="dot"></span>
+                                    </p>
+                                    <div class="content" id="icr-form-wrapper" style="font-size:small;">
+                                       <input hidden name="patient-firstname" id="patient-firstname" value="{{patient.first_name}}">                                                                                   
+                                       <div class="row" style="padding-top:10px;">
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-s-name" class="text-black">Last name: </label>
+                                                <input required class="icr-field" id="icr-s-name" name="icr-s-name" readonly  value="{{patient.icr.last_name}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-f-name" class="text-black">First Name: </label>
+                                                <input class="icr-field" id="icr-f-name" name="icr-f-name"  readonly required value="{{patient.icr.first_name}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-m-name" class="text-black">Middle Initial: </label>
+                                                <input class="icr-field" id="icr-m-name" name="icr-m-name"  readonly required value="{{patient.icr.middle_name}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-v-date" class="text-black">Date of Visit: </label>
+                                                <input type="date" class="icr-field" id="icr-v-date" name="icr-v-date"  readonly required value="{{patient.icr.date_of_visit}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-age" class="text-black">Age: </label>
+                                                <input class="icr-field" type="number" min="1" max="200" id="icr-age" name="icr-age"  readonly required value="{{patient.icr.age}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-b-date" class="text-black">Birth Date: </label>
+                                                <input class="icr-field" type="date" id="icr-b-date" name="icr-b-date"  readonly required value="{{patient.icr.birthdate}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-sex" class="text-black">Sex: </label>
+                                                <select class="icr-field" id="icr-sex" name="icr-sex"  readonly required value="{{patient.icr.sex}}" >
+                                                   <option value="female">Female</option>
+                                                   <option value="male">Male</option>
+                                                </select>
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-c-status" class="text-black">Civil Status: </label>
+                                                <select class="icr-field" id="icr-c-status" name="icr-c-status"  readonly required value="{{patient.icr.civil_status}}">
+                                                   <option value="single">Single</option>
+                                                   <option value="married"> Married</option>
+                                                   <option value="divorced">Divorced</option>
+                                                </select>
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-p-num" class="text-black">Phone Number: </label>
+                                                <input class="icr-field" type="tel" pattern="09[1-9]{9}"id="icr-p-num" name="icr-p-num"  readonly required value="{{patient.icr.phone_number}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-h-num" class="text-black">Home Address: </label>
+                                                <input class="icr-field" id="icr-h-num" name="icr-h-num" readonly required value="{{patient.icr.home_address}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-occ" class="text-black">Occupation: </label>
+                                                <input class="icr-field" id="icr-occ" name="icr-occ"  readonly required value="{{patient.icr.occupation}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-work-add" class="text-black">Work Address: </label>
+                                                <input class="icr-field" id="icr-work-add" name="icr-work-add"  readonly required value="{{patient.icr.work_address}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-work-num" class="text-black">Work Telephone or Cellphone Number: </label>
+                                                <input class="icr-field" type="tel" pattern="09[1-9]{9} | [1-9]{7}" id="icr-work-num" name="icr-work-num"  readonly required value="{{patient.icr.work_number}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-p-visit" class="text-black">Purpose of Visit: </label>
+                                                <input readonly class="icr-field" id="vpurpose-choice" name="vpurpose-choice" value="{{patient.icr.purpose_of_visit}}" readonly>
+                                                <select style="display:none;" class="icr-field" id="icr-p-visit" name="icr-p-visit" value="{{patient.icr.purpose_of_visit}}"  readonly required > <!--value="{{patient.icr.purpose_of_visit}}"-->
+                                                   <option value="routine checkup">Routine Checkup</option>
+                                                   <option value="STI S/Sx">STI S/Sx</option>
+                                                   <option value="HIV Testing">HIV Testing</option>
+                                                   <option value="Contact of STI/HIV case">Contact of STI/HIV case</option>
+                                                   <option value="Referred from other facility">Referred from other facility</option>
+                                                   <option value="others"> Others: <input hidden type="text" id="other-choices"></option>
+                                                </select>
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-symptoms" class="text-black">Symptoms: </label>
+                                                <input required class="icr-field" id="icr-symptoms" name="icr-symptoms"  readonly value="{{patient.icr.symptoms}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <div class="row" >
+                                          <div class="col-md-6">
+                                             <div class="form-group">
+                                                <label for="icr-specs"  class="text-black">Specifications: </label>
+                                                <input required class="icr-field" id="icr-specs" name="icr-specs" readonly value="{{patient.icr.specification}}">
+                                             </div>
+                                          </div> 
+                                       </div>
+                                       <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                          {% for viewer in patient.icr.docs_viewed.all %}
+                                             {{viewer.viewer_name}} |
+                                          {% empty %}
+                                          ...
+                                          {% endfor %}
+                                       </p>
+                                       <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin:0px;">  
+                                       <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                       {% for remark in patient.icr.doctor_remarks.all %}
+                                          <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                          <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}}:</b> {{remark.text}}</p>
+                                       {% empty %}
+                                          <p>No remarks yet..</p>
+                                       {% endfor%}
+                                       <div class="form-group">     
+                                          <button class="btn btn-primary" id="download-icr" type="button" data-toggle="modal" data-target="#ps-ver-icr-{{forloop.counter}}"> <i class="fa fa-download"> </i>Download</button>
+                                          <button  class="btn btn-primary"  id="edit-icr" type="button">Edit</button>
+                                          <button  class="btn btn-primary"  id="save-icr" type="submit" style="display:none;">Save</button>
+                                       </div>
+                                    </div>
+                                 </form>  
+                              </div>         
+
+                              <!-- modal to input password before download -->
+                              <div class="modal fade" id="ps-ver-icr-{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                 <div class="modal-dialog" role="document">
+                                    <div class="modal-content" id="modal-content-{{forloop.counter}}">
+                                       <div class="modal-header" style="background-color: #802400;">
+                                          <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> Enter password</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                          </button>
+                                       </div>
+                                       <div class="modal-body"  style="font-size:12px;">
+                                          <input type="password" id="icr_ps_verify">
+                                          <span id='icr_password_message'></span>
+
+                                          <div id="icr-download-content"  hidden>
+                                             <h5><b>Individual Client Record for Referrals/Walk-in Clients</b></h5>
+                                             <p><b>Last name: </b>{{patient.icr.last_name}}</p>
+                                             <p><b>First Name: </b>{{patient.icr.first_name}}</p>
+                                             <p><b>Middle Initial: </b>{{patient.icr.middle_name}}</p>
+                                             <p><b>Date of Visit: </b>{{patient.icr.date_of_visit}}</p>
+                                             <p><b>Age: </b>{{patient.icr.age}}</p>
+                                             <p><b>Birth Date: </b>{{patient.icr.birthdate}}</p>
+                                             <p><b>Sex: </b>{{patient.icr.sex}}</p>
+                                             <p><b>Civil Status: </b>{{patient.icr.civil_status}}</p>
+                                             <p><b>Phone Number: </b>{{patient.icr.phone_number}}</p>
+                                             <p><b>Home Address: </b>{{patient.icr.home_address}}</p>
+                                             <p><b>Occupation: </b>{{patient.icr.occupation}}</p>
+                                             <p><b>Work Address: </b>{{patient.icr.work_address}}</p>
+                                             <p><b>Work Telephone or Cellphone Number: </b>{{patient.icr.work_number}}</p>
+                                             <p><b>Purpose of Visit: </b>{{patient.icr.purpose_of_visit}}</p>
+                                             <p><b>Symptoms: </b>{{patient.icr.symptoms}}</p>
+                                             <p><b>Specifications:  </b>{{patient.icr.specification}}</p>
+                                          </div>
+                                       </div>
+                                       <div class="modal-footer">
+                                          <button disabled  class="btn btn-primary" data-dismiss="modal" id="download_icr_btn" onclick="downloadICR()" >Continue Download</button>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- end of ICR-->
+
+                              <!-- start of ART -->
+                              <div class="list-group item">
+                                 <form id="art-form" method="post" style="margin-top:1rem;">
+                                    {% csrf_token %} 
+                                    <p  class="collapsible"  id="profile" name="profile" style="margin-bottom:0rem; margin-left:0rem; padding-top:2%; padding-bottom:2%;" onclick ="SetElementValueFromSessionStorage('curr-user-name','patient-uname-local');">
+                                       Antiretroviral (ART) Medications
+                                       <span class="dot" style="margin-left:450px"></span>
+                                       <span class="dot"></span>
+                                       <span class="dot"></span>
+                                    </p>
+                                    <div class="content"  style="font-size: small;">   
+                                       {% for med in patient.meds.all %}
+                                          <div class="med-title" id="med-title-{{forloop.counter}}">
+                                             <p id="view-med-{{forloop.counter}}" style="padding: 0.5rem; margin-bottom:0rem;" >
+                                                {{forloop.counter}}. {{med.drug_name}}
+                                             </p>
+                                             <p id="unview-med-{{forloop.counter}}" style="padding: 0.5rem; margin-bottom: 2px; font-weight:600; display:none;">
+                                                {{forloop.counter}}. {{med.drug_name}}
+                                             </p>
+                                          </div>
+
+                                          <div id="med-content-{{forloop.counter}}" style="display:none; border-radius:10px; border:2px solid rgba(128, 29, 29, 0.781);">
+                                             <div  style="padding:1rem; font-size: small;">
+                                             
+                                                <p style="margin:0.5rem;"><b>Drug Name: </b>{{med.drug_name}}</p>
+                                                <p style="margin:0.5rem;"><b>Unit of Measure: </b> {{med.unit_of_measure}}</p>
+                                                <p style="margin:0.5rem;"></p><b>Medicine Type: </b> {{med.medicine_type}}</p>
+                                                <p style="margin:0.5rem;"><b>Content per Bottle: </b> {{med.content_per_bottle}}</p>
+                                                <p style="margin:0.5rem;"><b>Note(s): </b> {{med.doc_notes}}</p>
+                                                <hr>
+                                                <p style="margin:0.5rem;"><b>Administered by: </b> Dr. {{med.administered_by}}</p>
+                                                <p style="margin:0.5rem;"><b>Date Administered: </b> {{med.created_on}}</p>
+                                             </div>
+                                          </div>
+
+                                          <hr style="margin-top:0px;margin-bottom:0px; border:2px solid rgba(100, 58, 58, 0.1); ">
+                                          
+                                          <script>                                                   
+                                             $("#view-med-{{forloop.counter}}").click(function(){
+                                                $('#med-title-{{forloop.counter}}').addClass('med-active');
+                                                $("#med-content-{{forloop.counter}}").show();
+                                                $("#unview-med-{{forloop.counter}}").show();
+                                                $("#view-med-{{forloop.counter}}").hide()
+                                             });
+         
+                                             $("#unview-med-{{forloop.counter}}").click(function(){
+                                                $('#med-title-{{forloop.counter}}').removeClass('med-active');
+                                                $("#med-content-{{forloop.counter}}").hide();
+                                                $("#unview-med-{{forloop.counter}}").hide();
+                                                $("#view-med-{{forloop.counter}}").show()
+                                             });
+               
+                                          </script>
+                                       {% empty%}
+                                       <p>No medications at the moment...</p>
+                                       {% endfor %}
+                                    </div>
+                                 </form>
+                              </div>                                       
+                              <!-- end of ART -->
+                              <script>
+                                 $('#icr_ps_verify').on('keyup', function () {
+                                    if ($('#icr_ps_verify').val() != ''){
+                                       if ($('#icr_ps_verify').val() == "{{patient.password}}" ) {
+                                          $('#icr_password_message').html('Correct Password').css('color', 'green');
+                                             $("#download_icr_btn").removeAttr('disabled');
+                                       }else{
+                                          $('#icr_password_message').html('Incorrect Password').css('color', 'red');
+                                          $("#download_icr_btn").attr("disabled", true);
+                                       }
+                                    }
+
+                                 });   
+
+                                 // function to download the icr-form
+                                 var base64Img = null;
+                                 margins = {
+                                 top: 70,
+                                 bottom: 40,
+                                 left: 30,
+                                 width: 550
+                                 };
+                                 function downloadICR(){
+                                    console.log("download icr clicked!");
+
+                                    var pdf = new jsPDF('p', 'pt', 'a4');
+                                    pdf.setFontSize(25);
+                                    pdf.fromHTML(document.getElementById('icr-download-content'), 
+                                    margins.left, // x coord
+                                    margins.top,{width: margins.width}, 
+                                    margins);
+
+                                    //footer
+                                    var pageSize = pdf.internal.pageSize;
+                                    var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                                    var date_now = new Date();
+                                    if (typeof pdf.putTotalPages === 'function') { // Total page number plugin only available in jspdf v1.0+
+                                       str = "{{patient.username}} ICR Form as of: "  + date_now.toDateString();
+                                    }
+                                    pdf.setFontSize(10);
+                                    pdf.text(str, 10, pageHeight - 5);
+                                    pdf.save("ICRForm-{{patient.first_name}}-{{patient.last_name}}.pdf");
+                                 }
+
+                                 // Functions to Mark Remarks of Doctors as Seen
+                                 $('#med-hist').click(function(e){
+                                    console.log("action: Medical History Remark Seen");
+                                    e.preventDefault();
+
+                                    $.ajax({
+                                       type:"POST",
+                                       async:true,
+                                       url:'{% url "seenRemark" %}',
+                                       data:{
+                                          csrfmiddlewaretoken: '{{ csrf_token }}', 
+                                          viewed_type: "Medical History Remark",
+                                          file_pk: '{{patient.pk}}',
+                                          file_owner: '{{patient.username}}',
+                                          type: "normal"
+                                       },
+                                       success:function(){
+                                          console.log("action finished");
+                                       }
+                                    });    
+                                 });
+
+                                 $('#profile').click(function(e){
+                                    console.log("action: Profile Form Remark Seen");
+                                    e.preventDefault();
+
+                                    $.ajax({
+                                       type:"POST",
+                                       async:true,
+                                       url:'{% url "seenRemark" %}',
+                                       data:{
+                                          csrfmiddlewaretoken: '{{ csrf_token }}',
+                                          viewed_type: "Profile Form Remark",
+                                          file_pk: '{{patient.pk}}',
+                                          file_owner: '{{patient.username}}',
+                                          type:"normal"
+                                       },
+                                       success:function(){
+                                          console.log("action finished");
+                                       }
+                                    });
+                                 });
+
+                                 $('#icr-form').click(function(e){
+                                    console.log("action: ICR Form Remark Seen");
+                                    e.preventDefault();
+
+                                    $.ajax({
+                                       type:"POST",
+                                       async:true,
+                                       url:'{% url "seenRemark" %}',
+                                       data:{
+                                          csrfmiddlewaretoken: '{{ csrf_token }}',
+                                          viewed_type: "ICR Form Remark",
+                                          file_pk: '{{patient.pk}}',
+                                          file_owner: '{{patient.username}}',
+                                          type: "normal"
+                                       },
+                                       success:function(){
+                                          console.log("action finished");
+                                       }
+                                    });
+                                 });
+                              </script>  
+                        </div>
+                     </div>
+                  </div>     
+               </div>
+               <!-- END OF HIV/AIDS AND FORMS TAB -->
+
+               <!-- ADD/REMOVE DOCTORS -->
+               <div class="tab-pane fade py-5" id="v-pills-mydocs" role="tabpanel" aria-labelledby="v-pills-mydocs-tab">
+                  <div class="myDocList"> 
+                     <div class="col-md-12" style="border-style: ridge;"> 
+                        <div class="card card-plain"  style="padding-top: 1.5rem;">
+                           <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
+                              <h4 class="card-title">Added Doctors</h4>
+                           </div>
+                           <div class="card-body" style="margin-bottom: 1rem;">
+                              {% for doctor in patient.my_doctors.all %}  
+                                 <input class="collapsible"  style="border:1px solid rgba(0, 0, 0, 0.125); padding:1rem; margin:0.5rem;" id="mydoc-{{forloop.counter}}" name="mydoc" value="Dr. {{doctor.name}}" readonly>
+                                 <div class="content" style="font-size: small;" id="content-{{patient.first_name}}" >
+                                   
+                                    <div class="doc-pic" id="patient-doc-pic-wrapper" style="margin:1rem;">
+                                       {% if doctor.doc_image %}
+                                          <img src="{{doctor.doc_image.url}}" id="prof-pic-preview-{{doctor.name}}" style="background-color:black; border:2px solid #800000" > 
+                                       {% endif %}
+                                       {% if not doctor.doc_image %}
+                                          <img src="{% static 'portal/images/user.png' %}"  id="prof-pic-preview-{{doctor.name}}" style="background-color:black; border:2px solid #800000"> 
+                                       {% endif%}
+                                    </div>
+                                    <div class="doc-info">
+                                       <p style="margin-top:0.5rem; margin-bottom:0.5rem;"><b>Field Specialty:</b> {{doctor.field_specialty}} </p>
+                                       <p style="margin-bottom:0.5rem;"><b>Position:</b> {{doctor.position}}</p>
+                                       <p style="margin-bottom:0.5rem;"><b>Hospital Name:</b> {{doctor.hospital_name}} </p>
+                                       <p style="margin-bottom:0.5rem;"><b>Hospital Address:</b> {{doctor.hospital_address}}</p>
+                                       <p style="margin-bottom:0.5rem;"><b>Contact Number:</b> {{doctor.phone_number}}</p>
+                                       <p style="margin-bottom:0.5rem;"><b>Email:</b> {{doctor.email}}</p>
+   
+                                       <p id="add-schedule-{{forloop.counter}}" name="add-schedule" style="color:#802400;" data-toggle="modal" data-target="#set-sched-{{forloop.counter}}"><u>Request for personal consultation</u></p> 
+                                    
+                                    </div>
+                                  
+                                 </div>
+                                 <hr style="margin-top:0rem; margin-bottom: 0rem;">
+
+                                 <!-- modal to add pending consultation schedule to doctor -->
+                                 <div class="modal fade" id="set-sched-{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true" >
+                                    <div class="modal-dialog" role="document">
+                                       <div class="modal-content" id="modal-content-{{forloop.counter}}">
+                                          <div class="modal-header" style="background-color: #802400;">
+                                             <h5 class="modal-title"  id="modal-title-{{forloop.counter}}"  style="color:#ffffff; margin:0px;">Request to set a schedule to Dr. {{doctor.name}}</h5>
+                                             <button style="color:#ffffff;padding: 0rem; padding-top: 1rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                             <span aria-hidden="true">&times;</span>
+                                             </button>
+                                          </div>
+                                          <form  method="post"> 
+                                             <div class="modal-body"  style="font-size:12px;">
+                                                <input hidden id="request-sched-curr-doctor-{{forloop.counter}}" name="add-sched-curr-doctor" value="{{doctor.name}}">
+                                                <p id="consultation-date-label"><b>Consultation Date:</b> 
+                                                   <input  type="date" id="consultation-date-{{forloop.counter}}" name="consultation-date" required>
+                                                </p>                                                               
+                                                <p id="consultation-time-label"><b>Consultation Time:</b>
+                                                   <input type="time" id="consultation-time-{{forloop.counter}}" name="consultation-time">
+                                                </p>
+                                                <p id="consultation-topic-label"><b>Topic:</b> 
+                                                   <input id="consultation-topic-{{forloop.counter}}" name="consultation-topic" placeholder="what is it about?" required>
+                                                </p>
+                                                <label for="consultation-notes-{{forloop.counter}}"><b>Other topics to discuss:</b> </label>
+                                                <br>
+                                                <textarea  rows="4" cols="50" id="consultation-notes-{{forloop.counter}}" name="consultation-notes" placeholder="other topics you want to discuss during the consultation."></textarea>
+                                             </div>
+
+                                             <div class="modal-footer">
+                                                <button  class="btn btn-primary" id="send-request-{{forloop.counter}}" data-dismiss="modal">Send Request</button> 
+                                                <button class="btn btn-primary"  id="back-btn-req-sched-{{forloop.counter}}" data-dismiss="modal">back</button>
+                                             </div>
+                                          </form> 
+                                       </div>
+                                    </div>
+                                 </div> 
+
+                                 <script>
+                                    $('#send-request-{{forloop.counter}}').click(function(e){
+                                       console.log("Request to Schedule Consultation clicked!");
+                                       e.preventDefault();
+                                       var doc = $('#request-sched-curr-doctor-{{forloop.counter}}').val();
+
+                                       $.ajax({
+                                          type:"POST",
+                                          async:true,
+                                          url:'/addpendingSched/',
+                                          data:{
+                                             csrfmiddlewaretoken: '{{ csrf_token }}', 
+                                             curr_sched_doc: $('#request-sched-curr-doctor-{{forloop.counter}}').val(),
+                                             consultation_date: $('#consultation-date-{{forloop.counter}}').val(),
+                                             consultation_time: $('#consultation-time-{{forloop.counter}}').val(),
+                                             consultation_topic: $('#consultation-topic-{{forloop.counter}}').val(),
+                                             consultation_notes: $('#consultation-notes-{{forloop.counter}}').val()
+                                          },
+                                          success:function(){
+                                             console.log("Done requesting to Schedule Consultation");
+                                             alert("Request to set a Consultation Schedule to  Dr. " + doc + " done.");
+                                             $('#send-request-{{forloop.counter}}').attr("data-dismiss","modal");
+                                          }
+                                       });
+                                    });
+                                 </script>
+
+                              {% empty %}
+                                 <p>No doctors chosen...</p>
+                                 <hr style="margin-top:0px;">
+                              {% endfor %}
+                              <div style="margin-top:1rem;">
+                                 <a href="#" onclick ="SetElementValueFromSessionStorage('add-curr-user-name','patient-uname-local');" class="btn btn-primary" data-toggle="modal" data-target="#addDoc">Add Doctor</a>   
+                                 <a href="#" onclick ="SetElementValueFromSessionStorage('curr-user','patient-uname-local');"  class="btn btn-primary"  data-toggle="modal" data-target="#removeDoc"> Remove Doctor</a>
+                              </div>
+                           </div>
+                           
+                        </div>
+                     </div>                                 
+                  </div>
+
+                     <!-- modal to add doctor -->
+                  <div class="modal fade" id="addDoc" tabindex="-1" role="dialog" aria-hidden="true" >
+                     <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                           <div class="modal-header" style="background-color:#800000;">
+                              <h5 class="modal-title" style="color:white;">Add a Doctor</h5>
+                              <button type="button" class="close" style="color:white;" data-dismiss="modal">&times;</button>
+                           </div>
+                           <form id="add-doc-form"  method="post">
+                              <div class="modal-body">
+                                 {% csrf_token %}
+                                 <input hidden name="add-curr-user-name" id="add-curr-user-name" value="">  
+                                 <div class="table-responsive">
+                                    <table class="table table-hover" style="font-family:Roboto, Arial, sans-serif;">
+                                       <thead class=" text-primary">
+                                          <th>
+                                             Name
+                                          </th>
+                                          <th>
+                                             Hospital Name
+                                          </th>
+                                          <th class="text-right">
+                                             Hospital Address
+                                          </th>
+                                       </thead>
+                                       <tbody>
+                                          {% for doc in doctors %}
+                                             {% if doc not in patient.my_doctors.all %}
+                                             <tr class="doc-bar" style="transform: rotate(0);" data-id="{{forloop.counter}}">
+                                                <td>
+                                                   <input  class="stretched-link" type="checkbox" name="add-doc-name" id="doctor-{{doc.name}}" value="{{doc.name}}">Dr. {{doc.name}}
+                                                </td>
+                                                <td>
+                                                   <p name="add-doc-name" id="{{doc.hospital_name}}">{{doc.hospital_name}}</p>
+                                                </td>
+                                                <td class="text-right">
+                                                   <p name="add-doc-name" id="{{doc.hospital_address}}">{{doc.hospital_address}}</p>
+                                                </td>
+                                             </tr>
+                                             {% endif%}  
+                                             {% empty %}
+                                             <tr><td><input readonly value="no doctors available..."> </td></tr>
+                                          {% endfor %}
+                                       </tbody>
+                                    </table>
+                                 </div>                                       
+                              </div>
+                              <div class="modal-footer">
+                                    <input type="button submit" class="btn btn-primary" id="add-doc-btn" value="Add to My Doctors" data-dismiss="modal"> 
+                                    <input type="button" class="btn btn-primary" id="back-add-patient" value="Back" data-dismiss="modal">
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- modal to remove doctor -->
+                  <div class="modal fade" id="removeDoc" tabindex="-1" role="dialog" aria-hidden="true" >
+                     <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                           <div class="modal-header" style="background-color: #800000;">
+                              <h5 class="modal-title" style="color:#f1f1f1;">Remove Doctor</h5>
+                              <button type="button" class="close" data-dismiss="modal" style="color:#f1f1f1;">&times;</button>
+                           </div>
+                           <form id="rem-doc-form" method="post"></form>
+                              {% csrf_token %}
+                              <div class="modal-body">                                       
+                                    <input hidden name="curr-user" id="curr-user" value="">   
+                                    {% for doctor in patient.my_doctors.all %}
+                                       <input type="checkbox" name="remove-doc-name" id="rem-{{doctor.name}}" value="{{doctor.name}}">Dr. {{doctor.name}} <br>
+                                    {% endfor %}                                    
+                              </div>
+                              <div class="modal-footer">
+                                 <input type="submit" id="rem-doc-btn" class="btn btn-primary" value="finish removing" data-dismiss="modal">
+                                 <input type="button" id="back-rem-doc-btn" class="btn btn-primary" value="Back" data-dismiss="modal">
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+                  <script>
+                     // add doctor(s)
+                     var addDocList = [];
+                     $('#addDoc input[type="checkbox"]').change(function() {
+                           if ($(this).prop('checked') == false){ addDocList.pop($(this).val()); }
+                           else{ addDocList.push($(this).val());}
+                           console.log("list: ", addDocList);
+                     });
+
+                     $('#add-doc-btn').click(function(e){
+                        e.preventDefault();
+                        console.log("add doctor(s)");
+
+                        $.ajax({
+                           type:"POST",
+                           async: true,
+                           url: '{% url "addDocs" %}',
+                           data:{
+                              csrfmiddlewaretoken:'{{csrf_token}}',
+                              docs: addDocList
+                           },
+                           success:function(){
+                              alert("Doctor(s) Added! Refresh page to view changes.")
+                              console.log("Done adding the doctor(s)!!");
+                           }
+                        });
+                     });
+
+                     // remove doctor(s)
+                     var removeList = [];
+                     $('#removeDoc input[type="checkbox"]').on('change', function() {
+                           if ($(this).prop('checked') == false){ removeList.pop($(this).val()); }
+                           else{ removeList.push($(this).val());}
+                           console.log("list: ", removeList);
+                           console.log("haler ka diha..");
+                     });
+
+                     $('#rem-doc-btn').click(function(e){
+                        e.preventDefault();
+                        console.log("remove doctor(s)");
+
+                        $.ajax({
+                           type:"POST",
+                           async: true,
+                           url: '{% url "removeDocs" %}',
+                           data:{
+                              csrfmiddlewaretoken:'{{csrf_token}}',
+                              docs: removeList
+                           },
+                           success:function(){
+                              alert("Doctor Removed! Refresh page to view changes.")
+                              console.log("Done removing the doctor!!");
+                           }
+                        });
+                     });
+                  </script>
+                  <!-- END OF ADD/REMOVE DOCTORS -->
+               </div>
+
+                  
+               <!-- NOTIFICATIONS -->
+               <div class="tab-pane fade show active py-5" id="notifs" role="tabpanel" aria-labelledby="v-pills-master-tab">
+                  <div class="col-md-12" style="border-style: ridge;"> 
+                     <div class="card card-plain"  style="padding-top: 1.5rem;">
+                        <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
+                           <h4 class="card-title">Notifications</h4>
+                        </div>
+                        <div class="card-body" style="margin-bottom: 1rem;">
+                           <div class="table-responsive">
+                              <table class="table table-hover" style="font-family:Roboto, Arial, sans-serif;">
+                                 <thead class=" text-primary">
+                                    <th>
+                                       Action
+                                    </th>
+                                    <th>
+                                       Notification
+                                    </th>
+                                    <th class="text-right">
+                                       Date
+                                    </th>                                       
+                                 </thead>
+                                 <tbody>
+                                    {% for notif in patient.patient_notifications.all %}
+                                       {%csrf_token%}
+                                          <div id="notif-{{forloop.counter}}">
+                                             {% if notif.created_on > patient.last_log_out %}
+                                                <tr class="notif-bar" id="notif-row-{{forloop.counter}}" style="transform: rotate(0);background-color:#d6f5d6;" data-toggle="modal" data-target="#notif-content-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                             {% endif %}
+                                             {% if notif.created_on < patient.last_log_out %}
+                                                <tr class="notif-bar" id="notif-row-{{forloop.counter}}" style="transform: rotate(0);" data-toggle="modal" data-target="#notif-content-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                             {% endif %}
+                                             {% if notif.notif_status %}
+                                                <td > 
+                                                   <div class="custom-control custom-checkbox">
+                                                      <a data-toggle="modal" data-target="#notif-content" class="stretched-link"></a>
+                                                      <input type="checkbox" class="custom-control-input" id="notif-checkbox-{{forloop.counter}}" checked>
+                                                      <label class="custom-control-label" for="checkbox-{{forloop.counter}}">{{notif.action_type}}</label>
+                                                   </div>                                                      
+                                                </td>
+                                             {% endif %}
+                                             {% if not notif.notif_status %}
+                                                <td> 
+                                                   <div class="custom-control custom-checkbox">
+                                                      <a  data-toggle="modal" data-target="#notif-content" class="stretched-link"></a>
+                                                      <input type="checkbox" class="custom-control-input" id="notif-checkbox-{{forloop.counter}}">
+                                                      <label class="custom-control-label" for="checkbox-{{forloop.counter}}">{{notif.action_type}}</label>
+                                                   </div>  
+                                                </td>
+                                             {% endif %}
+                                                <td>
+                                                   {{notif.notification}}
+                                                </td>
+                                                <td class="text-right" style="padding-left:0px; font-family:Roboto, Arial, sans-serif; font-size:12px;"> 
+                                                {{notif.created_on}} 
+                                                </td>
+                                             </tr>
+                                          </div>
+                                       
+                                       <div class="modal fade" id="notif-content-{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true" >
+                                          <div class="modal-dialog" role="document">
+                                             <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #800000;">
+                                                   <h5 class="modal-title" style="color:#ffffff;">{{notif.subject}}</h5>
+                                                   <button type="button" data-dismiss="modal" style="background-color: transparent; border:none;" aria-label="Close">
+                                                      <span aria-hidden="true"  style="color:#ffffff;">&times;</span>
+                                                   </button>
+                                                </div>
+                                                <div class="modal-body" style="font-size: small; max-height: calc(100vh - 210px);overflow-y: auto;">                                                      
+                                                   {% if notif.subject == 'ART Medication' %}
+                                                      {% for med in patient.meds.all %}
+                                                         {% if med.pk == notif.action_pk %}
+                                                            <div id="new-med-notif">
+                                                               <div  style="padding:1rem; border:1px solid lightgray">
+                                                                  <p><b>Drug Name: </b>{{med.drug_name}}</p>
+                                                                  <p><b>Unit of Measure: </b> {{med.unit_of_measure}}</p>
+                                                                  <p><b>Medicine Type: </b> {{med.medicine_type}}</p>
+                                                                  <p><b>Content per Bottle: </b> {{med.content_per_bottle}}</p>
+                                                                  <p><b>Notes: </b> {{med.doc_notes}}</p>
+                                                               </div>
+                                                               <hr>
+                                                               <p><b>Administered By: </b> Dr. {{med.administered_by}}</p>
+                                                               <p><b>Date Administered: </b> {{med.created_on}}</p>
+                                                            </div>
+                                                         {% endif %}
+                                                      {% endfor%}
+                                                   {% endif %}
+                                                   
+                                                   {% if notif.subject == 'Personal Record' %}
+                                                   <!-- Personal Record Comment modal -->
+                                                      {% for post in patient.personal_records.all %}
+                                                         {% if post.pk == notif.action_pk %}
+                                                            <div id="record-notif-add-comment">
+                                                               <div class="card-header" style="background-color: #800000;">
+                                                                  <h1 style="color:white;">{{ post.title }}</h1>
+                                                                  <p  style="color:rgb(233, 227, 227);" >| {{ post.created_on}} </p>
+                                                               </div>
+                                                               <div class="card-body" style="background-color: rgba(0,0,0,.07); padding-bottom:0px;">
+                                                                  <p class="card-text" id="content-preview-{{forloop.counter}}">{{post.content|slice:":100" }}</p>
+                                                                  <p class="card-text" id="content-full-{{forloop.counter}}" style="display:none;">{{post.content}}</p>
+                                                                  <button class="btn btn-default" id="read-more-{{forloop.counter}}">Read more</button>
+                                                                  <button class="btn btn-default" id="read-less-{{forloop.counter}}" style="display:none;">Read less</button>
+                                                                  
+                                                                  <p style= "margin-bottom:0px; font-size: 12px; color:grey;margin-top:1rem;">seen by: 
+                                                                     {% for viewer in post.docs_viewed.all %}
+                                                                        {{viewer.viewer_name}} |
+                                                                     {% empty %}
+                                                                     ...
+                                                                     {% endfor %}
+                                                                  </p>
+                                                               </div>
+                                                               <div class="card-footer">
+                                                                  <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">
+                                                                  <p  class="doc-remarks-header"><font size="2"><b>Doctor(s) comments: {{post.comment.count}}</b></font></p>
+                                                                  <hr style="margin-bottom:0rem; margin-top:0rem;">
+                                                                  <div name="comments"  style="margin-bottom:1rem;;">
+                                                                     {% for comment in post.comment.all %}
+                                                                        <p style="margin-bottom:0rem;padding-left:1rem;" id="doc-comment-{{comment.author}}" name="doc-comment"><font size="2"><b>{{comment.author}}</b>: {{comment.text}}</font></p>
+                                                                        <hr style="margin-bottom:0rem; margin-top:0rem;">
+                                                                     {% endfor%}
+                                                                  </div>
+                                                               </div>                                                                     
+                                                            </div>
+                                                         {% endif %}
+                                                      {% endfor %}
+                                                {% endif %}
+
+
+                                                {% if notif.subject == 'Consultation Schedule' %}
+                                                <!-- accepted schedule modal -->
+                                                   {% if notif.action_type == 'Accepted' or notif.action_type == 'Remark Accepted' %}
+                                                      {% for schedule in patient.approved_schedules.all %}
+                                                         {% if schedule.pk == notif.action_pk %}
+                                                            <div id="sched-notif-accepted">
+                                                               <div id="done-notif-body-wrapper-{{forloop.counter}}" style="padding:1rem; border:1px solid lightgray">
+                                                                  <div class="form-group">
+                                                                     <p style="margin-left: 0rem;color: #00ff55;"><b>Schedule Status: </b>Accepted</p>
+                                                                  </div>
+                                                                  <div class="form-group">
+                                                                     <label><b>HIV Status: </b></label>
+                                                                     <input readonly  id="ongoing-patient-{{schedule.patient_hiv_status}}" name="ongoing-patient-hiv-status" value="{{schedule.patient_hiv_status}}">
+                                                                  </div>
+                                                                  <div class="form-group">
+                                                                     <label><b>Consultation Date: </b></label>
+                                                                     <input readonly id="ongoing-patient-{{schedule.schedule_date}}" name="ongoing-patient-sched-date" value="{{schedule.schedule_date}}">
+                                                                  </div>
+                                                                  <div class="form-group">
+                                                                     <label><b>Consultation Topic:</b></label>
+                                                                     <input readonly id="ongoing-patient-{{forloop.counter}}" name="ongoing-patient-sched-topic" value="{{schedule.schedule_topic}}">
+                                                                  </div>
+                                                                  <div class="form-group">
+                                                                     <label><b>Patient Consultation details: </b></label>
+                                                                     <textarea readonly style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="ongoing-patient-{{schedule.schedule_notes}}" name="ongoing-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                                                  </div>
+                                                               </div>
+                                                               <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                                                  {% for viewer in schedule.users_viewed.all %}
+                                                                     {{viewer.viewer_name}} |
+                                                                  {% empty %}
+                                                                  ...
+                                                                  {% endfor %}
+                                                               </p>
+                                                               <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
+                                                               <div class="form-group">
+                                                                  <p class="doc-remarks-header" ><b>Doctor(s) Remarks: </b></p>
+                                                                  {% for remark in schedule.doc_remark.all %}
+                                                                     <hr style="margin:0rem 0rem;">
+                                                                     <p style="font-size:12px; margin-top: 3px;margin-bottom: 3px;"><b>{{remark.author}}: </b> {{remark.text}}</p>
+                                                                  {% empty %}
+                                                                     <hr style="margin:0rem 0rem;">
+                                                                     <p>No remarks yet..</p>
+                                                                  {% endfor%}
+                                                               </div>
+                                                            </div>
+                                                         {% endif %}
+                                                      {% endfor %}
+
+                                                      {% endif %}
+
+                                                      <!-- Done schedule modal -->
+                                                      {% if notif.action_type == 'Done' or notif.action_type == 'Remark Finished' %}
+                                                         {% for schedule in patient.finished_schedules.all %}
+                                                            {% if schedule.pk == notif.action_pk %}
+                                                               <div id="sched-notif-accepted">
+                                                                  <div id="done-notif-body-wrapper-{{forloop.counter}}" style="padding:1rem; border:1px solid lightgray">
+                                                                     <div class="form-group">
+                                                                        <p style="margin-left: 0rem;color: #1a8cff;"><b>Schedule Status: </b>Accepted</p>
+                                                                     </div>
+                                                                     <div class="form-group">
+                                                                        <label><b>HIV Status: </b></label>
+                                                                        <input readonly  id="ongoing-patient-{{schedule.patient_hiv_status}}" name="ongoing-patient-hiv-status" value="{{schedule.patient_hiv_status}}">
+                                                                     </div>
+
+                                                                     <div class="form-group">
+                                                                        <label><b>Consultation Date: </b></label>
+                                                                        <input readonly id="ongoing-patient-{{schedule.schedule_date}}" name="ongoing-patient-sched-date" value="{{schedule.schedule_date}}">
+                                                                     </div>
+
+                                                                     <div class="form-group">
+                                                                        <label><b>Consultation Topic:</b></label>
+                                                                        <input readonly id="ongoing-patient-{{forloop.counter}}" name="ongoing-patient-sched-topic" value="{{schedule.schedule_topic}}">
+                                                                     </div>
+
+                                                                     <div class="form-group">
+                                                                        <label><b>Patient Consultation details: </b></label>
+                                                                        <textarea readonly style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="ongoing-patient-{{schedule.schedule_notes}}" name="ongoing-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                                                     </div>
+                                                                  </div>
+                                                                  
+                                                                  <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                                                     {% for viewer in schedule.users_viewed.all %}
+                                                                        {{viewer.viewer_name}} |
+                                                                     {% empty %}
+                                                                     ...
+                                                                     {% endfor %}
+                                                                  </p>
+
+                                                                  <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
+                                                                  <div class="form-group">
+                                                                     <p class="doc-remarks-header" ><b>Doctor(s) Remarks: </b></p>
+                                                                     {% for remark in schedule.doc_remark.all %}
+                                                                        <hr style="margin-top:0rem; margin-bottom: 0rem;">
+                                                                        <p style="margin-top: 3px; margin-bottom: 3px;"><b>{{remark.author}}: </b> {{remark.text}}</p>
+                                                                     {% empty %}
+                                                                        <hr style="margin:0rem 0rem;">
+                                                                        <p>No remarks yet..</p>
+                                                                     {% endfor%}
+                                                                  </div>
+                                                               </div>
+                                                            {% endif %}
+                                                         {% endfor %}
+                                                      {% endif %}
+
+                                                      <!-- declined schedule modal -->
+                                                      {% if notif.action_type == 'Declined'  or notif.action_type == 'Remark Declined' %}
+                                                         {% for schedule in patient.rejected_schedules.all %}
+                                                            {% if schedule.pk == notif.action_pk %}
+                                                               <div id="sched-notif-declined-{{forloop.counter}}" >
+                                                                  <div id="declined-notif-body-wrapper" style="padding:1rem; border:1px solid lightgray;">
+                                                                     <div class="form-group">
+                                                                        <p style="margin-left: 0rem;color: #b35900;"><b>Schedule Status: </b>Pending</p>
+                                                                     </div>
+                                                                     <p  id="ongoing-patient-{{schedule.patient_hiv_status}}"><b>HIV Status: </b>{{schedule.patient_hiv_status}}</p>
+
+                                                                     <p id="ongoing-patient-{{schedule.schedule_date}}"><b>Consultation Date: </b>{{schedule.schedule_date}}</p>
+
+                                                                     <p id="ongoing-patient-{{forloop.counter}}"><b>Consultation Topic: </b>{{schedule.schedule_topic}}</p>
+
+                                                                     <label><b>Patient Consultation details: </b></label>
+                                                                     <textarea readonly style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="2" id="ongoing-patient-{{schedule.schedule_notes}}" name="ongoing-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                                                  </div>
+                                                                  <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                                                     {% for viewer in schedule.users_viewed.all %}
+                                                                        {{viewer.viewer_name}} |
+                                                                     {% empty %}
+                                                                     ...
+                                                                     {% endfor %}
+                                                                  </p>
+                                                                  <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
+                                                                  <div class="form-group">
+                                                                     <p class="doc-remarks-header" ><b>Doctor(s) Remarks: </b></p>
+                                                                     {% for remark in schedule.doc_remark.all %}
+                                                                        <hr style="margin-top:0rem; margin-bottom: 0rem;">
+                                                                        <p style="margin-top: 3px; margin-bottom: 3px;"><b>{{remark.author}}: </b> {{remark.text}}</p>
+                                 
+                                                                     {% empty %}
+                                                                        <hr style="margin:0rem 0rem;">
+                                                                        <p>No remarks yet..</p>
+                                                                     {% endfor%}
+                                                                  </div>
+                                                                  <hr>
+                                                                  <button class="btn btn-primary" id="resched-btn-{{forloop.counter}}" >Resched</button>
+                                                               </div>
+
+                                                               <div style="display:none;" id="resched-div-{{forloop.counter}}">
+                                                                  <form method="post">
+                                                                     {% csrf_token %}
+                                                                     {% for sched in patient.rejected_schedules.all %}
+                                                                        {% if sched.pk == notif.action_pk %}
+                                                                           <input hidden id="resched-curr-doctor-{{forloop.counter}}" name="add-sched-curr-doctor" value="{{sched.doc_in_charge}}">
+                                                                           <p id="consultation-date-label"><b>Consultation Date:</b> 
+                                                                              <input  type="date" id="resched-consultation-date-{{forloop.counter}}" name="consultation-date" required>
+                                                                           </p>                                                               
+                                                                           <p id="consultation-time-label"><b>Consultation Time:</b>
+                                                                              <input type="time" id="resched-consultation-time-{{forloop.counter}}" name="consultation-time">
+                                                                           </p>
+                                                                           <p id="consultation-topic-label"><b>Topic:</b>
+                                                                              <input id="resched-consultation-topic-{{forloop.counter}}" name="consultation-topic" required>
+                                                                           </p>
+                                                                           <label for="consultation-notes-{{forloop.counter}}" id="consultation-notes-label"><b>Other topics to discuss:</b></label>
+                                                                           <textarea  rows="4" cols="50" id="resched-consultation-notes-{{forloop.counter}}" name="consultation-notes" placeholder="other topics you want to discuss during the consultation."></textarea>
+                                                                           <hr>
+                                                                           <button class="btn btn-primary" id="unsched-btn-{{forloop.counter}}"><i class='fas fa-arrow-left'></i> Back</button>
+                                                                           <button  class="btn btn-primary" id="send-request-resched-{{forloop.counter}}" data-dismiss="modal">Submit</button>   
+                                                                        </form>  
+                                                                     </div>
+                                                                        
+                                                                     <script>
+                                                                        $('#resched-btn-{{forloop.counter}}').click(function(){
+                                                                           $('#resched-div-{{forloop.counter}}').show();
+                                                                           $('#sched-notif-declined-{{forloop.counter}}').hide();
+                                                                        });
+
+                                                                        $('#unsched-btn-{{forloop.counter}}').click(function(){
+                                                                           $('#resched-div-{{forloop.counter}}').hide();
+                                                                           $('#sched-notif-declined-{{forloop.counter}}').show();
+                                                                        });
+
+                                                                        $('#send-request-resched-{{forloop.counter}}').click(function(e){
+                                                                           console.log("Request to Schedule Consultation clicked!");
+                                                                           e.preventDefault();
+                                                                           var doc = $('#request-sched-curr-doctor-{{forloop.counter}}').val();
+
+                                                                           $.ajax({
+                                                                              type:"POST",
+                                                                              async:true,
+                                                                              url:'/addpendingSched/',
+                                                                              data:{
+                                                                                 csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                                                 curr_sched_doc: $('#resched-curr-doctor-{{forloop.counter}}').val(),
+                                                                                 consultation_date: $('#resched-consultation-date-{{forloop.counter}}').val(),
+                                                                                 consultation_time: $('#resched-consultation-time-{{forloop.counter}}').val(),
+                                                                                 consultation_topic: $('#resched-consultation-topic-{{forloop.counter}}').val(),
+                                                                                 consultation_notes: $('#resched-consultation-notes-{{forloop.counter}}').val()
+                                                                              },
+                                                                              success:function(){
+                                                                                 console.log("Done requesting to Schedule Consultation");
+                                                                                 alert("Request to set a Consultation Schedule to  Dr. " + doc + " done.");
+                                                                              }
+                                                                           });
+                                                                        });
+                                                                     </script>
+                                                               {% endif %}
+                                                               {% endfor %}  
+                                                            {% endif %}
+                                                         {% endfor %}
+                                                      {% endif %}    
+                                                         
+                                                   {% endif %}
+
+
+                                                   {% if notif.subject == "Medical History"%}
+                                                      <div id="medhist-notif">
+                                                         <div id="medhist-notif-body-wrapper" style="border:1px solid lightgray;">
+                                                            <div class="form-group">
+                                                               <label style= "padding-left:10px;padding-top:10px;">Exposure: </label>
+                                                               <input id="exposure-{{forloop.counter}}" name="exposure" readonly  value="{{patient.medical_history.latest.exposure}}">
+                                                            </div> 
+                                                            <div class="form-group">
+                                                               <label style= "padding-left:10px;padding-top:10px;">HIV Status: </label>
+                                                               <input id="icr-hiv-status-{{forloop.counter}}" name="icr-hiv-status"  readonly required value="{{patient.HIV_status}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label style="padding-left:10px;">Other Medical Condition:</label>
+                                                               <input  id="other-med-con-{{forloop.counter}}" name="other-med-con" readonly value="{{patient.medical_history.latest.other_conditions}}"> 
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label style= "padding-left:10px;">Date Diagnosed/Sample Sent for Confirmatory:</label>
+                                                               <input id="date-diagnosed-{{forloop.counter}}" name="date-diagnosed" readonly value="{{patient.medical_history.latest.date_diagnosed}}">                                                               
+                                                            </div>
+                                                         </div>
+
+                                                         <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin:0px;"> 
+                                                         <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                                               {% for viewer in patient.medical_history.latest.docs_viewed.all %}
+                                                                  {{viewer.viewer_name}} |
+                                                               {% empty %}
+                                                               ...
+                                                               {% endfor %}
+                                                         </p>
+                                                         <div class="form-group">
+                                                            <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                                            {% for remark in patient.medical_history.latest.doctor_remarks.all %}
+                                                               <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                                               <p style="margin-top: 3px; margin-bottom: 3px;font-size:12px"><b>{{remark.author}}: </b>{{remark.text}} </p>
+                                                            {% empty %}
+                                                               <p>No remarks yet..</p>
+                                                            {% endfor%}
+                                                         </div>
+                                                      </div>
+                                                   {% endif %}
+
+                                                   {% if notif.subject == "ICR" %}
+                                                      <div id="icr-notif">
+                                                         <div id="icr-notif-body-wrapper" style="padding:1rem; border:1px solid lightgray;">
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-s-name" class="text-black">Surname: </label>
+                                                               <input class="icr-field" id="notif-s-name" name="icr-s-name" readonly required value="{{patient.icr.last_name}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-f-name" class="text-black">First Name: </label>
+                                                               <input class="icr-field" id="notif-icr-f-name" name="icr-f-name"  readonly required value="{{patient.icr.first_name}}">
+                                                            </div> 
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-m-initial" class="text-black">Middle Initial: </label>
+                                                               <input class="icr-field" id="notif-icr-m-name" name="icr-m-name"  readonly required value="{{patient.icr.middle_name}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-v-date" class="text-black">Date of Visit: </label>
+                                                               <input type="date" class="icr-field" id="notif-icr-v-date" name="icr-v-date"  readonly required value="{{patient.icr.date_of_visit}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-age" class="text-black">Age: </label>
+                                                               <input class="icr-field" type="number" min="1" max="200" id="notif-icr-age" name="icr-age"  readonly required value="{{patient.icr.age}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-b-date" class="text-black">Birth Date: </label>
+                                                               <input class="icr-field" type="date" id="notif-icr-b-date" name="icr-b-date"  readonly required value="{{patient.icr.birthdate}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-sex" class="text-black">Sex: </label>
+                                                               <input class="icr-field" id="notif-icr-sex" name="icr-sex"  readonly required value="{{patient.icr.sex}}" >
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-c-status" class="text-black">Civil Status: </label>
+                                                               <input class="icr-field" id="notif-icr-c-status" name="icr-c-status"  readonly required value="{{patient.icr.civil_status}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-p-num" class="text-black">Phone Number: </label>
+                                                               <input class="icr-field" type="tel" pattern="09[1-9]{9}"id="notif-icr-p-num" name="icr-p-num"  readonly required value="{{patient.icr.phone_number}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-h-num" class="text-black">Home Address: </label>
+                                                               <input class="icr-field" id="notif-icr-h-num" name="icr-h-num" readonly required value="{{patient.icr.home_address}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-occ" class="text-black">Occupation: </label>
+                                                               <input class="icr-field" id="notif-icr-occ" name="icr-occ"  readonly required value="{{patient.icr.occupation}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-work-add" class="text-black">Work Address: </label>
+                                                               <input class="icr-field" id="notif-icr-work-add" name="icr-work-add"  readonly required value="{{patient.icr.work_address}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-work-num" class="text-black">Work Telephone or Cellphone Number: </label>
+                                                               <input class="icr-field" type="tel" pattern="09[1-9]{9} | [1-9]{7}" id="notif-icr-work-num" name="icr-work-num"  readonly required value="{{patient.icr.work_number}}">                                                                  
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-p-visit" class="text-black">Purpose of Visit: </label>
+                                                               <input class="icr-field" id="notif-icr-p-visit" name="notif-icr-p-visit"  readonly required value="{{patient.icr.purpose_of_visit}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-symptoms" class="text-black">Symptoms: </label>
+                                                               <input class="icr-field" id="notif-icr-symptoms" name="icr-symptoms"  readonly value="{{patient.icr.symptoms}}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                               <label for="notif-icr-specs"  class="text-black">Specification: </label>
+                                                               <input class="icr-field" id="notif-icr-specs" name="icr-specs" readonly value="{{patient.icr.specification}}">
+                                                            </div>
+                                                         </div>
+                                                         <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                                            {% for viewer in patient.icr.docs_viewed.all %}
+                                                               {{viewer.viewer_name}} |
+                                                            {% empty %}
+                                                            ...
+                                                            {% endfor %}
+                                                         </p>
+                                                         <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-bottom:0px;">  
+                                                         <div class="form-group">
+                                                            <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                                            <hr style="margin:0rem 0rem;">
+                                                            {% for remark in patient.icr.doctor_remarks.all %}
+                                                               <hr style="margin:0rem 0rem;">
+                                                               <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}} :</b> {{remark.text}}</p>
+                                                            {% empty %}
+                                                               <hr style="margin:0rem 0rem;">
+                                                               <p>No remarks yet..</p>
+                                                            {% endfor%}
+                                                         </div>
+                                                      </div>
+                                                   {% endif %}
+
+                                                   <!-- profile notif -->
+                                                   {% if notif.subject == "Profile" %}
+                                                      <div id="prof-notif" style="padding:1rem; border:1px solid lightgray;">
+                                                         <p> <b>Location:</b> 
+                                                            {{patient.location_details.latest.general_location}}
+                                                         </p>
+                                                         <p> <b>Status:</b> {{patient.status}}</p>                                                            
+                                                         <p><b>Username: </b>{{patient.username}}</p>
+                                                         <p><b>Age: </b>{{patient.age}}</p>
+                                                         <p><b>HIV Level: </b>{{patient.HIV_status}}</p>
+                                                         <p><b>Work: </b>{{patient.work}}</p>  
+                                                         <p><b>Email: </b>{{patient.email}}</p>   
+                                                         <p><b>Contact Number: </b>{{patient.call_number}}</p>
+                                                      </div>
+                                                   {% endif%}
+                                                </div>
+                                                <div class="modal-footer">
+                                                   <button class="btn btn-primary" data-dismiss="modal">Dismiss</button>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <script>
+                                          // mark remarks seen from notification
+                                          $('#notif-row-{{forloop.counter}}').click(function(e){
+                                             console.log("notif clicked subject: {{notif.subject}}");
+                                             e.preventDefault();
+                                             // change UI to checked on notif clicked for quick changes
+                                             if ($('#notif-checkbox-{{forloop.counter}}  input[type="checkbox"]').prop("checked") == false){ 
+                                                alert("notif not changed to checked!");
+                                             }else{
+                                                $('#notif-checkbox-{{forloop.counter}}').prop('checked', true); 
+                                                console.log("notif is changed to checked!");
+                                             }
+
+                                             // notif is read
+                                             $.ajax({
+                                                type:"POST",
+                                                async:true,
+                                                url:'{% url "patientNotifRead" %}',
+                                                data:{
+                                                   csrfmiddlewaretoken: '{{ csrf_token }}', 
+                                                   notif_pk: '{{notif.pk}}'
+                                                },
+                                                success:function(){
+                                                   console.log("notif for patient read!" );
+                                                }
+                                             });
+                                             
+                                             if ('{{notif.subject}}' == "Medical History"){
+                                                console.log("action: Medical History Remark Seen");
+                                                $.ajax({
+                                                   type:"POST",
+                                                   async:true,
+                                                   url:'{% url "seenRemark" %}',
+                                                   data:{
+                                                      csrfmiddlewaretoken: '{{ csrf_token }}', 
+                                                      viewed_type: "Medical History Remark",
+                                                      file_pk: '{{patient.pk}}',
+                                                      file_owner: '{{patient.username}}',
+                                                      type: "notif",
+                                                      notif_pk: '{{notif.pk}}'
+                                                   },
+                                                   success:function(){
+                                                      console.log("action finished");
+                                                   }
+                                                });                                                            
+                                             }
+
+                                             if ('{{notif.subject}}' == "Profile Form"){
+                                                console.log("action: Profile Form Remark Seen");
+
+                                                $.ajax({
+                                                   type:"POST",
+                                                   async:true,
+                                                   url:'{% url "seenRemark" %}',
+                                                   data:{
+                                                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                      viewed_type: "Profile Form Remark",
+                                                      file_pk: '{{patient.pk}}',
+                                                      file_owner: '{{patient.username}}',
+                                                      type: "notif",
+                                                      notif_pk: '{{notif.pk}}'
+                                                   },
+                                                   success:function(){
+                                                      console.log("action finished");
+                                                   }
+                                                });
+                                             }
+
+                                             if ('{{notif.subject}}' == "ICR"){
+                                                console.log("action: ICR Form Remark Seen");
+
+                                                $.ajax({
+                                                   type:"POST",
+                                                   async:true,
+                                                   url:'{% url "seenRemark" %}',
+                                                   data:{
+                                                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                      viewed_type: "ICR Form Remark",
+                                                      file_pk: '{{patient.pk}}',
+                                                      file_owner: '{{patient.username}}',
+                                                      type: "notif",
+                                                      notif_pk: '{{notif.pk}}'
+                                                   },
+                                                   success:function(){
+                                                      console.log("action finished");
+                                                   }
+                                                });
+                                             }
+
+                                             if ('{{notif.subject}}' == "Personal Record"){
+                                                console.log("action: Personal Record Remark Seen");
+
+                                                $.ajax({
+                                                   type:"POST",
+                                                   async:true,
+                                                   url:'{% url "seenRemark" %}',
+                                                   data:{
+                                                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                      viewed_type: "Personal Record Comment",
+                                                      file_pk: '{{notif.action_pk}}',
+                                                      file_owner: '{{patient.username}}',
+                                                      type: 'notif',
+                                                      notif_pk: '{{notif.pk}}'
+                                                   },
+                                                   success:function(){
+                                                      console.log("action finished");
+                                                   }
+                                                });
+                                             }
+
+                                             if ('{{notif.subject}}' == "Consultation Schedule"){
+                                                console.log("action: Consultation Schedule Remark Seen");
+
+                                                $.ajax({
+                                                   type:"POST",
+                                                   async:true,
+                                                   url:'{% url "seenRemark" %}',
+                                                   data:{
+                                                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                      viewed_type: "Consultation Schedule Remark",
+                                                      file_pk: '{{notif.action_pk}}',
+                                                      file_owner: '{{patient.username}}',
+                                                      type: "notif",
+                                                      notif_pk: '{{notif.pk}}'
+                                                   },
+                                                   success:function(){
+                                                      console.log("action finished");
+                                                   }
+                                                });
+                                             }
+                                          });
+                                       </script>
+                                       {% empty %}
+                                          <tr>
+                                             <td>... </td>
+                                             <td>No notifications to show</td>
+                                             <td class="text-right"> ...</td>
+                                          </tr>
+                                    {% endfor %}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- END OF NOTIFICATIONS -->
+
+                  <!-- PATIENT PERSONAL RECORDS -->
+                  <div class="tab-pane fade py-5" id="p-records" role="tabpanel" aria-labelledby="v-pills-master-tab">
+                     <div class="col-md-12" style="border-style: ridge;"> 
+                        <div class="card card-plain"  style="padding-top: 1.5rem;">
+                           <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
+                             <button class="right-icon" id="create-new" data-toggle="modal" data-target="#new-record" style='font-size:24px;border:none;background:none; padding-top: 0.5rem;'> <span ><i class='fas fa-edit'></i></span></button>
+                              <h4>Personal Journal</h4>
+                           </div>
+                           <div class="card-body" style="margin-bottom: 1rem;">
+                              <div class="container">
+                                 <div class="row">
+                                    <div id="all-records" class="col-md-8 mt-3 left">
+                                       {% for post in patient.personal_records.all %}
+                                          <div class="card mb-4" >
+                                             <div class="card-header" style="background-color: #800000;">
+                                                <h1 style="color:white;">{{ post.title }}</h1>
+                                                <p  style="color:rgb(233, 227, 227);" >| {{ post.created_on}} </p>
+                                             </div>
+                                             <div class="card-body" style="background-color: rgba(0,0,0,.07); padding-bottom:0px;">
+                                                <p class="card-text" id="content-preview-{{forloop.counter}}">{{post.content|slice:":100" }}<a id="3-dots">...</a></p>
+                                                <p class="card-text" id="content-full-{{forloop.counter}}" style="display:none;">{{post.content}}</p>
+                                                <button class="btn btn-default" id="read-more-{{forloop.counter}}">Read more...</button>
+                                                <button class="btn btn-default" id="read-less-{{forloop.counter}}" style="display:none;">Read less</button>
+                                       
+                                                <p style= "margin-bottom:0px; font-size: 12px; color:grey; margin-top:1rem;">seen by: 
+                                                   {% for viewer in post.docs_viewed.all %}
+                                                      {{viewer.viewer_name}} |
+                                                   {% empty %}
+                                                   ...
+                                                   {% endfor %}
+                                                </p>
+                                             </div>
+                                             <div class="card-footer">
+                                                <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">
+                                                <p  class="doc-remarks-header"><font size="2"><b>Doctor(s) comments: {{post.comment.count}}</b></font></p>
+                                                <hr style="margin-bottom:0rem; margin-top:0rem;">
+                                                <div name="comments"  style="margin-bottom:1rem;;">
+                                                   {% for comment in post.comment.all %}
+                                                      <p style="margin-bottom:0rem;padding-left:1rem; " id="doc-comment-{{comment.author}}" name="doc-comment"><font size="2"><b>{{comment.author}}</b>: {{comment.text}}</font></p>
+                                                      <hr style="margin-bottom:0rem; margin-top:0rem;">
+                                                   {% endfor%}
+                                                </div>
+                                             </div>
+
+                                          </div>
+                                          
+                                          <script>
+                                             $("#read-more-{{forloop.counter}}").click(function(){
+                                                $("#read-more-{{forloop.counter}}").hide();
+                                                $("#read-less-{{forloop.counter}}").show();
+                                                $("#content-preview-{{forloop.counter}}").hide();
+                                                $("#content-full-{{forloop.counter}}").show();
+                                             });
+               
+                                             $("#read-less-{{forloop.counter}}").click(function(){
+                                                $("#read-less-{{forloop.counter}}").hide();
+                                                $("#read-more-{{forloop.counter}}").show();
+                                                $("#content-full-{{forloop.counter}}").hide();
+                                                $("#content-preview-{{forloop.counter}}").show();
+                                             });
+                                          </script>
+                                       {% empty%}
+                                       <p>No records yet. Create by pressing the icon..</p>
+                                       {% endfor %}
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+
+                     <!-- modal to add new personal record -->
+                     <div class="modal fade" id="new-record" tabindex="-1" role="dialog" aria-hidden="true" >
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header"  style="background-color: #802400; color:whitesmoke;">
+                                 <span class="right-icon"  data-dismiss="modal"><i style="color:whitesmoke; font-size:24px" class="fa">&#xf105;</i> </span> 
+                                 <h5 class="modal-title" style="color:whitesmoke;">Create New Record</h5>
+                              </div>
+                              <form  method="post">
+                                 {% csrf_token %}
+                                 <div class="modal-body"  >
+                                    <div style="border:1px solid lightgray; padding:0.5rem;font-size: 14px;">
+                                       <p>Title:
+                                          <input type="text" class="acc-field" id="record-title" name="record-title" placeholder="add a title...">
+                                       </p>
+                                       <p style="margin-bottom:0rem;">Content:</p>
+                                       <textarea class="acc-field" id="record-content" name="record-content" style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="7" placeholder="How are you today?" ></textarea>
+                                    </div>
+                                 </div>
+                                 <div class="modal-footer">
+                                    <button class="btn btn-primary" id="create-new-journal-btn" data-dismiss="modal">add to journal</button>
+                                    <button class="btn btn-primary" id="precord-back-btn" data-dismiss="modal">back</button> 
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                        <script>
+                           $('#create-new-journal-btn').click(function(e){
+                              e.preventDefault();
+                              console.log("add a new personal record!");
+                              
+                              $.ajax({
+                                 type: "POST",
+                                 async: true,
+                                 url: "/addNewRecord/",
+                                 data:{
+                                    csrfmiddlewaretoken: "{{ csrf_token}}",
+                                    record_title: $('#record-title').val(),
+                                    record_content: $('#record-content').val()
+                                 },
+                                 success:function(){
+                                    console.log("add new record done!");
+                                    alert("New record successfully created!");
+
+                                    $('#all-records').prepend(
+                                       ' <div class="card mb-4" >' + 
+                                       '<div class="card-header" style="background-color: #800000;">' +
+                                          '<h1 style="color:white;">' + $('#record-title').val() + '</h1>' + 
+                                          '<p style="color:rgb(233, 227, 227);" >' + '|' + new Date().toLocaleString() + '</p>' + 
+                                       '</div>' + 
+                                       ' <div class="card-body" style="background-color: rgba(0,0,0,.07); padding-bottom:0px;">' + 
+                     
+                                          '<p class="card-text" id="content-preview-{{forloop.counter}}">' + $('#record-content').val() + '</p>' +
+                                          '<p class="card-text" id="content-full-{{forloop.counter}}" style="display:none;">' + $('#record-content').val() + '</p>' +
+                                          '<button class="btn btn-default" id="read-more-{{forloop.counter}}">' + 'Read more' + '</button>' + 
+                                          '<button class="btn btn-default" id="read-less-{{forloop.counter}}" style="display:none;">'+ 'Read less' + '</button>'+
+                                    
+                                          '<p style= "margin-bottom:0px; font-size: 12px; color:grey; margin-top:1rem;">'+ 'seen by:' + 
+                                          
+                                          '</p>' +
+                                       '</div>' +
+                                       '<div class="card-footer">' + 
+                                          '<hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">' +
+                                          '<p  class="doc-remarks-header">' + '<font size="2">' + '<b>' + 'Doctor(s) comments: 0'  + '</b>' + '</font>' + '</p>' +
+                                          '<hr style="margin-bottom:0rem; margin-top:0rem;">' + 
+                                          '<div name="comments"  style="margin-bottom:1rem;padding-left:1rem;">' +
+                                          '</div>' +
+                                       '</div>' +
+
+                                    '</div>'
+                                    );
+                                 }
+                              });
+                           });
+                        </script>
+                     </div>
+
+                   <!-- Patient Schedules Tab -->
+                  <div class="tab-pane fade py-5" id="my-schedules" role="tabpanel" aria-labelledby="v-pills-fitness-tab">
+                     <div class="col-md-12" style="border-style: ridge;"> 
+                        <div class="card card-plain"  style="padding-top: 1.5rem;">
+                           <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
+                              <h4 class="card-title">My Schedules</h4>
+                           </div>
+                           <div class="card-body" style="padding:0rem; margin-bottom: 1rem;">
+                              <div class="patient-details-tab" id="{{patient.first_name}}-tab" >
+                                 <button style="font-size:medium;" class="tablinks active" id="pending-scheds-btn" onclick="openDetails(event, 'pending-scheds')">Pending</button>
+                                 <button style="font-size:medium;" type="button" class="tablinks" id="ongoing-scheds-btn" onclick="openDetails(event, 'ongoing-scheds')">Scheduled </button>
+                                 <button style="font-size:medium;" type="button" class="tablinks" id="finished-scheds-btn" onclick="openDetails(event, 'finished-scheds')">Finished</button>
+                                 <button style="font-size:medium;" type="button" class="tablinks" id="rejected-scheds-btn" onclick="openDetails(event, 'rejected-scheds')">Declined</button>
+                              </div>
+
+                              <!-- PENDING SCHEDULES -->
+                              <div class="patient-tab-content" style="display:none;" id="pending-scheds">
+                                 {% for schedule in patient.pending_schedules.all %}
+                                    <input hidden id="hidden-{{forloop.counter}}" name="sched-doc-name" value="{{schedule.doc_in_charge}}">
+                                    <input hidden id="hidden-{{forloop.counter}}" name="sched-topic" value="{{schedule.schedule_topic}}">
+                                    <input class="collapsible" style="padding:10px; border-bottom:none;" id="pending-doc-incharge-{{forloop.counter}}" name="pending-doc-incharge" readonly value="{{forloop.counter}}. Dr. {{schedule.doc_in_charge}}">
+                                    
+                                    <div class="content"  style="font-size: 12px; border-radius:10px;" id="sched-content-{{forloop.counter}}">
+                                       <p id="created-date-{{forloop.counter}}">{{schedule.created_on}}</p>
+                                       <p  id="pending-patient-hiv-status-{{forloop.counter}}" name="pending-patient-hiv-status">
+                                          <b>HIV Status: </b> {{schedule.patient_hiv_status}}
+                                       </p>
+                                       <p id="par1-{{forloop.counter}}">
+                                          <b>Consultation Date: </b>
+                                          <a id="pending-patient-sched-date-{{forloop.counter}}" name="pending-patient-sched-date"> {{schedule.schedule_date}}</a>
+                                       </p>
+                                       <p id="par2-{{forloop.counter}}">
+                                          <b>Consultation Topic:</b>
+                                          <a id="pending-patient-sched-topic-{{forloop.counter}}" name="pending-patient-sched-topic">{{schedule.schedule_topic}}</a>
+                                       </p>
+                                       <p id="par3-{{forloop.counter}}" style="margin-bottom:0rem;">
+                                          <b>Patient Consultation details: </b>
+                                       </p>
+                                       <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="pending-patient-sched-notes-{{forloop.counter}}" name="pending-patient-sched-notes" readonly>{{schedule.schedule_notes}}</textarea>
+                                       
+                                       <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                          {% for viewer in schedule.users_viewed.all %}
+                                             {{viewer.viewer_name}} |
+                                          {% empty %}
+                                          ...
+                                          {% endfor %}
+                                       </p>
+                                       <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1);  margin:0px;">  
+                                       <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                       {% for remark in schedule.doc_remark.all %}
+                                          <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                          <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}}:</b> {{remark.text}}</p>
+                                       {% empty %}
+                                          <p>No remarks yet..</p>
+                                       {% endfor%}
+                                    </div>  
+
+                                    <script>
+                                       $('#pending-doc-incharge-{{forloop.counter}}').click(function(e){
+                                          console.log("action: Pending Consultation Schedule Remark Seen");
+                                          e.preventDefault();
+
+                                          $.ajax({
+                                             type:"POST",
+                                             async:true,
+                                             url:'{% url "seenRemark" %}',
+                                             data:{
+                                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                viewed_type: "Consultation Schedule Remark",
+                                                file_pk: '{{schedule.pk}}',
+                                                file_owner: '{{patient.username}}',
+                                                type:"normal"
+                                             },
+                                             success:function(){
+                                                console.log("action finished");
+                                             }
+                                          });
+                                       });
+                                    </script>
+                                 {% empty %}
+                                    <hr>
+                                    <p style="font-size: 12px; margin-left:1rem;">No pending schedules yet.</p>
+                                 {% endfor%}
+                              </div>
+                                 
+                              <!-- ONGOING SCHEDULES -->
+                              <div class="patient-tab-content" id="ongoing-scheds">   
+                                 {% for schedule in patient.approved_schedules.all %}
+                                    <input class="collapsible" style="padding:10px; border-bottom:none;" id="ongoing-doc-incharge-{{schedule.patient_username }}" name="ongoing-doc-incharge-name" readonly value="{{forloop.counter}}. Dr. {{schedule.doc_in_charge}}">
+                                    <div class="content"  style="font-size: 12px; border-radius:10px;" >
+                                       <p  id="ongoing-patient-{{schedule.patient_hiv_status}}" name="ongoing-patient-hiv-status">
+                                          <b>HIV Status: </b> {{schedule.patient_hiv_status}}
+                                       </p>
+                                       <p><b>Consultation Date: </b>
+                                          <a id="ongoing-patient-{{schedule.schedule_date}}" name="ongoing-patient-sched-date"> {{schedule.schedule_date}}</a>
+                                       </p>
+                                       <p><b>Consultation Topic:</b>
+                                          <a id="ongoing-patient-{{forloop.counter}}" name="ongoing-patient-sched-topic">{{schedule.schedule_topic}}</a>
+                                       </p>
+                                       <p style="margin-bottom:0rem;"><b>Patient Consultation details: </b></p>
+                                       <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="ongoing-patient-{{schedule.schedule_notes}}" name="ongoing-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                       <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                          {% for viewer in schedule.users_viewed.all %}
+                                             {{viewer.viewer_name}} |
+                                          {% empty %}
+                                          ...
+                                          {% endfor %}
+                                       </p>
+                                       <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1);  margin:0px;">  
+                                       <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                       {% for remark in schedule.doc_remark.all %}
+                                          <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                          <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}}:</b> {{remark.text}}</p>
+                                       {% empty %}
+                                          <p>No remarks yet..</p>
+                                       {% endfor%}
+                                    </div>
+
+                                    <script>
+                                       $('#ongoing-doc-incharge-{{schedule.patient_username }}').click(function(e){
+                                          console.log("action: Ongoing Consultation Schedule Remark Seen");         
+                                          e.preventDefault();
+
+                                          $.ajax({
+                                             type:"POST",
+                                             async:true,
+                                             url:'{% url "seenRemark" %}',
+                                             data:{
+                                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                viewed_type: "Consultation Schedule Remark",
+                                                file_pk: '{{schedule.pk}}',
+                                                file_owner: '{{patient.username}}',
+                                                type: "normal"
+                                             },
+                                             success:function(){
+                                                console.log("action finished");
+                                             }
+                                          });
+                                       });
+                                    </script>
+                                 {% empty %}
+                                    <hr>
+                                    <p  style="font-size: 12px; margin-left:1rem;">No ongoing consultation schedules yet.</p>
+                                 {% endfor%}
+                              </div>
+                              
+                              <!-- FINISHED SCHEDULES -->
+                              <div class="patient-tab-content" id="finished-scheds">   
+                                 {% for schedule in patient.finished_schedules.all %}
+                                    <input class="collapsible" style="padding:10px; border-bottom:none;" id="finished-doc-incharge-{{schedule.patient_username}}" name="finished-doc-incharge-name" readonly value="{{forloop.counter}}. Dr. {{schedule.doc_in_charge}}">
+                                    <div class="content"  style="font-size: 12px; border-radius:10px;" >
+                                       <p id="finished-patient-{{schedule.patient_hiv_status}}" name="finished-patient-hiv-status">
+                                          <b>HIV Status: </b> {{schedule.patient_hiv_status}}
+                                       </p>
+                                       <p><b>Consultation Date: </b>
+                                          <a id="finished-patient-{{schedule.schedule_date}}" name="finished-patient-sched-date"> {{schedule.schedule_date}}</a>
+                                       </p>
+                                       <p><b>Consultation Topic:</b>
+                                          <a id="finished-patient-{{forloop.counter}}" name="finished-patient-sched-topic">{{schedule.schedule_topic}}</a>
+                                       </p>
+                                       <p style="margin-bottom:0rem;"><b>Patient Consultation details: </b></p>
+                                       <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="finished-patient-{{schedule.schedule_notes}}" name="finished-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                       
+                                       <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                          {% for viewer in schedule.users_viewed.all %}
+                                             {{viewer.viewer_name}} |
+                                          {% empty %}
+                                          ...
+                                          {% endfor %}
+                                       </p>
+                                       <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1);  margin:0px;">  
+                                       <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                       {% for remark in schedule.doc_remark.all %}
+                                          <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                          <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}}:</b> {{remark.text}}
+                                          </p>
+                                       {% empty %}
+                                          <p>No remarks yet..</p>
+                                       {% endfor%}
+                                    </div>
+
+                                    <script>
+                                       $('#finished-doc-incharge-{{schedule.patient_username}}').click(function(e){
+                                          console.log("action: Finished Consultation Schedule Remark Seen");
+         
+                                          e.preventDefault();
+
+                                          $.ajax({
+                                             type:"POST",
+                                             async:true,
+                                             url:'{% url "seenRemark" %}',
+                                             data:{
+                                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                viewed_type: "Consultation Schedule Remark",
+                                                file_pk: '{{schedule.pk}}',
+                                                file_owner: '{{patient.username}}',
+                                                type:"normal"
+                                             },
+                                             success:function(){
+                                                // alert("seen remark success: ");
+                                                console.log("action finished");
+                                             }
+                                          });
+                                       });
+                                    </script>
+                                 
+                                 {% empty %}
+                                    <hr>
+                                    <p  style="font-size: 12px; margin-left:1rem;">No finished consultation schedules yet.</p>
+                                 {% endfor%}
+                              </div>
+
+                              <!-- REJECTED SCHEDULES -->
+                              <div class="patient-tab-content" id="rejected-scheds">
+                                 {% for schedule in patient.rejected_schedules.all %}
+                                    <input class="collapsible" style="padding:10px; border-bottom:none;" id="rejected-doc-incharge-{{schedule.patient_username }}" name="rejected-doc-incharge" readonly value="{{forloop.counter}}. Dr. {{schedule.doc_in_charge}}">
+                                    <div class="content"  style="font-size: 12px; border-radius:10px;" >
+                                       <p  id="rejected-patient-{{schedule.patient_hiv_status}}" name="rejected-patient-hiv-status">
+                                          <b>HIV Status: </b> {{schedule.patient_hiv_status}}
+                                       </p>
+                                       <p><b>Consultation Date: </b>
+                                          <a id="rejected-patient-{{schedule.schedule_date}}" name="rejected-patient-sched-date"> {{schedule.schedule_date}}</a>
+                                       </p>
+                                       <p><b>Consultation Topic:</b>
+                                          <a id="rejected-patient-{{forloop.counter}}" name="rejected-patient-sched-topic">{{schedule.schedule_topic}}</a>
+                                       </p>
+                                       <p style="margin-bottom:0rem;"><b>Patient Consultation details: </b></p>
+                                       <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="4" id="rejected-patient-{{schedule.schedule_notes}}" name="rejected-patient-sched-notes">{{schedule.schedule_notes}}</textarea>
+                                       <p style= "margin-bottom:0px; font-size: 12px; color:grey;">seen by: 
+                                          {% for viewer in schedule.users_viewed.all %}
+                                             {{viewer.viewer_name}} |
+                                          {% empty %}
+                                          ...
+                                          {% endfor %}
+                                       </p>
+                                       <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1);  margin:0px;"> 
+                                       <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
+                                       {% for remark in schedule.doc_remark.all %}
+                                          <hr style="margin-top:0rem; margin-bottom:0rem;">
+                                             
+                                          <p style="margin-top: 3px; margin-bottom: 3px; font-size:12px;"><b>{{remark.author}}:</b> {{remark.text}}
+                                          </p>
+
+                                       {% empty %}
+                                          <p>No remarks yet..</p>
+                                       {% endfor%}
+                                    </div>
+
+                                    <script>
+                                       $('#rejected-doc-incharge-{{schedule.patient_username}}').click(function(e){
+                                          console.log("action: Rejected Consultation Schedule Remark Seen");
+                                          e.preventDefault();
+
+                                          $.ajax({
+                                             type:"POST",
+                                             async:true,
+                                             url:'{% url "seenRemark" %}',
+                                             data:{
+                                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                viewed_type: "Consultation Schedule Remark",
+                                                file_pk: '{{schedule.pk}}',
+                                                file_owner: '{{patient.username}}',
+                                                type:"normal"
+                                             },
+                                             success:function(){
+                                                console.log("action finished");
+                                             }
+                                          });
+                                       });
+                                    </script>
+                                 {% empty %}
+                                    <hr>
+                                    <p  style="font-size: 12px; margin-left:1rem;">No declined consultation schedules yet.</p>
+                                 {% endfor%}
+                              </div>
+                           </div>
+                        </div>   
+                     </div>
+                  </div>
+                  <!-- END OF CONSULTATION SCHEDULES TAB -->
+
+               </div>
+            </div>
+      	</div>
+      </div>
+
+      <!-- loader -->
+      <div id="ftco-loader" class="show fullscreen">
+         <svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+         </svg>
+      </div>
+
+
+      <script src="{% static 'portal/js/jquery.min.js' %}"></script>
+      <script src="{% static 'portal/js/jquery-migrate-3.0.1.min.js' %}"></script>
+      <script src="{% static 'portal/js/popper.min.js' %}"></script>
+      <script src="{% static 'portal/js/bootstrap.min.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.easing.1.3.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.waypoints.min.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.stellar.min.js' %}"></script>
+      <script src="{% static 'portal/js/owl.carousel.min.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.magnific-popup.min.js' %}"></script>
+      <script src="{% static 'portal/js/aos.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.animateNumber.min.js' %}"></script>
+      <script src="{% static 'portal/js/bootstrap-datepicker.js' %}"></script>
+      <script src="{% static 'portal/js/jquery.timepicker.min.js' %}"></script>
+      <script src="{% static 'portal/js/scrollax.min.js' %}"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+      <script src="{% static 'portal/js/main.js' %}"></script>
+      <script>
+         // NOTIFICATION BELL BADGE
+         $('#notification').click(function(){
+            $('.badge').hide();
+         });   
+          // mabolo,cebu city
+          var startlat = 10.31493310;
+         var startlon = 123.91454160;
+
+         var options = {
+            center: [startlat, startlon],
+            zoom: 9
+         }
+
+         document.getElementById('lat').value = startlat;
+         document.getElementById('lon').value = startlon;
+
+         var map = L.map('map', options);
+         var nzoom = 12;
+
+         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: 'OSM'}).addTo(map);
+
+         var myMarker = L.marker([startlat, startlon], {title: "Coordinates", alt: "Coordinates", draggable: true}).addTo(map).on('dragend', function() {
+            var lat = myMarker.getLatLng().lat.toFixed(8);
+            var lon = myMarker.getLatLng().lng.toFixed(8);
+            var czoom = map.getZoom();
+            // way gamit
+            if(czoom < 18) { nzoom = czoom + 2; }
+            if(nzoom > 18) { nzoom = 18; }
+            if(czoom != 18) {map.setView([lat,lon], nzoom); } else { map.setView([lat,lon]); }
+            document.getElementById('lat').value = lat;
+            document.getElementById('lon').value = lon;
+            myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
+         });
+
+
+         function chooseAddr(lat1, lng1){
+            myMarker.closePopup();
+            map.setView([lat1, lng1],18);
+            myMarker.setLatLng([lat1, lng1]);
+            lat = lat1.toFixed(8);
+            lon = lng1.toFixed(8);
+            document.getElementById('lat').value = lat;
+            document.getElementById('lon').value = lon;
+            myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
+         }
+
+         function myFunction(arr){
+            var out = "<br />";
+            var i;
+
+            if(arr.length > 0){
+               for(i = 0; i < arr.length; i++){
+                  out += "<div class='address' title='Show Location and Coordinates' onclick='chooseAddr(" + arr[i].lat + ", " + arr[i].lon + ");return false;'>" + arr[i].display_name + "</div>";
+               }
+               document.getElementById('results').innerHTML = out;
+            } else {
+               document.getElementById('results').innerHTML = "Sorry, no results...";
+            }
+         }
+
+         $("#results").click(function(){
+            $("#results").attr("hidden", "true");
+         });
+
+         $("#searchbtn").click(function(){
+            $("#results").removeAttr("hidden");
+         });
+
+         function addr_search(){
+            var inp = document.getElementById("p_present_address");
+            var input_var = inp.value;
+            
+            if (input_var.includes('st.')){
+               input_var.replace("st.", "Street");
+            }else if (input_var.includes('St.')){
+               input_var.replace("St.", "Street");
+            }else if (input_var.includes('St')){
+               input_var.replace("St", "Street");
+            }else if (input_var.includes('st')){
+               input_var.replace("st", "Street");
+            }
+
+            if (input_var.includes('brgy.')){
+               input_var.replace("brgy.", " ");
+            }else if (input_var.includes('Brgy.')){
+               input_var.replace("Brgy.", " ");
+            }else if (input_var.includes('brgy')){
+               input_var.replace("brgy", " ");
+            }else if (input_var.includes('Brgy')){
+               input_var.replace("Brgy", " ");
+            }else if (input_var.includes('Barangay')){
+               input_var.replace("Barangay", " ");
+            }else if (input_var.includes('barangay')){
+               input_var.replace("barangay", " ");
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + input_var;
+
+            xmlhttp.onreadystatechange = function(){
+               if (this.readyState == 4 && this.status == 200)
+               {
+               var myArr = JSON.parse(this.responseText);
+               myFunction(myArr);
+               // chooseAddr( + myArr[0].lat,  + myArr[0].lon);
+               }
+            };
+
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+
+         }
+
+         $('#my-schedules-tab').click(function(){
+            $('#pending-scheds').show();
+         });
+         function openDetails(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("patient-tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+               tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+               tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+         }
+         // for collapsing data
+         var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+               this.classList.toggle("active");
+               var content = this.nextElementSibling;
+               if (content.style.display === "block") {
+                  content.style.display = "none";
+               } else {
+                  content.style.display = "block";
+               }
+            });
+         }
+            
+         function GetUserInforSessionStorage(key){
+            var fullName = sessionStorage.getItem(key);        
+            return fullName;    
+         } 
+
+         function SetElementValueFromSessionStorage(elementId, key){
+            var val = GetUserInforSessionStorage(key);
+            $(document).find('#'+elementId).val(val); 
+         }
+
+
+         // log out
+         $("#log-out").click(function(){
+            sessionStorage.clear();
+         });
+         
+         //allow icr fields editable or not
+         $("#edit-icr").click(function(){
+            $('.icr-field').removeAttr('readonly'); 
+            $('#save-icr').show();
+            $("#edit-icr").hide();  
+            $('#vpurpose-choice').hide();
+            $('#icr-p-visit').show();                                                
+         });
+         $("#save-icr").click(function(){
+            $('.icr-field').attr('readonly', 'readonly'); 
+            $("#edit-icr").show();
+            $('#save-icr').hide();
+            $('#vpurpose-choice').show(); 
+            $('#icr-p-visit').hide();  
+         });   
+         //end
+
+
+          //allow profile fields editable or not
+         $("#edit-profile").click(function(){
+            $('.prof-field').removeAttr('readonly'); 
+            $('#save-profile').show();
+            $("#edit-profile").hide();                                                   
+         });
+         $("#save-profile").click(function(){
+            $('.prof-field').attr('readonly', 'readonly'); 
+            $("#edit-profile").show();
+            $('#save-profile').hide();
+         });   
+         //end
+      
+         //allow med-hist fields editable or not
+         $("#edit-med-hist").click(function(){
+            $('.med-hist-field').removeAttr('readonly'); 
+            $('#save-med-hist').show();
+            $("#edit-med-hist").hide();                                                   
+         });
+         $("#form-control").click(function(){
+            $('.med-hist-field').attr('readonly', 'readonly'); 
+            $("#edit-med-hist").show();
+            $('#save-med-hist').hide();
+         });   
+         //end
+
+
+         // Send POST to EDIT ICR VIA AJAX
+         // pass icr to backend
+         $(document).on('submit','#icr-form-field', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("edit ICR!");
+            console.log($('#icr-f-name').val());
+            
+            $.ajax({
+               type: "POST",
+               async: true,
+               url: '{% url "editICR" %}',
+               data:{
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  first_name: $('#icr-f-name').val(),
+                  surname: $('#icr-s-name').val(),
+                  middle_name: $('#icr-m-name').val(),
+                  visit_date: $('#icr-v-date').val(),
+                  age: $('#icr-age').val(),
+                  bdate: $('#icr-b-date').val(),
+                  sex: $('#icr-sex').val(),
+                  civil_status: $('#icr-c-status').val(),
+                  phone_num: $('#icr-p-num').val(),
+                  home_add: $('#icr-h-num').val(),
+                  occupation: $('#icr-occ').val(),
+                  work_add: $('#icr-work-add').val(),
+                  work_num: $('#icr-work-num').val(),
+                  visit_purpose: $('#vpurpose-choice').val(),
+                  visit_purpose_choice: $('#icr-p-visit').val(),
+                  symptoms:$('#icr-symptoms').val(),
+                  specs: $('#icr-specs').val()
+               },
+               success:function(){
+                  console.log("edit ICR done!");
+                  alert("ICR Form successfully edited!");
+               },
+            });
+
+         });
+      </script>
+
+{% endblock content %}
+

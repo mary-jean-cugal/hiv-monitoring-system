@@ -1,0 +1,1281 @@
+{% extends "portal/base.html" %}
+{% load static %}
+{% load staticfiles %}
+
+{% block content %}
+   <style>
+      /* for getting lat and lon on present address */
+
+      #map { width:100%;height:50%;padding:0;margin:0; }
+      .address { cursor:pointer }
+      .address:hover { color:#AA0000;text-decoration:underline }
+      
+      .slider-text h1 {
+         font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+         font-weight: normal;
+         font-size: 3rem;
+         letter-spacing: .2em;
+         line-height: 1.1em;
+         text-align: center;
+      }
+      .slider-text p {
+         font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+      }
+      
+      #pLogin:hover{
+         background: white;
+         color:#800000;
+         border: solid;
+      }
+
+      #docLogin:hover{
+         background: white;
+         color:#800000;
+         border: solid;
+      }
+      .services-wrap:hover{
+         margin-left: 0px;
+      }
+
+   </style>
+   
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   <!-- for getting lat and lon on present address -->
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" /> 
+   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+
+      <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+         <div class="container">
+            <a class="navbar-brand" href="{% url 'portal' %}"><img src="{% static 'portal/images/logo-main.png' %}" id="mainLogo" alt=""></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+               <ul class="navbar-nav ml-auto">
+                  <li class="nav-item cta" ><a href="#" id="docLogin" class="nav-link" data-toggle="modal" data-target="#modalDoctor">Doctor Portal</a></li>
+                  <li class="nav-item cta"><a href="#" id="pLogin" class="nav-link" data-toggle="modal" data-target="#modalUser" >Patient Portal</a></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <!-- END nav -->
+      <div class="hero-wrap" style="background-image: url({% static 'portal/images/bg_1.jpg' %}); background-attachment:fixed;">
+         <div class="overlay"></div>
+         <div class="container">
+            <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+               <div class="col-md-8 ftco-animate text-center">
+                  <h1 class="mb-4">We care about your security</h1>
+                  <p>Aidsecure provides you with a secure environment where respective patients can freely and anonymously set appointment with a preferred doctor 
+                     that specialize AIDS screening and treatment from accredited Doctors in Cebu City.</p>
+                     <br>
+               </div>
+            </div>
+         </div>
+      </div>
+      <section class="ftco-section-2 img" style="background-image: url({% static 'portal/images/bg_3.jpg' %});">
+         <div class="container">
+            <div class="row d-md-flex justify-content-end">
+               <div class="col-md-6">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <a class="services-wrap ftco-animate"> 
+                           <p style="font-size: 30px; color:#800000;"><b>What Does Aidsecure Offer?</b></p>
+                        </a>
+                       
+                        <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">
+                           <h2>1. Facilitates Online Scheduling of Doctor to Patient Meetings</h2>
+                           <p style="font-size: 16px;">Aidsecure allows patients to schedule an appointment with doctors of their choice for online for HIV screening.</p>
+                        </a>
+                        <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">
+                           <h2>2. Provides Editable and Downloadable Online Copy of HIV/Aids Forms Online</h2>
+                           <p style="font-size: 16px;">Aidsecure lets users edit  and download patient forms (e.g. Profile Forms, Medical History, Individual Client Forms)</p>
+                        </a>
+                        <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">                           
+                           <h2>3. Creates Incidence Visualization</h2>
+                           <p style="font-size: 16px;">Aidsecure features visualization on HIV/AIDS Incidence in Cebu City.</p>
+                        </a>
+                        <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">                           
+                           <h2>4. Assures Anonimity and Security Online</h2>
+                           <p style="font-size: 16px;">Aidsecure makes sure that your private information is handled properly.</p>
+                        </a>
+                        
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="ftco-section">
+         <div class="container">
+            <div class="row justify-content-center mb-5 pb-3">
+               <div class="col-md-7 heading-section ftco-animate text-center">
+                  <h2 class="mb-4">Our Experienced Doctors</h2>
+               </div>
+            </div>
+            <div class="row">
+               {% for doc in doctors %}
+                  <div class="col-md-6 col-lg-3 ftco-animate">
+                     <div class="block-2">
+                        <div class="flipper">
+                           {% if not doc.doc_image  %}
+                              <div class="front" style="background-image: url({% static 'portal/images/user.png' %});">
+                           {% endif %}
+                           {% if doc.doc_image.url is not None %}
+                              <div class="front" style="background-image:url({{doc.doc_image.url }})"> 
+                           {% endif%}
+                              <div class="box">
+                                 <h2>Dr. {{doc.name}}</h2>
+                                 <p>{{doc.position}}</p>
+                                 <p>{{doc.hospital_name}}</p>
+                                 <p>{{doc.hospital_address}}</p>
+                                 <p>{{doc.phone_number}}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="back" style="background-color: lightgray;" >
+                           <!-- back content -->
+
+                              <p style="font-size: 14px;text-align: left;">
+                                 <br>
+                                 <b>Field Specialty:</b> {{doc.field_specialty}} <br>
+                                 <b>Position:</b> {{doc.position}} <br>
+                                 <b>Hospital Name:</b> {{doc.hospital_name}} <br>
+                                 <b>Hospital Address:</b> {{doc.hospital_address}}<br>
+                                 <b>Contact Number:</b> {{doc.phone_number}}<br>
+                                 <b>Email:</b> {{doc.email}}<br>
+
+                              </p>
+                           <div class="author d-flex">
+                              <div class="image mr-3 align-self-center">
+                                 {% if not doc.doc_image  %}
+                                    <div class="img" style="background-image: url({% static 'portal/images/user.png' %});"></div>
+                                 {% endif %}
+                                 {% if doc.doc_image.url is not None %}
+                                    <div class="img"  style="background-image:url({{doc.doc_image.url }})"></div>
+                                 {% endif%}
+                              </div>
+                              <div class="name align-self-center">{{doc.name}}<span class="position">{{doc.Specialty}}</span></div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               {% endfor%}
+            </div>
+      </section>
+      <section class="ftco-section-parallax">
+         <div class="parallax-img d-flex align-items-center">
+         <div class="container">
+            <div class="row d-flex justify-content-center">
+               <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
+                  <h2>"Reaching out for professional assistance is made safe and secure online"</h2>
+               </div>
+            </div>
+         </div>
+      </section>
+      <footer class="ftco-footer ftco-bg-dark ftco-section img" style="background-image: url({% static 'portal/images/bg_5.jpg)' %};">
+         <div class="overlay"></div>
+         <div class="container" style="margin-top:-70px;">
+               <div class="row d-flex justify-content-center">
+                  <div class="col-md-7 text-center heading-section heading-section-white ftco-animate fadeInUp ftco-animated">
+                     <p style="font-size:23px;">This website is developed and maintained by the BioInformatics and Research Interest Group (BRIG)</p>
+                     
+                     <div style="color: rgba(255, 255, 255, 0.7); margin-top:4rem;">
+                        <p style="font-size:18px; margin-bottom: 0rem;">Mary Jean V. Cugal  &emsp; &emsp; &emsp;&emsp; &emsp;&emsp;Prof. Demelo M. Lao</p>
+                        <p style="font-size: 15px;">Software Developer &emsp; &emsp;&emsp;&emsp;&emsp; &emsp; &emsp; &emsp; BRIG Lead, SP Adviser</p>
+                     </div>
+
+                     <br>
+                     <ul>
+                        <li><a href="#"><span class="text"> University of the Philippines Cebu, Gorordo Avenue, Lahug, Cebu City, Cebu 6000</span></a></li>
+                        <li><a href="#"><span class="text">aidsecureph@gmail.com</span></a></li>
+                     </ul>
+                     <div class="col-md-12 text-center">
+                        <p>
+                           Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved</i>  
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            <div class="row">
+         
+            </div>
+         </div>
+      </footer>
+      <!-- loader -->
+      <div id="ftco-loader" class="show fullscreen">
+         <svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+         </svg>
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="modalUser" tabindex="-1" role="dialog" aria-hidden="true" >
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header" style="background-color: #802400;">
+                  <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> PATIENT LOGIN</h5>
+                  <button style="color:#ffffff;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                     <form id="patient-login-form" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                           <label for="patient-username" class="text-black">Username</label>
+                           <input type="text" placeholder="e.g. josedelacruz123" class="form-control" name="patient-username" id="patient-username" pattern="[^\s]+" required>
+                        </div>
+                        <div class="form-group">
+                           <label for="patient-password" class="text-black">Password</label>
+                           <input type="password" placeholder="Enter password" class="form-control" name="patient-password"  id="patient-password" required> 
+                        </div>
+                        <div class="form-group">
+                         
+                              <input id="patient-login-btn"  type="submit" class="btn btn-primary"  value="Log In">
+                              <a href="" data-toggle="modal" data-target="#modalPatientNew" id="newPatientLink" data-dismiss="modal">New user?</a>
+                        </div>
+                     </form>
+               </div>
+            </div>
+
+            <script>
+               // initial checking if username and password exists 
+               $("#patient-login-btn").click(function(){
+                  $("#patient-login-btn").attr('type', 'submit');
+                  console.log("checking for input corrections...");
+                  let punameAttempt = $("#patient-username").val();
+                  let ppsAttempt = $("#patient-password").val();
+              
+                  if (punameAttempt.length > 0 && ppsAttempt.length > 0){ // unless naay input, steady as submit to make use of the form's ability for error checking 
+                     $("#patient-login-btn").attr('type', 'button');      // otherwise, change it to button to prohibit it from dismissing the modal while the user attempts to log in
+                     let puname = "";
+                     let ppassword = "";
+                     let ppsflag = false;
+                     let punameflag = false;
+                     for (let a=0; a<1; a++){
+                        {% for patient in patients %}
+                           // console.log("{{forloop.counter}}")
+                           puname = "{{patient.username}}";
+                           ppassword = "{{patient.password}}";
+                           console.log(puname + " == " + punameAttempt);
+                           if (puname == punameAttempt){
+                              console.log("username found..");
+                              if (ppsAttempt != ppassword){
+                                 alert("Please input the correct password.");
+                              }
+                              else{
+                                 punameflag = true;
+                              }
+                           }
+
+                           if (ppassword == ppsAttempt){
+                              console.log("password found..");
+                              if (puname != punameAttempt){
+                                 alert("Please input the correct username.")
+                              }
+                              else{
+                                 ppsflag = true;
+                              }
+                           }
+
+                           if (ppsflag==true && punameflag==true){
+                              // redirect to profile page with 'url/slug'
+                              $("#patient-login-btn").attr('type', 'submit');
+                              $('#patient-login-form').attr('action', "{% url 'patientLogin' patient.slug %}");
+                              
+                              SetUserInfoSessionStorage();
+                              break;
+                           }
+                        {% endfor%}
+                     }
+                  }
+                  
+               });
+            </script>
+            <div id="myModal" class="modal">
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                     <span class="close">&times;</span>
+                     <p>{{p_message}}</p>
+                  </div>
+               </div>
+         </div>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="modalPatientNew" tabindex="-1" role="dialog" aria-hidden="true" >
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header" style="background-color: #802400;">
+                  <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> PATIENT SIGN UP</h5>
+                  <button style="color:#ffffff;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body"  style="max-height:calc(100vh - 210px); overflow-y: auto;">
+                  <form id="sign-up-patient-form" action="{% url 'signUpPatient' %}" method="post"> <!--action="{% url 'signUpPatient' %}" -->
+                     {% csrf_token %}
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="first-name" class="text-black">First Name</label>
+                              <input type="text" class="form-control" id="p-first-name" name="p-first-name" placeholder="e.g. Juan" required>
+                           </div>
+                        </div>
+                         <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-sur-name" class="text-black">Last Name</label>
+                              <input type="text" class="form-control" id="p-last-name" name="p-last-name" placeholder="e.g. de la Cruz"  required>
+                           </div>
+                        </div>  
+                     </div>
+                     
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-age" class="text-black">Age</label>
+                              <input type="number" class="form-control" id="p-age" name="p-age" placeholder = "e.g. 20"  required>
+                           </div>
+                        </div> 
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-birthdate" class="text-black">Birthdate</label>
+                              <input type="date" class="form-control" id="p-birthdate" name="p-birthdate"  required> 
+                           </div>
+                        </div>
+                     </div>
+                        
+                     <div class="row">
+                         <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-phone-number" class="text-black">Cellphone Number</label>
+                              <input type="text" class="form-control" id="p-phone-number" name="p-phone-number" placeholder= "11 digits e.g. 09120000000" pattern="09[0-9]{9}" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="tel-number" class="text-black">Telephone Number</label>
+                              <input type="text" class="form-control" id="tel-number" name="tel-number" placeholder="7 digits e.g. 7654321" pattern="[0-9]{7}" required>
+                           </div> 
+                        </div>
+                     </div>
+
+                     <div class="form-group">
+                        <label for="p-home-address" class="text-black">Home Address</label>
+                        <input type="text" class="form-control" id="p-home-address" name="p-home-address" placeholder="e.g. 123 St, Lahug, Cebu City"  required>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-status" class="text-black">HIV Status</label>
+                              <select class="form-control" id="p-status" name="p-status"  required>
+                                    <option value="for screening">for screening</option>
+                                    <option value="negative">negative</option>
+                                    <option value="stage 1">Stage 1</option>
+                                    <option value="stage 2">Stage 2</option>
+                                    <option value="stage 3">Stage 3 (AIDS)</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                     
+                     
+                     <div class="form-group">
+                        <!-- for getting address coordinates -->
+                        <div hidden class="row" style="padding-bottom:1rem;">
+                           <label for="lat" style="padding-left:1rem;font-size:1.1rem;margin-bottom:0rem;">Coordinates <a style="font-size: 13px;color:rgb(56, 53, 53);">(auto-generated)</a></label>
+
+                           <input type="text" name="lat" id="lat" size=12 value="" readonly>
+                           <input type="text" name="lon" id="lon" size=12 value=""readonly>
+                          
+                           <div hidden id="map"></div>
+                        </div>
+                       
+                        
+                        <div id="search">
+                           <label for="p_present_address" class="text-black">Present Address</label>
+                           <input type="text" class="form-control" id="p_present_address" name="p_present_address" placeholder="e.g. 123 St, Lahug, Cebu City"  required>  
+                           <button style="margin-top: 3px;" type="button" id="searchbtn" onclick="addr_search();">Search address</button>
+                           <div id="results"></div>
+                        </div>
+                     </div>
+                     <div class= "row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-occupation" class="text-black">Occupation</label>
+                              <input type="text" class="form-control" id="p-occupation" name="p-occupation" placeholder="e.g. teacher"  required >
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-work-address" class="text-black">Address of Work</label>
+                              <input type="text" class="form-control" id="p-work-address" name="p-work-address" placeholder="e.g. 123 St, Lahug, Cebu City"  required>
+                           </div>
+                        </div>
+                     </div>
+                     
+                     <div class="row">
+                        <div class="col-md-6">              
+                           <div class="form-group">
+                              <label for="p-email" class="text-black">Email</label>
+                              <input type="email" class="form-control" id="p-email" name="p-email" placeholder="e.g. juandelacruz@gmail.com" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                           </div>
+                        </div>
+
+                         
+                        
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <div class="form-group">
+                                 <label for="p-username" class="text-black">Username <a style="font-size: 10px;">(only 1 word and letters only)</a></label>
+                                 <input type="text" class="form-control" id="p-username" name="p-username"  placeholder="e.g. josedelacruz123" pattern="^[a-zA-Z]+$"  required>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <div class="form-group">
+                                 <label for="p-password" class="text-black">Password  <a style="font-size: 10px;">(must be at least 6 characters)</a></label>
+                                 <input type="password" class="form-control" id="p_password" name="p_password" pattern="[A-Za-z0-9_.]{6,}" placeholder="******"  required>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-re-password" class="text-black">Confirm Password</label>
+                              <input type="password" class="form-control" id="p_confirm_password" name="p_confirm_password" pattern="[A-Za-z0-9_.]{6,}" placeholder="******"  required>
+                              <span id="p_password_message"></span>
+                           </div>
+                        </div>
+                     </div>
+                        
+                     <div class="form-group">
+                        <button  class="btn btn-primary" id="terms-and-conds-btn" type="button" data-toggle="modal" data-target="#terms-and-conds">Continue</button>
+                        <button  hidden  disabled type="submit" class="btn btn-primary" id="sign-up-btn" onclick="SetUserInfoSessionStorage();">Sign Up</button>
+                        <a href="{% url 'loginPatient' %}" data-toggle="modal" data-target="#modalUser" id="oldPatientLink" data-dismiss="modal">Already have an account?</a>
+                     </div>
+                  </form>
+
+                  <script>
+                     $('#p_password, #p_confirm_password').on('keyup', function () {
+                        if ($('#p_password').val() != '' &&  $('#p_confirm_password').val()!='' ){
+                           if ($('#p_password').val() == $('#p_confirm_password').val()) {
+                              $('#p_password_message').html('Matching').css('color', 'green');
+                                 $("#sign-up-btn").removeAttr('disabled');
+                           } else{
+                              $('#p_password_message').html('Not Matching').css('color', 'red');
+                              $( "#sign-up-btn").attr("disabled", true);
+                           }
+                        }
+                     });
+
+                     $("#sign-up-patient-form").on('submit', function(){
+                        
+                        console.log("add patient!");
+                       $('#sign-up-btn').attr('type', 'submit');
+
+
+                        // check if username exists
+                        let uname = $('#p-username').val();
+                        let unameFlag = false;
+
+                        let fname = $('#p-first-name').val();
+                        let lname = $('#p-last-name').val()
+                        let nameFlag = false;
+
+                        let email = $('#p-email').val();
+                        let emailFlag = false;
+                        
+                        {% for patient in patients %}
+                           if ('{{patient.username}}' == uname){
+                              unameFlag = true;
+                              alert("Username is already taken. Please use another one.");
+                              $('#sign-up-btn').attr('type', 'button');
+                           }
+
+                           if ('{{patient.first_name}}' == fname && '{{patient.last_name}}' == lname){
+                              nameFlag = true;
+                              alert("A patient with the same firstname and surname already exists. please try again.");
+                              $('#sign-up-btn').attr('type', 'button');
+                           }
+
+                           if ('{{patient.email}}' == email){
+                              emailFlag = true;
+                              alert("Email has already been used by another patient. Please use another one.");
+                              $('#sign-up-btn').attr('type', 'button');
+                           }
+                        {% endfor %}
+                      
+                        if (!unameFlag && !nameFlag && !emailFlag){
+                              alert("Patient Sign Up Success. Please log in to continue.");
+                           $('#sign-up-btn').attr('type', 'submit');
+                        }
+                     });
+                     
+                  </script>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalDoctor" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header" style="background-color: #802400;">
+                  <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> DOCTOR LOGIN</h5>
+                  <button type="button" style="color:#ffffff;" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <form id="doctor-login-form" method="POST">
+                     {% csrf_token %}
+                     <div class="form-group">
+                        <label for="doc-name" class="text-black">Doctor Name</label>
+                        <input type="text" placeholder="case insensitive: e.g. jose a. de la Cruz" class="form-control" name="doc-name" id="doc-name" required>
+                     </div>
+                     <div class="form-group">
+                        <label for="doc-password" class="text-black">Password</label>
+                        <input type="password" placeholder="Enter password" class="form-control" name="doc-password"  id="doc-password" required> 
+                     </div>
+                     <div hidden>
+                        <input id="doc-real-name">
+                     </div>
+                     <div class="form-group">
+                        <input id="doctor-login-btn"  type="submit" class="btn btn-primary"  value="Log In"></input>
+                        <a href="" data-toggle="modal" data-target="#modalDoctorNew" id="newDoctorLink" data-dismiss="modal">Not yet signed up?</a>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <script>
+         // initial checking if username and password exists for doctor during log in 
+         $("#doctor-login-btn").click(function(){
+            $("#doctor-login-btn").attr('type', 'submit');
+            console.log("checking for input corrections...");
+            let docnameAttempt = $("#doc-name").val().toLowerCase();
+            let docpsAttempt = $("#doc-password").val();
+            if (docnameAttempt.length > 0 && docpsAttempt.length > 0){ // unless naay input, steady as submit to make use of the form's ability for error checking 
+               $("#doctor-login-btn").attr('type', 'button');      // otherwise, change it to button to prohibit it from dismissing the modal while the user attempts to log in
+               let docname = "";
+               let docpassword = "";
+               let docpsflag = false;
+               let docnameflag = false;
+               for (let a=0; a<1; a++){
+                  {% for doctor in doctors %}
+                     console.log("{{forloop.counter}}")
+                     docname = ("{{doctor.name}}").toLowerCase();
+                     docpassword = "{{doctor.password}}";
+                     console.log(docname + " == " + docnameAttempt);
+                     if (docname == docnameAttempt){
+                        $('#doc-real-name').val('{{doctor.name}}');
+                        console.log("username found..");
+                        if (docpsAttempt != docpassword){
+                           alert("Please input the correct password.");
+                        }
+                        else{
+                           docnameflag = true;
+                        }
+                     }
+
+                     if (docpassword == docpsAttempt){
+                        console.log("password found..");
+                        if (docname != docnameAttempt){
+                           alert("Please input the correct doctor name.")
+                        }
+                        else{
+                           docpsflag = true;
+                        }
+                     }
+
+                     if (docpsflag && docnameflag){
+                        $('#doctor-login-form').attr('action', "{% url 'docLogin' doctor.slug %}");
+                        $("#doctor-login-btn").attr('type', 'submit');
+                        SetUserInfoSessionStorage();
+                        break;
+                     }
+                  {% endfor%}
+               }
+            }
+            
+         });
+      </script>
+      
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalDoctorNew" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header" style="background-color: #802400;">
+                  <h5 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> DOCTOR SIGN UP</h5>
+                  <button style="color:#ffffff;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body" style="max-height: calc(100vh - 210px);overflow-y: auto;">
+                  <form id="sign-up-doc-form"  action='{% url "signUpDoctor"%}' method="post"> 
+                     {% csrf_token %}                     
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-firstName" class="text-black">First Name</label>
+                              <input type="text" class="form-control" name="doc-first-name" id="doc-first-name" placeholder="e.g. Juan" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-middle-name" class="text-black">Middle Name</label>
+                              <input type="text" class="form-control" id="doc-middle-name" name="doc-middle-name" placeholder="e.g. L." pattern="[A-Za-z]{1}\." required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-last-name" class="text-black">Last Name</label>
+                              <input type="text" class="form-control" id="doc-last-name" name="doc-last-name" placeholder="e.g. de la Cruz" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-bdate" class="text-black">Birthdate</label>
+                              <input type="date" class="form-control" id="doc-bdate" name="doc-bdate" required>
+                           </div>
+                        </div>
+                     </div>
+                    
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-email" class="text-black">Email</label>
+                              <input type="email" class="form-control" id="doc-email" name="doc-email"  placeholder="e.g. juandelacruz@gmail.com" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-phone-number" class="text-black">Phone Number</label>
+                              <input type="text" class="form-control" id="doc-phone-number" name="doc-phone-number"  pattern="09[0-9]{9}" placeholder="e.g. 09123456798" required>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="hospital-name" class="text-black">Hospital/Institution Name</label>
+                              <select class="prof-field" style="padding: 0.5rem;" id="doc-hospital-name" name="doc-hospital-name" onchange="getAdd()">
+                                 <option id="chong-hua" value="Chong Hua Hospital">Chong Hua Hospital</option>
+                                 <option id="cebu-doc" value="Cebu Doctor’s Hospital">Cebu Doctor’s Hospital</option>
+                                 <option id="st-anthony" value="St. Anthony Mother and Child Hospital">St. Anthony Mother and Child Hospital</option>
+                                 <option id="st-vincent" value="St. Vincent General Hospital">St. Vincent General Hospital</option>
+                                 <option id="sacred-heart" value="Sacred Heart Hospital">Sacred Heart Hospital</option>
+                                 <option id="cebu-velez" value="Cebu Velez General Hospital">Cebu Velez General Hospital</option>
+                                 <option id="vicente-sotto" value="Vicente Sotto Memorial Medical Center">Vicente Sotto Memorial Medical Center</option>
+                                 <option id="ccmc" value="Cebu City Medical Center">Cebu City Medical Center</option>
+                                 <option id="perpetual-soccour" value="Perpetual Soccour Hospital">Perpetual Soccour Hospital</option>
+                                 <option id="cebu-comm" value="Cebu Community Hospital">Cebu Community Hospital</option>
+                                 <option id="vcmc" value="Visayas Community Medical Center">Visayas Community Medical Center</option>
+                                 <option id="vicente-gullas" value="Vicente Gullas Memorial Hospital">Vicente Gullas Memorial Hospital</option>
+                                 <option id="cebu-north" value="Cebu North General Hospital">Cebu North General Hospital</option>
+                                 <option id="red-cross" value="Philippine Red Cross Cebu Chapter">Philippine Red Cross Cebu Chapter</option>
+                                 <option id="camp-lapulapu" value="Camp Lapu-Lapu Army Station Hospital">Camp Lapu-Lapu Army Station Hospital</option>
+                                 <option id="guba" value="Guba Community Hospital">Guba Community Hospital</option>
+                                 <option id="others" value="others">others</option>
+      
+                              </select>
+                              <input  hidden id="doc-hospital-name-others" type="text" class="form-control" id="doc-hospital-name-others" name="doc-hospital-name-others" placeholder="e.g. XYZ Medical Center">
+                              
+                              <script>
+                                 // set a value for hospital address upon click of hospital name
+                                 let hospitals = [
+                                    ['Chong Hua Hospital','Don Mariano Cui Street, Fuente Osmeña, Cebu City'],
+                                    ['Cebu Doctor’s Hospital','Osmeña Blvd., Cebu City'],  
+                                    ['St. Anthony Mother and Child Hospital','Cabreros St., Cebu City'],
+                                    ['St. Vincent General Hospital', '210 Jones Ave., Cebu City'],
+                                    ['Sacred Heart Hospital', '53 J. Urgello St., Cebu City'],
+                                    ['Cebu Velez General Hospital', 'F. Ramos St., Cebu City'],
+                                    ['Vicente Sotto Memorial Medical Center','B. Rodriguez St., Cebu City'],
+                                    ['Cebu City Medical Center','N. Bacalso Ave., Cebu City'],
+                                    ['Perpetual Soccour Hospital', 'Gorordo Ave., Cebu City'],
+                                    ['Cebu Community Hospital', 'Jones Ave., Cebu City'],
+                                    ['Visayas Community Medical Center', '85 Osmeña Blvd, Cebu City'], 
+                                    ['Vicente Gullas Memorial Hospital', 'Gov Cuenco Ave, Cebu City'],
+                                    ['Cebu North General Hospital', 'Kauswagan Rd., Cebu City'],
+                                    ['Philippine Red Cross Cebu Chapter', 'Osmeña Blvd., Cebu City'],
+                                    ['Camp Lapu-Lapu Army Station Hospital','Camp Lapu-Lapu, Apas, Cebu City'],
+                                    ['Guba Community Hospital', 'Cebu City' ]
+                                 ];
+      
+                                 function getAdd(){
+                                    let hospitalName = document.getElementById("doc-hospital-name").value;
+                                    if (hospitalName=="others"){
+                                       $("#doc-hospital-name").attr("hidden", "true");
+                                       $("#doc-hospital-name-others").removeAttr("hidden");
+                                    }else{
+                                       for (let i=0; i<hospitals.length; i++){
+                                          if (hospitalName == hospitals[i][0]){
+                                             hospitalAdd = hospitals[i][1]; //address of the hospital
+                                             document.getElementById('doc-hospital-address').value = hospitalAdd;
+                                          }
+                                          
+                                       }
+                                    }
+                                 }
+                              </script>
+                           </div>
+                        </div>
+                     </div>
+                     
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="hospital-address" class="text-black">Hospital/Institution Address</label>
+                              <input type="text" class="form-control" id="doc-hospital-address" name="doc-hospital-address" placeholder="e.g. 123 St, Lahug, Cebu City" required>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-specialty" class="text-black">Field Specialty</label>
+                              <input type="text" class="form-control" id="doc-specialty" name="doc-specialty" placeholder="e.g. Venereology" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-position" class="text-black">Position</label>
+                              <input type="text" class="form-control" id="doc-position" name="doc-position" placeholder="e.g. HIV Unit Head" required>
+                           </div>
+                        </div>
+                     </div>                     
+                     
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-new-password" class="text-black">Password <a style="font-size: 10px;">(must be at least 6 characters)</a></label>
+                              <input type="password" class="form-control" id="doc_password" name="doc_password"  pattern="[A-Za-z0-9_.]{6,}" placeholder="******" required>
+                           </div>
+                        </div> 
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="doc-new-password2" class="text-black">Confirm Password</label>
+                              <input type="password" class="form-control" id="doc_confirm_password" name="doc_confirm_password" pattern="[A-Za-z0-9_.]{6,}" placeholder="******" required>
+                              <span id='message'></span>
+                           </div>
+                        </div>      
+                     </div>
+                     <div class="form-group">
+                        <button  class="btn btn-primary" id="terms-and-conds-doc-btn" type="button" data-toggle="modal" data-target="#terms-and-conds">Continue</button>
+                        <button hidden  class="btn btn-primary" id="sign-up-doc-btn" type="submit" onclick="SetUserInfoSessionStorage();" disabled>Sign Up</button>
+                        <a href="" data-toggle="modal" data-target="#modalDoctor" id="oldDoctorLink" data-dismiss="modal">Already have an account?</a>
+                     </div>
+                  </form>
+                  <script>
+                     $('#doc_password, #doc_confirm_password').on('keyup', function () {
+                        if ($('#doc_password').val() != '' &&  $('#doc_confirm_password').val()!='' ){
+                           if ($('#doc_password').val() == $('#doc_confirm_password').val()) {
+                              $('#message').html('Matching').css('color', 'green');
+                                 $("#sign-up-doc-btn").removeAttr('disabled');
+                           } else{
+                              $('#message').html('Not Matching').css('color', 'red');
+                              $( "#sign-up-doc-btn").attr("disabled", true);
+                           }
+                        }
+                     });
+
+                     $("#sign-up-doc-form").on('submit', function(){
+                        $('#sign-up-doc-btn').attr('type', 'submit');
+                        // check if username exists
+                        let docFname = $('#doc-first-name').val();
+                        let docMname = $('#doc-middle-name').val();
+                        let docLname = $('#doc-last-name').val();
+                        let docEmail = $('doc-email').val();
+                        let docPhoneNum = $('doc-phone-num').val();
+                        let docNameFlag = false;
+                        let docEmailFlag = false;
+                        let docPhoneNumFlag = false;
+
+                        {% for doc in doctors %}
+                           if (('{{doc.name}}').toLowerCase() == (docFname + " "  + docMname + " " + docLname).toLowerCase()){
+                              docNameFlag = true;
+                              alert("Name is already exists. Please type another one.");
+                              $('#sign-up-doc-btn').attr('type', 'button');
+
+                           }
+
+                           if ('{{doc.email}}' == docEmail){
+                              docEmailFlag = true;
+                              alert("A doctor with the same email already exists. Please try again.");
+                              $('#sign-up-doc-btn').attr('type', 'button');
+
+                           }
+
+                           if ('{{doc.phone_number}}' == docPhoneNum){
+                              docPhoneNumFlag = true;
+                              alert("Phone number is already taken by another doctor. Please use another one.");
+                              $('#sign-up-doc-btn').attr('type', 'button');
+                           }
+                        {% endfor %}
+                        
+                        if (!docNameFlag && !docEmailFlag && !docPhoneNumFlag){ // if not exists in db
+                              alert("Sign Up Success. Please log in to continue.");
+                           $('#sign-up-doc-btn').attr('type', 'submit');
+                        };
+                           
+                     });
+
+                  </script>
+
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- MODAL FOR TERMS AND CONDITIONS -->
+      <div class="modal fade" id="terms-and-conds" tabindex="-1" role="dialog" aria-hidden="true" >
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header"  style="background-color: #802400;">
+                  <h4 class="modal-title" id="modal-title-{{forloop.counter}}" style="color:#ffffff;"> Terms and Conditions</h4>
+                  <button style="color:#ffffff;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body" style="max-height: calc(100vh - 210px);overflow-y: auto;">
+                  <div id="terms-and-conds-body">
+                        <h2>Welcome to AidSecure!</h2>
+                        <br>
+                        <p style="text-align: justify;font-size: 14px;">These terms and conditions outline the rules and regulations for the use of AidSecure's Website.</p> 
+                      
+                        <p style="text-align: justify;font-size: 12px;">By accessing this website we assume you accept these terms and conditions in full. Do not continue to use AidSecure's website 
+                        if you do not accept all of the terms and conditions stated on this page.</p>
+                        <p style="text-align: justify;font-size: 12px;">The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice
+                        and any or all Agreements: "Client", "You" and "Your" refers to you, the person accessing this website
+                        and accepting the Company's terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers
+                        to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves, or either the Client
+                        or ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake
+                        the process of our assistance to the Client in the most appropriate manner, whether by formal meetings
+                        of a fixed duration, or any other means, for the express purpose of meeting the Client's needs in respect
+                        of provision of the Company's stated services/products, in accordance with and subject to, prevailing law
+                        of Philippines. Any use of the above terminology or other words in the singular, plural,
+                        capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to same.</p>
+                        <h5>1. License</h5>
+                        
+                        <p style="text-align: justify;font-size: 12px;">Unless otherwise stated, AidSecure and/or it's licensors own the intellectual property rights for
+                        all material on AidSecure. All intellectual property rights are reserved. You may view and/or print
+                        pages from http://localhost:8000/aidsecure/ for your own personal use subject to restrictions set in these terms and conditions.</p>
+                        <p style="text-align: justify;font-size: 12px;">You must not:</p>
+                        <ol style="text-align: justify;font-size: 12px;">
+                           <li>Republish material from http://localhost:8000/aidsecure/</li>
+                           <li>Sell, rent or sub-license material from http://localhost:8000/aidsecure/</li>
+                           <li>Reproduce, duplicate or copy material from http://localhost:8000/aidsecure/</li>
+                        </ol>
+                        <p style="text-align: justify;font-size: 12px;">Redistribute content from AidSecure (unless content is specifically made for redistribution).</p>
+                     <h5>2. User Comments</h5>
+                        <ol style="text-align: justify;font-size: 12px;">
+                           <li>This Agreement shall begin on the date hereof.</li>
+                           <li>Certain parts of this website offer the opportunity for users to post and exchange opinions, information,
+                           material and data ('Comments') in areas of the website. AidSecure does not screen, edit, publish
+                           or review Comments prior to their appearance on the website and Comments do not reflect the views or
+                           opinions of AidSecure, its agents or affiliates. Comments reflect the view and opinion of the
+                           person who posts such view or opinion. To the extent permitted by applicable laws AidSecure shall
+                           not be responsible or liable for the Comments or for any loss cost, liability, damages or expenses caused
+                           and or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this
+                           website.</li>
+                           <li>AidSecure reserves the right to monitor all Comments and to remove any Comments which it considers
+                           in its absolute discretion to be inappropriate, offensive or otherwise in breach of these Terms and Conditions.</li>
+                           <li>You warrant and represent that:
+                              <ol>
+                                 <li>You are entitled to post the Comments on our website and have all necessary licenses and consents to
+                                       do so;</li>
+                                 <li>The Comments do not infringe any intellectual property right, including without limitation copyright,
+                                    patent or trademark, or other proprietary right of any third party;</li>
+                                 <li>The Comments do not contain any defamatory, libelous, offensive, indecent or otherwise unlawful material
+                                    or material which is an invasion of privacy</li>
+                                 <li>The Comments will not be used to solicit or promote business or custom or present commercial activities
+                                    or unlawful activity.</li>
+                                 </ol>
+                              </li>
+                           <li>You hereby grant to <strong>AidSecure</strong> a non-exclusive royalty-free license to use, reproduce,
+                           edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats
+                           or media.</li>
+                        </ol>
+                     <h5>3. Hyperlinking to our Content</h5>
+                        <ol style="text-align: justify;font-size: 12px;">
+                           <li>The following organizations may link to our Web site without prior written approval:
+                              <ol>
+                              <li>Government agencies;</li>
+                              <li>Search engines;</li>
+                              <li>News organizations;</li>
+                              <li>Online directory distributors when they list us in the directory may link to our Web site in the same
+                                 manner as they hyperlink to the Web sites of other listed businesses; and</li>
+                              <li>Systemwide Accredited Businesses except soliciting non-profit organizations, charity shopping malls,
+                                 and charity fundraising groups which may not hyperlink to our Web site.</li>
+                              </ol>
+                           </li>
+                        </ol>
+                        <ol start="2" style="text-align: justify;font-size: 12px;">
+                           <li>These organizations may link to our home page, to publications or to other Web site information so long
+                              as the link: (a) is not in any way misleading; (b) does not falsely imply sponsorship, endorsement or
+                              approval of the linking party and its products or services; and (c) fits within the context of the linking
+                              party's site.
+                           </li>
+                           <li>We may consider and approve in our sole discretion other link requests from the following types of organizations:
+                              <ol>
+                                 <li>commonly-known consumer and/or business information sources such as Chambers of Commerce</li>
+                                 <li>dot.com community sites;</li>
+                                 <li>associations or other groups representing HIV health organizations, including government and non-government health organizations,</li>
+                                 <li>online directory distributors;</li>
+                                 <li>internet portals;</li>
+                                 <li>accounting, law and consulting firms whose primary clients are businesses; and</li>
+                                 <li>educational institutions and trade associations.</li>
+                              </ol>
+                           </li>
+                        </ol>
+                        <p style="text-align: justify;font-size: 12px;">We will approve link requests from these organizations if we determine that: (a) the link would not reflect
+                        unfavorably on us or our accredited businesses (for example, trade associations or other organizations
+                        representing inherently suspect types of business, such as work-at-home opportunities, shall not be allowed
+                        to link); (b)the organization does not have an unsatisfactory record with us; (c) the benefit to us from
+                        the visibility associated with the hyperlink outweighs the absence of <?=$companyName?>; and (d) where the
+                        link is in the context of general resource information or is otherwise consistent with editorial content
+                        in a newsletter or similar product furthering the mission of the organization.</p>
+                     
+                        <p style="text-align: justify;font-size: 12px;">These organizations may link to our home page, to publications or to other Web site information so long as
+                        the link: (a) is not in any way misleading; (b) does not falsely imply sponsorship, endorsement or approval
+                        of the linking party and it products or services; and (c) fits within the context of the linking party's
+                        site.</p>
+                     
+                        <p style="text-align: justify;font-size: 12px;">If you are among the organizations listed in paragraph 2 above and are interested in linking to our website,
+                        you must notify us by sending an e-mail to <a href="mailto:aidsecureph@gmail.com" title="send an email to aidsecureph@gmail.com">aidsecureph@gmail.com</a>.
+                        Please include your name, your organization name, contact information (such as a phone number and/or e-mail
+                        address) as well as the URL of your site, a list of any URLs from which you intend to link to our Web site,
+                        and a list of the URL(s) on our site to which you would like to link. Allow 2-3 weeks for a response.
+                        <br>
+                        <br>
+                        Approved organizations may hyperlink to our Web site as follows:</p>
+                     
+                        <ol style="text-align: justify;font-size: 12px;">
+                           <li>By use of our corporate name; or</li>
+                           <li>By use of the uniform resource locator (Web address) being linked to; or</li>
+                           <li>By use of any other description of our Web site or material being linked to that makes sense within the
+                              context and format of content on the linking party's site.</li>
+                        </ol>
+                        <p style="text-align: justify;font-size: 12px;">No use of AidSecure's logo or other artwork will be allowed for linking absent a trademark license
+                        agreement.</p>
+                     <h5>4. Iframes</h5>
+                        <p style="text-align: justify;font-size: 12px;">Without prior approval and express written permission, you may not create frames around our Web pages or
+                        use other techniques that alter in any way the visual presentation or appearance of our Web site.</p>
+                     <h5>5. Reservation of Rights</h5>
+                        <p style="text-align: justify;font-size: 12px;">We reserve the right at any time and in its sole discretion to request that you remove all links or any particular
+                        link to our Web site. You agree to immediately remove all links to our Web site upon such request. We also
+                        reserve the right to amend these terms and conditions and its linking policy at any time. By continuing
+                        to link to our Web site, you agree to be bound to and abide by these linking terms and conditions.</p>
+                     <h5>6. Removal of links from our website</h5>
+                        <p style="text-align: justify;font-size: 12px;">If you find any link on our Web site or any linked web site objectionable for any reason, you may contact
+                        us about this. We will consider requests to remove links but will have no obligation to do so or to respond
+                        directly to you.</p>
+                        <p style="text-align: justify;font-size: 12px;">Whilst we endeavour to ensure that the information on this website is correct, we do not warrant its completeness
+                        or accuracy; nor do we commit to ensuring that the website remains available or that the material on the
+                        website is kept up to date.</p>
+                     <h5>7. Content Liability</h5>
+                        <p style="text-align: justify;font-size: 12px;">We shall have no responsibility or liability for any content appearing on your Web site. You agree to indemnify
+                        and defend us against all claims arising out of or based upon your Website. No link(s) may appear on any
+                        page on your Web site or within any context containing content or materials that may be interpreted as
+                        libelous, obscene or criminal, or which infringes, otherwise violates, or advocates the infringement or
+                        other violation of, any third party rights.</p>
+
+                     <h5>8. User Rights</h5>
+                        <p style="text-align: justify;font-size: 12px;">1. Patient users:<br>
+                           All information that the patient inputted in the website can only be viewed by the health organization's designated admin officer.
+                           <b>Upon creating a patient profile in the website, the patient user is agreeing upon Aidsecure's rule that all the information inputted 
+                              by the patient are true. </b>
+                           The patient user will be held accountable for any false or fabricated information that the patient user provided. With this being the case, it is 
+                           highly recommended that there should be a presence of a trusted health officer or doctor to help verify that the information provided by the patient is true and reliable. 
+                           <br>The patient user can:</p>
+                           <ol  style="text-align: justify;font-size: 12px;">
+                              <li> add and remove a doctor.</li>
+                              <li> view all the doctors and their basic information.</li>
+                              <li> request an appointment to meet in person with an added doctor.</li>
+                              <li> download the user's medical history and ICR form.</li>
+                              <li> add a personal Journal</li>
+                              <li> view user's ART medications</li>
+                              <li> edit or change information in ICR (Individual Client Record) Form.</li>
+                           </ol>
+                           <p style="text-align: justify;font-size: 12px;">2. Doctor Users:<br>
+                           All the information that a doctor inputted in the website is viewable by the the health organization's designated admin officer and 
+                           their basic information will be accessible by all users in the website's main/portal page. <b>Upon creating a doctor profile in the website, 
+                              the doctor user is agreeing upon Aidsecure's rule that all the information inputted by the doctor are true. </b>
+                           The doctor user will be held accountable for any false or fabricated information that the doctor user provided. <br>
+                           
+                           When a patient adds a doctor, the doctor will be able to:</p>
+                           <ol  style="text-align: justify;font-size: 12px;">
+                              <li>view patient's public profile (consists: patient status i.e. deceased or ongoing therapy, general location i.e. within cebu city or outside cebu city, age, HIV stage level, work, email, and contact number).</li>
+                              <li>edit some information on patient's public profile specifically: patient status, general location, and HIV stage level. </li>
+                              <li>view and edit patient's Medical History (consists: HIV stage level, Exposure, Other Medical Condition(s), Date Diagnosed/ Date Sample Sent for Confirmatory).</li>
+                              <li>view and edit patient's ICR (Individual Client Record) Form.</li>
+                              <li>view and administer Medicine on ART Medication (All Medicines prescribed by doctors in Aidsecure Website since user sign up) of the  patient.</li>
+                              <li>view and comment  patient's Personal Journal (acts as daily diary to post personal feelings to keep track of emotional status).</li>
+                              <li>accept or decline an appointment schedule request sent by a patient that the doctor handles.</li>
+                              <li>add a remark on the handled patient's Medical History, ICR Form, and Appointment Forms.</li>
+                              <li>download handled patient's medical history and ICR form, and all patients handled statistical data.</li>
+                           </ol>
+
+                           <p style="text-align: justify;font-size: 12px;">3. Admin:<br>
+                           All the information stored in the website's database will be subject to the respective administration officer assigned in a health organization using the website.
+                            The admin's responsibility is integral to the preservation of privacy on information stored in the website's database and therefore
+                           is only limited to the assigned officer(s) of the health organization affiliated with the website. <br>
+                           The admin user can:</p>
+                           <ol  style="text-align: justify;font-size: 12px;">
+                              <li> view, edit, add, remove, or change patients, doctors, and Cebu Barangays information. </li>
+                              <li> view the patients present address in a map. </li>
+                              <li> view Cebu Barangay's HIV Incidence Summary in a map. </li>
+                              <li> search a Cebu Barangay in a map </li>
+                              <li> download Cebu Barangay(s) data summary on HIV Incidence of the area.</li>
+                           </ol>                             
+                           
+
+                     <h5>9. Disclaimer</h5>
+                        <p style="text-align: justify;font-size: 12px;">To the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website (including, without limitation, any warranties implied by law in respect of satisfactory quality, fitness for purpose and/or the use of reasonable care and skill). Nothing in this disclaimer will:</p>
+                        <ol  style="text-align: justify;font-size: 12px;">
+                           <li>limit or exclude our or your liability for death or personal injury resulting from negligence;</li>
+                           <li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;</li>
+                           <li>limit any of our or your liabilities in any way that is not permitted under applicable law; or</li>
+                           <li>exclude any of our or your liabilities that may not be excluded under applicable law.</li>
+                        </ol>
+                        <p style="text-align: justify;font-size: 12px;">The limitations and exclusions of liability set out in this Section and elsewhere in this disclaimer: (a)
+                        are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer or
+                        in relation to the subject matter of this disclaimer, including liabilities arising in contract, in tort
+                        (including negligence) and for breach of statutory duty.</p>
+                        <p style="text-align: justify;font-size: 14px;">To the extent that the website and the information and services on the website are provided free of charge,
+                        we will not be liable for any loss or damage of any nature.</p>                     
+                  </div>
+                  <hr>
+               </div>
+               <div class="modal-footer">
+                  <input type="checkbox"id="accept-checkbox" name="accept-checkbox" value="I accept the terms and conditions."> <p style="margin: 0px; margin-right: 9.7rem;">I accept the terms and conditions.</p><br>
+               
+                  <button  class="btn btn-primary" id="done-reading-btn" type="button" data-toggle="modal"  data-dismiss="modal">Done</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script>
+         let acceptBtn = document.getElementById("accept-checkbox");
+         $("#accept-checkbox").click(function(){
+            if($('#accept-checkbox').is(":checked")){
+               $("#done-reading-btn").removeAttr("disabled");
+            }
+         });
+         $("#done-reading-btn").click(function(){
+            if($('#accept-checkbox').is(":checked")){
+               $("#done-reading-btn").removeAttr("disabled");
+               $("#terms-and-conds-btn").attr("hidden", true);
+               $("#sign-up-btn").removeAttr("hidden");
+               $("#sign-up-doc-btn").removeAttr("hidden");
+               $("#terms-and-conds-doc-btn").attr("hidden", true);
+               
+            }
+            else if($('#accept-checkbox').is(":not(:checked)")){
+               alert("Please accept the terms and conditions on the corresponding checkbox to proceed sign up.");
+            }
+         });
+           
+
+         function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+         }
+         $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+               if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
+               }
+            }
+         });
+
+         
+
+         $('#doc-hospital-name').on('keyup', function () {
+            let hospitalName = document.getElementById('doc-hospital-name');
+            let hospitalNameVal = hospitalName.options[hospitalName.selectedIndex].value;
+            var hospitalAdd = "";
+            for (let i=0; i<hospitals.length; i++){
+               if (hospitalNameVal == hospitals[i]){
+                  hospitalAdd = hospitals[i][0]; //address of the hospital
+                  document.getElementById('doc-hospital-address').val = hospitalAdd;
+               }
+               
+            }
+         });
+
+
+         // // Get the modal
+         var modal = document.getElementById('myModal');
+
+         // When the user clicks anywhere outside of the modal, close it
+         window.onclick = function(event) {
+           if (event.target == modal) {
+             modal.style.display = "none";
+           }
+         }
+
+           //get current user  and save to localStorage
+         function SetUserInfoSessionStorage(){
+            var userName = $(document).find('#patient-username').val();           
+            var realName = $(document).find('#doc-real-name').val();
+            if (userName != null){
+               sessionStorage.setItem('patient-uname-local', userName);
+            }else if (newPatientUserName != null){
+               sessionStorage.setItem('patient-uname-local', newPatientUserName);
+            }
+
+            if (realName != null){
+               sessionStorage.setItem('doc-name-local', realName);
+            }
+            else if (newDocFirstName != null && newDocLastName != null){
+               var newDoc = newDocFirstName + " " + newDocLastName;
+               sessionStorage.setItem('doc-name-local', newDoc);
+
+            }
+         }
+
+      
+
+         // get latitude and longitude of present address
+         
+         // mabolo,cebu city
+         var startlat = 10.31493310;
+         var startlon = 123.91454160;
+
+         var options = {
+            center: [startlat, startlon],
+            zoom: 9
+         }
+
+         document.getElementById('lat').value = startlat;
+         document.getElementById('lon').value = startlon;
+
+         var map = L.map('map', options);
+         var nzoom = 12;
+
+         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: 'OSM'}).addTo(map);
+
+         var myMarker = L.marker([startlat, startlon], {title: "Coordinates", alt: "Coordinates", draggable: true}).addTo(map).on('dragend', function() {
+            var lat = myMarker.getLatLng().lat.toFixed(8);
+            var lon = myMarker.getLatLng().lng.toFixed(8);
+            var czoom = map.getZoom();
+            // way gamit
+            if(czoom < 18) { nzoom = czoom + 2; }
+            if(nzoom > 18) { nzoom = 18; }
+            if(czoom != 18) {map.setView([lat,lon], nzoom); } else { map.setView([lat,lon]); }
+            document.getElementById('lat').value = lat;
+            document.getElementById('lon').value = lon;
+            myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
+         });
+
+
+         function chooseAddr(lat1, lng1){
+            myMarker.closePopup();
+            map.setView([lat1, lng1],18);
+            myMarker.setLatLng([lat1, lng1]);
+            lat = lat1.toFixed(8);
+            lon = lng1.toFixed(8);
+            document.getElementById('lat').value = lat;
+            document.getElementById('lon').value = lon;
+            myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
+         }
+
+         function myFunction(arr){
+            var out = "<br />";
+            var i;
+
+            if(arr.length > 0){
+               for(i = 0; i < arr.length; i++){
+                  out += "<div class='address' title='Show Location and Coordinates' onclick='chooseAddr(" + arr[i].lat + ", " + arr[i].lon + ");return false;'>" + arr[i].display_name + "</div>";
+               }
+               document.getElementById('results').innerHTML = out;
+            } else {
+               document.getElementById('results').innerHTML = "Sorry, no results...";
+            }
+         }
+
+         $("#results").click(function(){
+            $("#results").attr("hidden", "true");
+         });
+
+         $("#searchbtn").click(function(){
+            $("#results").removeAttr("hidden");
+         });
+
+         function addr_search(){
+         
+            var inp = document.getElementById("p_present_address");
+            var input_var = inp.value;
+            
+            if (input_var.includes('st.')){
+               input_var.replace("st.", "Street");
+            }else if (input_var.includes('St.')){
+               input_var.replace("St.", "Street");
+            }else if (input_var.includes('St')){
+               input_var.replace("St", "Street");
+            }else if (input_var.includes('st')){
+               input_var.replace("st", "Street");
+            }
+
+            if (input_var.includes('brgy.')){
+               input_var.replace("brgy.", " ");
+            }else if (input_var.includes('Brgy.')){
+               input_var.replace("Brgy.", " ");
+            }else if (input_var.includes('brgy')){
+               input_var.replace("brgy", " ");
+            }else if (input_var.includes('Brgy')){
+               input_var.replace("Brgy", " ");
+            }else if (input_var.includes('Barangay')){
+               input_var.replace("Barangay", " ");
+            }else if (input_var.includes('barangay')){
+               input_var.replace("barangay", " ");
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + input_var;
+
+            xmlhttp.onreadystatechange = function(){
+               if (this.readyState == 4 && this.status == 200)
+               {
+               var myArr = JSON.parse(this.responseText);
+               myFunction(myArr);
+               // chooseAddr( + myArr[0].lat,  + myArr[0].lon);
+               }
+            };
+
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+
+         }
+
+      </script>
+
+      <script src= "{% static 'portal/js/jquery.min.js' %}" ></script>
+      <script src= "{% static 'portal/js/jquery-migrate-3.0.1.min.js' %}" ></script>
+      <script src= "{% static 'portal/js/popper.min.js' %}"></script>
+      <script src= "{% static 'portal/js/bootstrap.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/jquery.easing.1.3.js'  %}"></script>
+      <script src= "{% static 'portal/js/jquery.waypoints.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/jquery.stellar.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/owl.carousel.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/jquery.magnific-popup.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/aos.js' %}"></script>
+      <script src= "{% static 'portal/js/jquery.animateNumber.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/bootstrap-datepicker.js'  %}"></script>
+      <script src= "{% static 'portal/js/jquery.timepicker.min.js'  %}"></script>
+      <script src= "{% static 'portal/js/scrollax.min.js' %}"></script>
+      <!-- <script src= "https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script> -->
+      <script src= "{% static 'portal/js/main.js'  %}"></script>
+
+ {% endblock content %}
+

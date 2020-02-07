@@ -1,0 +1,33 @@
+
+------------------------UPDATE 1/31/2020--------------------------
+CODE CLEAN UP DONE, Ready for Deployment OF AIDSECURE 
+
+> UPDATE: with docs photo on My Doctors, and patients photo on Patients haandled
+
+
+DONE:
+> BUG ALERT: property undefined for appointments sa patients & doctor
+> download format
+> stat: UI <mudako
+> add doctor bug
+> change meds in ART docs and patients
+> UI for portal finishing
+> login and sign up finishing
+> change URL 
+> stat monthly stat over all patients: just manually assign in jquery inside doctor.html. analyze the patients by month and year
+--------
+
+> totally refresh on year change
+> size 	increase font point size sa portal front back
+> What Does Aidsecure Offer? point size
+> with label stat UI 
+> unread status in notif,  align text in notif
+> download doc stats as image
+> add pic doc and patient
+> delete pic once changed
+> profile patient remove func to uneditable for now
+> change format in patient to correct row alignment on small user interface.
+> (done) change format in patient to correct stuff.
+> (done) terms and conditions: data is used will be subject by the respective health admin assigned
+> (done) specify on terms and cond number 8. with the presence of doc on patient sign up 
+

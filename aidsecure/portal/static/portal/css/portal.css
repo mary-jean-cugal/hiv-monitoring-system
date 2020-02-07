@@ -1,0 +1,51 @@
+body {
+	background: #ececec;	
+}
+
+
+.right-portal {
+	padding: 0px;
+}
+
+.left-portal {
+	background-color: #8e0000;
+	text-align: center;
+	padding: 0!important;
+}
+
+.list-group {
+	padding-top: 20px;
+	border-radius: 0;
+}
+
+.list-group-item:last-child {
+		    margin-bottom: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#userpic {
+	height: 100px;
+	margin: 15px;
+	text-align: center;
+}
+
+.white {
+	color: #fff;
+}
+
+.center {
+	text-align: center;
+	margin: auto;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+
+.modal-dialog{
+	
+	position:relative;
+	overflow-y: auto;
+
+}

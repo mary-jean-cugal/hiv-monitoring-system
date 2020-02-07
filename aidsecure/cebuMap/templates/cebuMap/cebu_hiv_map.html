@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+    {% load leaflet_tags %}
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<head>
+    
+    {% leaflet_css %}
+    {% leaflet_js %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+    <script src="{% static 'aidsecure/dist/leaflet.ajax.js' %}"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+
+   <!-- fonts -->
+   <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+   <!-- table -->
+   
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- js to pdf for downloading forms -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+   
+    <!-- script for downloading tabular data (plugin) -->
+    <script src="{% static 'cebuMap/js/jspdf.plugin.autotable.js'%}"></script>
+    <script src="{% static 'cebuMap/js/jspdf.plugin.autotable.min.js'%}"></script> 
+
+    <style>
+
+        .collapsible {
+            background-color: white;
+            border:1px solid rgba(0, 0, 0, 0.125);
+            cursor: pointer;
+            padding: 18px;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+        
+        .collapsible:hover{
+            color:white;
+            background-color: #800000;
+        }
+        
+        .collapsible:visited{
+            color:white;
+            background-color: #800000;
+        }
+
+        .is-active{
+            color:white;
+            background-color: #800000;
+        }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            border:1px solid  #800000;
+            background-color: #f1f1f1;
+        }
+
+        #autocomplete {
+            z-index: 100;
+            margin-bottom: 5px;
+        }
+        
+        /* .leaflet-popup-content-wrapper, .leaflet-popup-tip{
+            color:rosybrown;
+        } */
+
+        .custom1 .leaflet-popup-tip,
+        .custom1 .leaflet-popup-content-wrapper {
+            background: #ffb3b3;
+            color: black;
+        }
+
+
+        .custom2 .leaflet-popup-tip,
+        .custom2 .leaflet-popup-content-wrapper {
+            background: #ff8080;
+            color: black;
+        }
+
+
+        .custom3 .leaflet-popup-tip,
+        .custom3 .leaflet-popup-content-wrapper {
+            background: #ff3333;
+            color: white;
+        }
+
+
+        .custom4 .leaflet-popup-tip,
+        .custom4 .leaflet-popup-content-wrapper {
+            background: #ffe6e6;
+            color: black;
+        }
+
+        .popUpWrapper{
+            background-color:green;
+        }
+
+        body{
+            background-color: #ffe6e6;
+            /* margin-bottom: 1rem; */
+            /* position:abs */
+        }
+
+        #gis{
+            height:550px; /*adjusts the height of the map*/
+            border-style: double;
+            position: absolute;
+            z-index: -1;
+            width: 96%;
+        }
+
+        #map-header, #brgy-data-header{
+            padding: 1rem;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            background-color: #ffb3b3;
+            border-style: double;
+            font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+            font-weight: normal;
+            font-size: 1.75em;
+            letter-spacing: .2em;
+            line-height: 1.1em;
+            text-align: center;
+            text-transform: uppercase;
+            margin-right: 7rem;
+            margin-left: 7rem;
+        }
+
+        /* pop up for barangays data */
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #dff0d8;
+        }
+        #map-menu{
+            height: 550px;
+            width: 25rem;
+            float: right;
+            position:relative;
+            z-index: 1;
+            margin-right: 3rem;
+            background:white;
+            border-style: double;
+            border-left: solid 1px grey;
+            font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+        }
+        #search-bar{
+            border-radius: 10px;
+            padding: 0.5rem;
+            border: solid 1px rgb(179, 179, 179);
+            box-shadow: 5px 5px 5px rgb(204, 204, 204);
+            margin: 0.5rem;
+            min-height: 7.5rem;
+        }
+
+        #search-brgy{
+            height: 1.5rem;
+            width: 22rem; 
+            font-size: 13px; 
+            border: none;
+            padding-left: 3px;
+        }
+        .brgy-wrapper{
+            padding-left: 1rem; 
+            border-bottom: 1px solid grey;
+        }
+
+        .brgys{
+            max-height:85%;
+            overflow:auto;
+        }
+
+        #map-wrapper-id, #map{
+            height:550px; /*adjusts the height of the map*/
+            border-style: double;
+            position: absolute;
+            z-index: 1;
+            width: 95%;
+            margin-left: 3rem;
+        }
+
+        #brgy-data-btn{
+            border:solid black; 
+            border-style: double; 
+            width:100%; 
+            padding:10px;  
+            margin-top:1rem; 
+            margin-left: -56.85rem;
+        }
+
+        /* for table */
+
+        td:hover{
+            background-color: #ffb3b3;
+        }
+
+        brgy-data-tb td, th{
+            padding: 2rem;
+            font-weight: unset;
+        }
+
+        #download-btn:hover{
+            background-color: #0080ff;
+            color:#fff;
+            border:none;
+        }
+       
+    </style>
+
+    <title>AidSecure</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{% static 'portal/images/logo.jpg' %}">
+
+</head>
+
+<body>
+    <div class="cebu-map-wrapper">
+        <div id="header-wrapper">
+            <p id="map-header">Cebu City HIV Incidence Map</p>
+        </div>
+            
+        <div id="map" >
+        </div>
+
+        <div id="map-menu" >
+
+            <div id="search-bar">
+                <label style="height: 1.5rem;width: 14rem;" for="search-brgy">Search:</label>
+                <input  id="search-brgy" placeholder="Enter name of barangay in Cebu City..">
+            </div>
+
+            <div class="brgys">
+                <hr style="margin-top:0rem;margin-bottom: 0.5rem; border: 1px solid lightgrey;">
+                {% for brgy in all_brgys %}
+                <div class="brgy-wrapper" id="brgy-wrap-{{forloop.counter}}" >
+                    <p readonly class="bngy-name" id="brgy-id-{{forloop.counter}}">{{brgy.name_3}}</p>
+                </div>
+
+                <script>
+                    // Set style function that sets fill color property
+                    function style(feature) {
+                        return {
+                            fillColor: '#ff8080', 
+                            fillOpacity: 0.5,  
+                            weight: 2,
+                            opacity: 1,
+                            color:'#ffffff',
+                            dashArray: '3'
+                        };
+                    }
+                    var highlight = {
+                        'fillColor': 'yellow',
+                        'weight': 2,
+                        'opacity': 1
+                    };
+
+                    $('#brgy-id-{{forloop.counter}}').click(function(){
+
+                        brgy = $('#brgy-id-{{forloop.counter}}');
+                        console.log("CLICKED!" + brgy.text()); // sanity check
+
+                        brgyLayer.setStyle(style);
+                        map._layers[{{brgy.objectid}}].fire('click');  //search by objectid since the layer was stored with the brgy id as its id also
+                        
+                        var layer = map._layers[{{brgy.objectid}}];
+                        map.fitBounds(layer.getBounds());  // zooms to selected poly
+
+                    });  
+
+
+                </script>
+                
+                {% empty %}
+                    <input value="Empty....">
+
+                {% endfor %} 
+            </div>   
+        </div> 
+    </div>
+
+ 
+    <div class="brgy-data-wrapper" style="position: relative; z-index:0; padding-top: 46%;">
+        <div id="header-wrapper">
+            <p id="brgy-data-header">Cebu Barangays Tabular Data</p>
+        </div>
+
+        <div class="download-data-wrapper" style="margin-left:5%; margin-bottom:1%;">
+            <label> Select what to do with barangay(s) data: </label>
+            <select  style="height:30px; line-height:30px;" id="data-choice"  readonly>
+                <option value="---">-------------</option>
+                <option value="selected">download selected barangays data</option>
+                <option value="all">download all barangays data</option>
+             </select>
+             <button class="btn" id="download-btn" style="border:1px solid lightgrey;">Go</button>
+             <input readonly id="selected-count" style="border:none; background: none; color:grey;" value="0 out of 80 selected.">
+        </div>
+
+        <div hidden id="data-download-wrapper">
+            <div id="brgy-data-download-content">
+                <table class="table brgy-data-tb" id="brgy-data-table-download" style="width:90%; margin-left: 5%;background-color: white; font-family: Montserrat;">
+                    <thead style="background-color: #0080ff; color: #fff; text-transform: uppercase;">
+                        <th style="padding: 2rem;">Barangay Name</th>
+                        <th style="padding-bottom: 2rem;">for screening</th>
+                        <th style="padding: 2rem;">stage 1</th>
+                        <th style="padding: 2rem;">stage 2</th>
+                        <th style="padding: 2rem;">stage 3</th>
+                        <th style="padding: 2rem;">deceased</th>
+                        <th class="text-right" style="padding: 2rem;">Total HIV Incidence</th>
+                    </thead>
+                    <tbody id="download-table-body">
+                        
+                        {% for brgy in all_brgys %}
+                            <tr id="brgy-{{brgy.pk}}">
+                            
+                                <td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">{{forloop.counter}}. {{brgy.name_3}}</td>
+                                <td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
+                                <td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
+                                <td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
+                                <td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
+                                <td class="deceased">{{brgy.deceased.count}}</td>
+                                <td style="text-align:right;">{{brgy.hiv_pop.count}}</td>
+                            </tr>
+                        {% endfor%}
+                        <tr id="outside-ceb-row-download">
+                            <td class="brgy-name" id="outside-ceb-download" style="text-align:left;">
+                                <b>Outside Cebu</b>
+                            </td>
+                            <td class="screening-count" id="out-ceb-screening-download"></td>
+                            <td class="stage-1-count"  id="out-ceb-s1-download"></td>
+                            <td class="stage-2-count" id="out-ceb-s2-download"></td>
+                            <td class="stage-3-count" id="out-ceb-s3-download"></td>
+                            <td class="deceased-count" id="out-ceb-deceased-download"></td>
+                            <td style="text-align:right;" id="out-ceb-all-download"></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div id="editor"></div>
+        </div>
+    </div>
+       
+        <div class="brgy-table-wrapper">
+         
+            <table class="table table-hover brgy-data-tb" style="width:90%; margin-left: 5%;background-color: white; font-family: Montserrat;">
+                <thead style="background-color: #0080ff; color: #fff; text-transform: uppercase;">
+                    <th style="padding: 2rem;">Barangay Name</th>
+                    <th style="padding-bottom: 2rem;">for screening</th>
+                    <th style="padding: 2rem;">stage 1</th>
+                    <th style="padding: 2rem;">stage 2</th>
+                    <th style="padding: 2rem;">stage 3</th>
+                    <td style="padding: 2rem;">deceased</td>
+                    <th class="text-right" style="padding: 2rem;">Total HIV Incidence</th>
+                </thead>
+                <tbody>
+                    {% for brgy in all_brgys %}
+                        <tr id="brgy-{{brgy.pk}}">
+                        
+                            <td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">
+                                <input class="stretched-link" type="checkbox"  value="{{brgy.name_3}}">
+                                {{forloop.counter}}. {{brgy.name_3}}
+                            </td>
+                            <td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
+                            <td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
+                            <td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
+                            <td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
+                            <td class="brgy-name" id="deceased-{{brgy.pk}}" style="text-align:left;">{{brgy.deceased.count}}</td>
+                            <td style="text-align:right;" id="pop-count-{{brgy.pk}}">{{brgy.hiv_pop.count}}</td>
+                        </tr>
+                    {% endfor%}
+                    <tr id="outside-ceb-row">
+                        <td class="brgy-name" id="outside-ceb" style="text-align:left;">
+                            <input class="stretched-link" type="checkbox"  value="Outside Cebu">
+                            <b>Outside Cebu</b>
+                        </td>
+                        <td class="screening-count" id="out-ceb-screening"></td>
+                        <td class="stage-1-count"  id="out-ceb-s1"></td>
+                        <td class="stage-2-count" id="out-ceb-s2"></td>
+                        <td class="stage-3-count" id="out-ceb-s3"></td>
+                        <td class="deceased-count" id="out-ceb-deceased"></td>
+                        <td style="text-align:right;" id="out-ceb-all"></td>
+                    </tr>
+            
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script>
+        
+      
+        var downloadList = []; //empty list for storing the checked items
+
+        $('input[type="checkbox"]').on('change', function() {
+            if ($(this).prop('checked') == false){ downloadList.pop($(this).val()); }
+            else{ downloadList.push($(this).val());}
+            console.log("list: ", downloadList);
+            document.getElementById("selected-count").value = downloadList.length + " out of 80 selected.";
+        });
+
+        // download data from barangays
+        $("#download-btn").click(function(e){
+            e.preventDefault();
+            console.log("download button clicked!");
+            let choice = $('#data-choice').val();
+
+            if (choice=='---'){
+                alert("Please choose what action to be done.");
+            }
+            else if (choice == 'all'){
+                downloadList = []; // clean list first to for special cases like user selects multiple brgy data but choses download all
+                {% for brgy in all_brgys %}
+                    downloadList.push("{{brgy.name_3}}");
+                {% endfor %}
+            } else if (choice == 'selected'){
+
+                $("#brgy-data-table-download > tbody").html("");  //empty the tbody first
+                let brgyCounter = 0;
+                {% for brgy in all_brgys %}
+                    if (downloadList.includes("{{brgy.name_3}}")){
+                        brgyCounter+=1;
+
+                        $('#download-table-body').append( // add data in tbody, fill it with brgy data
+                            '<tr id="brgy-{{brgy.pk}}">' + 
+                                '<td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">' + 
+                                    brgyCounter + '. ' +  '{{brgy.name_3}}' +
+                                '</td>'  +
+                                '<td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">' + 
+                                    '{{brgy.for_screening.count}}' +
+                                '</td>' + 
+                                '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                                    '{{brgy.stage_1.count}}' + 
+                                '</td>' +
+                                '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                                    '{{brgy.stage_2.count}}' + 
+                                '</td>' +
+                                '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                                    '{{brgy.stage_3.count}}' +
+                                '</td>' + 
+                                '<td class="deceased">' +
+                                    '{{brgy.deceased.count}}' +
+                                '</td>' + 
+                                '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
+                                    '{{brgy.hiv_pop.count}}' +
+                                '</td>' + 
+                            '</tr>'
+                        );  
+                    }
+                {% endfor %}
+                // for outside of cebu patients
+                if (downloadList.includes("Outside Cebu")){
+                    $('#download-table-body').append( // add data in tbody, fill it with brgy data
+                        '<tr id="brgy-{{brgy.pk}}">' + 
+                            '<td class="brgy-name" id="out-ceb" style="text-align:left;">' + 
+                                 '<b>' + 'Outside Cebu' + '</b>' +
+                            '</td>'  +
+                            '<td class="screening-count" id="out-ceb-for-screening">' + 
+                                $('#out-ceb-screening').text() +
+                            '</td>' + 
+                            '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                                $('#out-ceb-s1').text() + 
+                            '</td>' +
+                            '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                                $('#out-ceb-s2').text() + 
+                            '</td>' +
+                            '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                                $('#out-ceb-s3').text() +
+                            '</td>' + 
+                            '<td class="deceased">' +
+                                $('#out-ceb-deceased').text() +
+                            '</td>' + 
+                            '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
+                                $('#out-ceb-all').text() +
+                            '</td>' + 
+                        '</tr>'
+                    );  
+                }
+            }
+            
+            if (downloadList.length > 0 && choice != "---"){
+                var doc = new jsPDF('l', 'mm', 'letter');
+                var totalPagesExp = "{total_pages_count_string}";
+                doc.autoTable({
+                    didDrawPage: function(data) {
+                        // Header
+                        doc.setFontSize(20);
+                        doc.setTextColor(40);
+                        doc.setFontStyle('normal');
+                        doc.text("CEBU BARANGAYS TABULAR DATA", data.settings.margin.left + 60, 22);
+
+                        // Footer
+                        var date_now = new Date();
+                        
+                        var str = "Page " + doc.internal.getNumberOfPages()
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                        str = "Barangays data as of: "  + date_now.toDateString()  + "\n" + str + " of " + totalPagesExp;
+                        }
+                        var pageSize = doc.internal.pageSize;
+                        var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                        doc.setFontSize(10);
+                        doc.text(str, data.settings.margin.left, pageHeight - 12);
+                    },
+                    margin: {
+                        top: 30
+                    },
+                    html: '#brgy-data-table-download'
+                });
+
+                // Total page number plugin only available in jspdf v1.0+
+                if (typeof doc.putTotalPages === 'function') {
+                doc.putTotalPages(totalPagesExp);
+                }
+                
+                doc.save('brgys-data.pdf');
+            }
+            else if (downloadList.length == 0 && choice != "---"){
+                alert("you have not chosen any barangay data. please choose again.");
+            }
+           
+        });
+
+        // for collapsible
+        var coll = document.getElementsByClassName("collapsible");
+        var a;
+        
+        for (a = 0; a < coll.length; a++) {
+            coll[a].addEventListener("click", function() {
+                this.classList.toggle("active");
+                
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                content.style.display = "none";
+                } else {
+                content.style.display = "block";
+                }
+            });
+        }
+
+
+        var url = "{% url 'bngy' %}";  // my GeoJSON data source for all barangays, can be found in views, refer to the cebuMap.urls.py,
+        var arr = [];
+        var arr1 = [];
+
+        // options on which type of map to use as the 2nd layer after leaflet map 
+        var osm=new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{ 
+                    attribution: '© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'});
+        var mapbox_map = new L.tileLayer('https://api.mapbox.com/styles/v1/den21/ck1og2q6406oj1cqwsj18hpnk/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGVuMjEiLCJhIjoiY2sxbnNtczgwMGV5NDNucnk5NHpreXU3NyJ9.XFoEEc3pHHNn0p755kmVWw',
+        {});
+        var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+    
+        var allPatientsObj = []; //storage for all the markers
+        let i = 0;
+        
+        var customOption1 = { 'backgroundColor': 'green', 'className' : 'custom1' }
+
+        var customOption2 = { 'backgroundColor': 'green', 'className' : 'custom2'}
+
+        var customOption3 = {'backgroundColor': 'green', 'className' : 'custom3'}
+
+        var customOption4 = {'backgroundColor': 'green', 'className' : 'custom4'}
+
+        
+
+
+        // for handling patients outside of cebu
+        var outside_ceb_count = 0;
+        var screeningOutCeb = 0;
+        var s1OutCeb = 0;
+        var s2OutCeb = 0;
+        var s3OutCeb = 0;
+        var negOutCeb = 0;
+        var deceasedOutCeb = 0;
+        // pop up for every patient user
+        {% for info in patient_loc %}
+            // store count of deceased and out of cebu city
+            {% if info.general_location == "outside cebu" %}
+                outside_ceb_count+=1;
+                {% if info.hiv_level == "for screening" %}
+                    screeningOutCeb+=1;
+                {% endif %}
+                {% if info.hiv_level == "stage 1" %}
+                    s1OutCeb+=1;
+                {% endif %}
+                {% if info.hiv_level == "stage 2" %}
+                    s2OutCeb+=1;
+                {% endif %}
+                {% if info.hiv_level == "stage 3" %}
+                    s3OutCeb+=1;
+                {% endif %}
+                {% if info.status == "deceased"%}
+                    deceasedOutCeb+=1;
+                {% endif %}
+            {% endif %}
+           
+            var patientInfo = "Patient Status: {{info.status}} <br/>"  
+                + "HIV Status: {{info.hiv_level}} <br/>" 
+                + "Username: {{info.username}}<br/>"
+                + "Location: {{info.location}} <br/>" 
+                + "Work: {{info.work}}";
+            console.log("username: {{info.username}} -- {{info.location}}")
+            i = L.marker([{{info.lat}}, {{info.lon}}]);
+            $(".leaflet-popup-content-wrapper").addClass("popUpWrapper");
+            {% if info.hiv_level == 'stage 1'%}
+                i.bindPopup(patientInfo, customOption1).openPopup();
+
+            {% elif info.hiv_level == 'stage 2'%}
+                i.bindPopup(patientInfo, customOption2).openPopup();
+
+            {% elif info.hiv_level == 'stage 3'%}
+                i.bindPopup(patientInfo, customOption3).openPopup();
+
+            {% elif info.hiv_level == 'negative' or info.hiv_level == 'for screening'%}
+                i.bindPopup(patientInfo, customOption4 ).openPopup();
+            {% endif%}
+            
+            allPatientsObj.push(i);
+            i++;
+
+        {% empty %}
+            alert("no address was provided");
+        {% endfor %}
+
+
+        // assign the deceased and outside cebu count
+        $('#out-ceb-screening').html(screeningOutCeb);
+        $('#out-ceb-s1').html(s1OutCeb);
+        $('#out-ceb-s2').html(s2OutCeb);
+        $('#out-ceb-s3').html(s3OutCeb);
+        $('#out-ceb-deceased').html(deceasedOutCeb);
+        $('#out-ceb-all').html(outside_ceb_count);
+        $('#out-ceb-screening-download').html(screeningOutCeb);
+        $('#out-ceb-s1-download').html(s1OutCeb);
+        $('#out-ceb-s2-download').html(s2OutCeb);
+        $('#out-ceb-s3-download').html(s3OutCeb);
+        $('#out-ceb-deceased-download').html(deceasedOutCeb);
+        $('#out-ceb-all-download').html(outside_ceb_count);
+
+
+
+        
+        var allPatientsLayer = L.layerGroup(allPatientsObj);  // store array of markers to a layergroup 
+        
+        var brgyLayer = L.geoJson(null, {onEachFeature: forEachFeature, style: style}); // Null variable that will hold layer for barangays
+        
+        // pop up for every barangay
+        function forEachFeature(feature, layer) {
+            // Tagging each brgy polygon with their name for the search control.
+            layer._leaflet_id = feature.properties.objectid;
+
+            var hiv_pop = 0;
+            var hiv_s1 = 0;
+            var hiv_s2 = 0;
+            var hiv_s3 = 0;
+            var forScreening = 0;
+            var brgy = feature.properties.name_3
+            console.log("here: ", feature.properties.name_3.lower);
+
+            var brgy_patients = feature.properties.hiv_pop;
+            
+            var popupContent = "<p><b>Barangaay: </b>" + feature.properties.name_3 
+            + "<br> <b> Total HIV Incidence: </b>"  + feature.properties.hiv_pop.length
+            + "<br> <b> Patients For Screening: </b>" + feature.properties.for_screening.length
+            + "<br> <b> Stage 1 Patients: </b>" + feature.properties.stage_1.length
+            + "<br> <b> Stage 2 Patients: </b>" +  feature.properties.stage_2.length
+            + "<br> <b> Stage 3 Patients: </b>" +  feature.properties.stage_3.length
+            "</p>"; 
+
+            layer.bindPopup(popupContent);
+
+            layer.on("click", function (e) { 
+                brgyLayer.setStyle(style); //resets layer colors
+                layer.setStyle(highlight);  //highlights selected.
+            }); 
+
+        }
+
+        
+
+        // access the geojson file
+        $.getJSON(url, function(data) {
+            brgyLayer.addData(data);    // store data from geojson to brgyLayer Layer
+            for (i = 0; i < data.features.length; i++) {  //loads brgy Name into an Array for searching
+                arr1.push({label:data.features[i].properties.name_3, value:data.features[i].properties.objectid});
+            }
+            addDataToAutocomplete(arr1);
+        });
+
+
+        // gets the nearest barngay word to the searched word in search bar
+        function addDataToAutocomplete(arr) {
+            arr.sort(function(a, b){ // sort object by Name
+                var nameA=a.label, nameB=b.label
+                if (nameA < nameB) //sort string ascending
+                    return -1 
+                if (nameA > nameB)
+                    return 1
+                return 0 //default return value (no sorting)
+            });
+            
+            $( "#search-brgy" ).autocomplete({source: arr});     
+    
+            $( "#search-brgy" ).on( "autocompleteselect", function(event, ui) {
+                // alert("search clicked!");
+                polySelect(ui.item.value);  //grabs selected brgy name
+                ui.item.value='';
+            });
+        }
+
+        function polySelect(a){
+            map._layers[a].fire('click');  // 'clicks' on brgy name from search
+            var layer = map._layers[a];
+            map.fitBounds(layer.getBounds());  // zooms to selected poly
+        }
+
+        // initialize map
+        var map = L.map('map', {
+            center: [10.397459, 123.904314],
+            zoom: 12,
+            layers: [osm, brgyLayer, allPatientsLayer]
+        });
+
+        // add the layers to map
+        var baseMaps = {
+            "osm": osm
+        };
+        var overlayMaps = {
+            "barangays": brgyLayer,
+            "hivIncidences": allPatientsLayer
+        };
+        L.control.layers(baseMaps, overlayMaps).addTo(map); //needed for navigation of layers and searching        
+    </script>
+
+</body>
+</html>

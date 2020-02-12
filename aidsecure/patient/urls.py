@@ -6,7 +6,6 @@ from django.conf.urls import include, url
 
 
 urlpatterns = [
-    url(r'^$', views.login, name = 'loginPatient'), #way gamit
     url(r'^patientLogout/$', views.patientLogout, name = 'patientLogout'),
     url(r'^icrForm/$', views.editICR, name = 'editICR'),
     url(r'^addDoctor/$', views.addDr, name='addDocs'),

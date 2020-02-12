@@ -6,21 +6,23 @@ from cebuMap.models import CebuBarangays
 from .models import Doctor, Remark, UsersViewed, DoctorSchedule, Medicine, DoctorNotification
 import os
 from datetime import datetime, date
-
-
 from django.contrib.gis.geos import Point
+#from django.views.decorators.cache import cache_control
 
 # log out doctor
+#@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def docLogout(request):
-	doc_name = request.session['doc-name-local']
-	doctor = Doctor.objects.all().get(name=doc_name)
-	doctor.new_notifs.clear()  # prevent resetting last log put on  page refresh
-		
-	if doctor.login_flag is True:
-		doctor.last_log_out = datetime.now()
-		doctor.login_flag=False
-	doctor.save()
-
+	try:
+		doc_name = request.session['doc-name-local']
+		doctor = Doctor.objects.all().get(name=doc_name)
+		doctor.new_notifs.clear()  # prevent resetting last log put on  page refresh
+		if doctor.login_flag is True:
+			doctor.last_log_out = datetime.now()
+			doctor.login_flag=False
+		doctor.save()
+		request.session['doc-name-local'] = None
+	except:
+		print("no more stored data in session storage")
 	doctors = Doctor.objects.all()
 	patients = Patient.objects.all()
 	context ={
@@ -380,7 +382,7 @@ def docEditICR(request):
 
 def docEditMedHist(request):
 	send_notif = False
-	
+	change_hiv_level = False
 	curr_doctor = request.session['doc-name-local']
 	curr_patient = request.POST.get("uname", "")
 	remark = request.POST.get("remark", "")
@@ -496,6 +498,7 @@ def docEditMedHist(request):
 	if len(hiv_level_choice) > 0:
 		print("change of hiv level------------------ \n exists: ", CebuBarangays.objects.filter(geom__intersects=patient_point).exists())
 		
+		change_hiv_level = True
 		if CebuBarangays.objects.filter(geom__intersects=patient_point).exists():
 			brgy = CebuBarangays.objects.get(geom__intersects=patient_point)
 			print("---------location located: ",  brgy.name_3)
@@ -538,6 +541,21 @@ def docEditMedHist(request):
 			
 			brgy.save()	
 			
+		if change_hiv_level:
+			# notify the patient for changes
+			notif = PatientNotification()
+			notif.patient_username = curr_patient
+			notif.doctor_name = curr_doctor
+			notif.user_type = "Doctor"
+			notif.action_type = "Edit"
+			notif.subject="Medical History"
+			notif.action_pk = patient.pk
+			notif.notification = "Dr. "+ curr_doctor + " changed your HIV status."
+			notif.created_on = datetime.now()
+			notif.status = True
+			notif.save()
+			patient.patient_notifications.add(notif)
+			patient.save()
 	return HttpResponse("Edit Medical History Done")
 		
 

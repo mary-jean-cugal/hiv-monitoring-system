@@ -11,6 +11,7 @@ from cebuMap.models import CebuBarangays
 from datetime import datetime, date
 from django.contrib.gis.geos import Point
 
+from django.views.decorators.cache import cache_control
 
 
 
@@ -26,6 +27,7 @@ def setPortal(request):
 
 
 @csrf_protect 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def validateDoctor(request, slug):
 	if slug:
 		d = Doctor.objects.get(slug=slug)
@@ -108,6 +110,7 @@ def validateDoctor(request, slug):
 
 
 @csrf_protect
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def validatePatient(request, slug): 	
 	if 'patient-username' in request.POST:
 		patient_username = request.POST.get("patient-username")

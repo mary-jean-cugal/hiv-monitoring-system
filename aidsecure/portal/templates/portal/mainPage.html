@@ -456,7 +456,7 @@
                      <div class="form-group">
                         <button  class="btn btn-primary" id="terms-and-conds-btn" type="button" data-toggle="modal" data-target="#terms-and-conds">Continue</button>
                         <button  hidden  disabled type="submit" class="btn btn-primary" id="sign-up-btn" onclick="SetUserInfoSessionStorage();">Sign Up</button>
-                        <a href="{% url 'loginPatient' %}" data-toggle="modal" data-target="#modalUser" id="oldPatientLink" data-dismiss="modal">Already have an account?</a>
+                        <a data-toggle="modal" data-target="#modalUser" id="oldPatientLink" data-dismiss="modal">Already have an account?</a>
                      </div>
                   </form>
 
@@ -631,7 +631,7 @@
                         </div>
                         <div class="col-md-6">
                            <div class="form-group">
-                              <label for="doc-middle-name" class="text-black">Middle Name</label>
+                              <label for="doc-middle-name" class="text-black">Middle Initial</label>
                               <input type="text" class="form-control" id="doc-middle-name" name="doc-middle-name" placeholder="e.g. L." pattern="[A-Za-z]{1}\." required>
                            </div>
                         </div>

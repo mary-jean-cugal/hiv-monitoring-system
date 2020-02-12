@@ -49,7 +49,23 @@
 <!-- END OF UI FOR STATISTICAL DATA -->
 
 <style>
+   /*--for sizing of the app to relatively resize depending on the size of the screen */
+   /* On screens that are 992px wide or less, the background color is blue */
+/*@media screen and (max-width: 992px) {
+  body {
+    background-color: blue;
+    color: white;
+  }
+}*/
 
+/* On screens that are 600px wide or less, the background color is olive */
+/*@media screen and (max-width: 600px) {
+  body {
+    background-color: olive;
+    color: white;
+  }
+}*/
+   /* end */
    .notif-bar:hover{
       box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
    }
@@ -1369,7 +1385,7 @@ p{
                                                                            <hr style="margin:0rem 0rem;">
                                                                            <div id="normal-remark">
                                                                               <label style="margin-bottom: 0rem; padding-left: 1rem;">Add a remark:</label>
-                                                                              <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="2" id="pending-patient-remark-{{schedule.schedule_notes}}" name="doc-notif-remark"></textarea>
+                                                                              <textarea style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="2" id="pending-patient-remark-{{schedule.pk}}" name="doc-notif-remark"></textarea>
                                                                               <hr style="margin:0rem 0rem;">
                                                                            </div>                                                                           
                                                                      </div>
@@ -1399,7 +1415,7 @@ p{
                                                                         csrfmiddlewaretoken: '{{ csrf_token }}', 
                                                                         p_sched_uname: $('#notif-pending-sched-patient-username-{{forloop.counter}}').val(),
                                                                         p_sched_topic: $('#notif-pending-sched-topic-{{forloop.counter}}').val(),
-                                                                        p_sched_remark: $('#pending-patient-remark-{{schedule.schedule_notes}}').val(),
+                                                                        p_sched_remark: $('#pending-patient-remark-{{schedule.pk}}').val(),
                                                                         p_sched_pk: $('#notif-pending-sched-pk-{{forloop.counter}}').val()
                                                                      },
                                                                      success:function(){
@@ -2822,7 +2838,8 @@ p{
                                                       </div>
                                                    </div> 
                                                 </div>
-                                                <div class="row" >
+                                                
+						<div class="row" >
                                                    <div class="col-md-6">
                                                       <div class="form-group">
                                                          <p>
@@ -3652,7 +3669,7 @@ p{
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
                   {  y: '{{doctor.p_handled_stats.stage_1}}', legendText: "stage 1 patients" },
-                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled  patients" },
                   ]
                }
             ]
@@ -3676,7 +3693,7 @@ p{
                   
                   dataPoints: [
                   {  y:'{{doctor.p_handled_stats.stage_2}}', legendText: "stage 2 patients" },
-                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
                   ],
                
                }
@@ -3701,7 +3718,7 @@ p{
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
                   {  y: '{{doctor.p_handled_stats.stage_3}}', legendText: "stage 3 patients" },
-                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
                   ]
                }
             ]
@@ -3724,7 +3741,7 @@ p{
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
                   {  y: '{{doctor.p_handled_stats.for_screening}}', legendText: "for screening patients" },
-                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
                   ]
                }
             ]

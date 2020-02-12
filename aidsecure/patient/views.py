@@ -5,29 +5,30 @@ from patient.models import ProfileForm, Patient, ICRForm,  PersonalRecord, Patie
 from doctor.models import Doctor, DoctorNotification, DoctorSchedule, DoctorStats, UsersViewed, MonthlyStatistics
 
 from datetime import datetime, date
-
 from django.core.files.storage import FileSystemStorage
+#from django.contrib.auth import logout 
+#from django.views.decorators.cache import cache_control
 
 
-def login(request):
-	return render(request, 'patient/patient.html')
 
+#@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def patientLogout(request):
-	patient_username = request.session['patient-uname-local']
-	patient = Patient.objects.all().get(username=patient_username)
-	for notif in patient.patient_notifications.all():  #mark all notifs as old
-		if notif.status == True:
-			notif.status = False
-			notif.save()
-	patient.patient_new_notifications.clear()    # prevent resetting last log put on  page refresh
+#	logout(request)
+	try:
+		patient_username = request.session['patient-uname-local']
+		patient = Patient.objects.all().get(username=patient_username)
+		for notif in patient.patient_notifications.all():  #mark all notifs as old
+			if notif.status == True:
+				notif.status = False
+				notif.save()
+		patient.patient_new_notifications.clear()    # prevent resetting last log put on  page refresh
 
-	
-
-	if patient.login_flag is True:
-		patient.last_log_out = datetime.now()
-		patient.login_flag = False
-	patient.save()
-
+		if patient.login_flag is True:
+			patient.last_log_out = datetime.now()
+			patient.login_flag = False
+		patient.save()
+	except:
+		print("no more data in the session storage")
 	doctors = Doctor.objects.all()
 	patients = Patient.objects.all()
 	context ={

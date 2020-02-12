@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+#import django
+#if __name__ == '__main__':
+#django.setup()
 from patient.models import Patient
 
 class CebuMap(models.Model):

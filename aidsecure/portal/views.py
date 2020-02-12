@@ -358,7 +358,7 @@ def addDoctor(request):
 		doc_hospital_name = request.POST.get('doc-hospital-name', "")
 		doc_hospital_name_others = request.POST.get('doc-hospital-name-others', "")
 		doc_password = request.POST.get('doc_password', "")
-
+#		new_doctor.save()
 		if len(doc_fname) > 0 and len(doc_mname) > 0 and len(doc_lname) > 0:
 			new_doctor.name = doc_fname.title() + " " + doc_mname.title() + " " + doc_lname.title() 
 			new_doctor.slug = doc_fname.lower() + "-" + doc_mname +"-" + doc_lname.lower() 
@@ -381,14 +381,14 @@ def addDoctor(request):
 			new_doctor.hospital_address = doc_hospital_address.title()
 		if len(doc_password) > 0:
 			new_doctor.password = doc_password
-
+		print("DOCTOR SAVED!!!---------------------")
 		new_doctor.save()
 		# creates a blank stats and monthly stats
 		doc_stats = DoctorStats()
 		doc_stats.doctor_name = new_doctor.name
 		doc_stats.neg_patients = 0
 		doc_stats.stage_1 = 0
-
+  
 		monthly_stat = MonthlyStatistics.objects.create()
 		monthly_stat.created_on = datetime.now()
 		monthly_stat.doctor_name = new_doctor.name
@@ -410,9 +410,11 @@ def addDoctor(request):
 			'doctors' : doctors,
 			'patients' : patients, 
 		}
+		print("SAVING DONE!--------------------------------------")
 		return render(request, 'portal/mainPage.html', context)
 		
 	return render(request, 'portal/mainPage.html')
+
 
 
 

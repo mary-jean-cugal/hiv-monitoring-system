@@ -113,7 +113,7 @@ class CebuMapAdmin(LeafletGeoAdmin):
 
     def my_clickable_link(self, instance):
         return format_html(
-            '<a href="http://localhost:8000/cebuMap" target="_blank">Cebu HIV Incidence Map</a>', 
+            '<a href="http://202.92.153.70:80/cebuMap" target="_blank">Cebu HIV Incidence Map</a>', 
         )
 
     my_clickable_link.short_description = "Cebu Map"

@@ -1,9 +1,11 @@
-import os
+#import os
+import os, sys
+sys.path.insert(0, os.path.abspath(".."))
 
 from django.contrib.gis.utils import LayerMapping
-from .models import CebuMap, CebuBarangays
+from cebuMap.models import CebuMap, CebuBarangays
 
-
+# open python shell, from cebuMap import load_layer, load_layer.run()
 # Auto-generated `LayerMapping` dictionary for CebuBarangays model
 cebubarangays_mapping = {
     'objectid': 'OBJECTID',

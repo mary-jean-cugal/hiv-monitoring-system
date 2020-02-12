@@ -26,7 +26,7 @@ def default_map(request):
 
     }
     
-    return render(request, 'cebuMap\cebu_hiv_map.html', context)
+    return render(request, 'cebuMap/cebu_hiv_map.html', context)
 
 def get_data(request):
     download_brgys = request.GET.getlist('checked_brgys[]')

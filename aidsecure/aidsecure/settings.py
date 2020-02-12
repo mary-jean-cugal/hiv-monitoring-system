@@ -1,6 +1,7 @@
 import os
+import json
 
-
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "aidsecure.settings")
 
 if os.name == 'nt':
     import platform
@@ -13,15 +14,18 @@ if os.name == 'nt':
     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
+#django.setup()
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-with open('C:/Users/Mary Jean Cugal/Desktop/aidsecure_key.txt') as f:
-    SECRET_KEY = f.read().strip()
+with open('/etc/aidsecure/config.json') as config_file:
+    config = json.load(config_file)
 
-# DEBUG = True
-DEBUG = False
-ALLOWED_HOSTS = ['*'] # for now set to localhost, since not yet deployed
+SECRET_KEY =  config['SECRET_KEY']
+DEBUG = True
+#DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.0','i153-70.upd.edu.ph', '202.92.153.70']
 
 
 CSRF_COOKIE_DOMAIN = None
@@ -89,10 +93,10 @@ WSGI_APPLICATION = 'aidsecure.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'HIV_Incidence',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PASSWORD': 'den',
+        'NAME': 'aidsecure_storage',
+        'USER': config.get('DB_USER'),
+        'HOST': '',
+        'PASSWORD': config.get('DB_PASSWORD'),
         'PORT': '',
     }
 }
@@ -123,10 +127,10 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = 'static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'profile-pictures/media/')
+MEDIA_ROOT = '/home/dlao/hiv-monitoring-system/aidsecure/profile-pictures/media/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'aidsecure/static/'),

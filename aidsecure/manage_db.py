@@ -12,20 +12,20 @@ def user_interface():
     if choice == "1":
         # backup
         print(" Backing up data...\n")
-        os.system('cmd /c "python manage.py dbbackup  -s hivIncidence"') # may add --clean --compress --encrypt
+        os.system('sudo  "python manage.py dbbackup  -s hivIncidence"') # may add --clean --compress --encrypt
         print("\n Done backing up data. Data is stored in /data-backup/backups/ in this directory.")
         user_interface()
         
     elif choice == "2":
         # restore
         print(" Restoring data...\n")
-        os.system('cmd /c "python manage.py dbrestore -s hivIncidence') # may add --decrypt if dbbackup uses --encrypt
+        os.system('sudo "python manage.py dbrestore -s hivIncidence"') # may add --decrypt if dbbackup uses --encrypt
         print("\n Done restoring data...")
         user_interface()
     elif choice == "3" :
         # delete
         print(" Deleting all data saved in database...\n")
-        os.system('cmd /c "python manage.py flush')
+        os.system('cmd /c "python manage.py flush"')
         print("\n Done deleting all data saved in database...")
         user_interface()
     elif choice == "4":

@@ -23,8 +23,8 @@ with open('/etc/aidsecure/config.json') as config_file:
     config = json.load(config_file)
 
 SECRET_KEY =  config['SECRET_KEY']
-#DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.0','i153-70.upd.edu.ph', '202.92.153.70']
 
 

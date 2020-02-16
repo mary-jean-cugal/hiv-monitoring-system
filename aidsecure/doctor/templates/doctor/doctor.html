@@ -1839,7 +1839,12 @@ p{
                                           <p style="padding:0rem; margin:0rem;font-size: 14.5px;">For Screening</p>
                                        </div>
                                        <div class="card-body" style="padding:0px; text-align:center; ">
-                                             <div id="negative-patients" style="height: 180px; width:100%;"></div>
+					  {% if doctor.p_handled_stats.doc_patients_count == 0 %}
+                                             <div id="no-patients1" style="height: 180px; width:100%;"></div>
+                                          {% endif %}
+                                          {% if doctor.p_handled_stats.doc_patients_count != 0 %}
+                                             <div id="for-screening-patients" style="height: 180px; width:100%;"></div>
+                                          {% endif %}
                                        </div>
                                     </div>
                                  </div>
@@ -1850,7 +1855,12 @@ p{
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 1 HIV Patients</p>
                                        </div>
                                        <div class="card-body" style="padding:0rem; text-align:center;">
-                                          <div id="stage1-patients" style="height: 180px; width:100%;"></div>
+                                          {% if doctor.p_handled_stats.doc_patients_count == 0 %}
+                                             <div id="no-patients2" style="height: 180px; width:100%;"></div>
+                                          {% endif %}
+                                          {% if doctor.p_handled_stats.doc_patients_count != 0 %}
+						<div id="stage1-patients" style="height: 180px; width:100%;"></div>
+					  {% endif %}
                                        </div>
                                     </div>
                                  </div>
@@ -1861,7 +1871,12 @@ p{
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 2 HIV Patients</p>
                                        </div>
                                        <div class="card-body" style="padding:0rem; text-align:center;">
-                                          <div id="stage2-patients" style="height: 180px; width:100%;"></div>
+					  {% if doctor.p_handled_stats.doc_patients_count == 0 %}
+                                             <div id="no-patients3" style="height: 180px; width:100%;"></div>
+                                          {% endif %}
+                                          {% if doctor.p_handled_stats.doc_patients_count != 0 %}
+                                             <div id="stage2-patients" style="height: 180px; width:100%;"></div>
+					  {%endif%}
                                        </div>
                                     </div>
                                  </div>
@@ -1872,7 +1887,12 @@ p{
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 3 HIV Patients</p>
                                        </div>
                                        <div class="card-body" style="padding:0rem; text-align:center;">
+					  {% if doctor.p_handled_stats.doc_patients_count == 0 %}
+                                             <div id="no-patients4" style="height: 180px; width:100%;"></div>
+                                          {% endif %}
+                                          {% if doctor.p_handled_stats.doc_patients_count != 0 %}
                                              <div id="stage3-patients" style="height: 180px; width:100%;"></div>
+					  {%endif%}
                                        </div>
                                     </div>
                                  </div>
@@ -3653,8 +3673,10 @@ p{
          });
          columnChart.render();
 
-         var stage1Chart = new CanvasJS.Chart("stage1-patients", {
-            maintainAspectRatio: false,
+	{% if doctor.p_handled_stats.doc_patients_count != 0 %}
+            var stage1Chart = new CanvasJS.Chart("stage1-patients", {
+            {% if doctor.p_handled_stats.stage_1 != 0 %}
+	    maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
             width:158,
@@ -3668,16 +3690,39 @@ p{
                   indexLabelFontWeight: "bolder",
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
-                  {  y: '{{doctor.p_handled_stats.stage_1}}', legendText: "stage 1 patients" },
                   {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled  patients" },
+		  {  y: '{{doctor.p_handled_stats.stage_1}}', legendText: "stage 1 patients" },
+
                   ]
                }
             ]
-         });
-         stage1Chart.render();
-
-         var stage2Chart = new CanvasJS.Chart("stage2-patients", {
-            maintainAspectRatio: false,
+	{%endif%}
+	    {% if doctor.p_handled_stats.stage_1 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
+	  
+            });
+            stage1Chart.render();
+	
+            var stage2Chart = new CanvasJS.Chart("stage2-patients", {
+            {% if doctor.p_handled_stats.stage_2 != 0 %}
+	    maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
             width:158,
@@ -3692,17 +3737,39 @@ p{
                   toolTipContent:  "{legendText}: {y}",
                   
                   dataPoints: [
-                  {  y:'{{doctor.p_handled_stats.stage_2}}', legendText: "stage 2 patients" },
                   {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+		  {  y:'{{doctor.p_handled_stats.stage_2}}', legendText: "stage 2 patients" },
+
                   ],
                
                }
             ]
-         });
-         stage2Chart.render();
+	   {%endif%}
+	    {% if doctor.p_handled_stats.stage_2 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
+            });
+            stage2Chart.render();
 
-         var stage3Chart = new CanvasJS.Chart("stage3-patients", {
-            // theme: "light2",
+            var stage3Chart = new CanvasJS.Chart("stage3-patients", {
+            {% if doctor.p_handled_stats.stage_3 != 0 %}
+	    // theme: "light2",
             maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
@@ -3717,15 +3784,37 @@ p{
                   indexLabelFontWeight: "bolder",
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
-                  {  y: '{{doctor.p_handled_stats.stage_3}}', legendText: "stage 3 patients" },
+		  {  y: '{{doctor.p_handled_stats.stage_3}}', legendText: "stage 3 patients" },
                   {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+
                   ]
                }
+	    {%endif%}
+		{% if doctor.p_handled_stats.stage_3 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
             ]
-         });
-         stage3Chart.render();
+            });
+            stage3Chart.render();
 
-         var negativePatientChart = new CanvasJS.Chart("negative-patients", {
+            var negativePatientChart = new CanvasJS.Chart("for-screening-patients", {
+            {% if doctor.p_handled_stats.for_screening != 0 %}
             maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
@@ -3740,13 +3829,146 @@ p{
                   indexLabelFontWeight: "bolder",
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
-                  {  y: '{{doctor.p_handled_stats.for_screening}}', legendText: "for screening patients" },
                   {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+		  {  y: '{{doctor.p_handled_stats.for_screening}}', legendText: "for screening patients" },
+
                   ]
                }
             ]
-         });
-         negativePatientChart.render();
+	   {%endif%}
+           {% if doctor.p_handled_stats.for_screening == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+                        ]
+                     }
+                  ]
+             {% endif %}
+            });
+            negativePatientChart.render();
+	{%endif%}
+
+	
+	{% if doctor.p_handled_stats.doc_patients_count == 0 %}
+		CanvasJS.addColorSet("greenShades",
+        	        [//colorSet Array
+               		 "#008080",
+               	 	"#2E8B57",
+                	"#3CB371",
+                	"#90EE90"                
+                	]);
+
+         	var noPatient1Chart = new CanvasJS.Chart("no-patients1", {
+            	colorSet: "greenShades",
+            	maintainAspectRatio: false,
+            	animationEnabled: true,
+            	height: 180,
+            	width:158,
+            	data: [
+               	{
+	        	type: "pie",
+                  	showInLegend: true,
+                  	indexLabel: "0",
+                 	// indexLabelPlacement: "inside",
+                 	// indexLabelFontSize: 15,
+                 	// indexLabelFontWeight: "bolder",
+                  	toolTipContent: "{legendText}: 0",                  
+                  	dataPoints: [
+                  	{  y:'1', legendText: "No Patients yet" },
+                  	],
+               
+               	}
+            	]
+            });
+            noPatient1Chart.render();
+	
+	    var noPatient2Chart = new CanvasJS.Chart("no-patients2", {
+               colorSet: "greenShades",
+               maintainAspectRatio: false,
+               animationEnabled: true,
+               height: 180,
+               width:158,
+               data: [
+                  {
+                     type: "pie",
+                     showInLegend: true,
+                     indexLabel: "0",
+                     //indexLabelPlacement: "inside",
+                     //indexLabelFontSize: 15,
+                     //indexLabelFontWeight: "bolder",
+                     toolTipContent: "{legendText}: 0",
+                     
+                     dataPoints: [
+                     {  y:'1', legendText: "No Patients yet" },
+                     ],
+                  
+                  }
+               ]
+            });
+            noPatient2Chart.render();
+
+            var noPatient3Chart = new CanvasJS.Chart("no-patients3", {
+               colorSet: "greenShades",
+               maintainAspectRatio: false,
+               animationEnabled: true,
+               height: 180,
+               width:158,
+               data: [
+                  {
+                     type: "pie",
+                     showInLegend: true,
+                     indexLabel: "0",
+                     //indexLabelPlacement: "inside",
+                     //indexLabelFontSize: 15,
+                     //indexLabelFontWeight: "bolder",
+                     toolTipContent: "{legendText}: 0",
+                     
+                     dataPoints: [
+                     {  y:'1', legendText: "No Patients yet" },
+                     ],
+                  
+                  }
+               ]
+            });
+            noPatient3Chart.render();
+
+            var noPatient4Chart = new CanvasJS.Chart("no-patients4", {
+               colorSet: "greenShades",
+               maintainAspectRatio: false,
+               animationEnabled: true,
+               height: 180,
+               width:158,
+               data: [
+                  {
+                     type: "pie",
+                     showInLegend: true,
+                     indexLabel: "0",
+                     //indexLabelPlacement: "inside",
+                     //indexLabelFontSize: 15,
+                     //indexLabelFontWeight: "bolder",
+                     toolTipContent: "{legendText}: 0",
+                     
+                     dataPoints: [
+                     {  y:'1', legendText: "No Patients yet" },
+                     ],
+                  
+                  }
+               ]
+            });
+            noPatient4Chart.render();
+
+	{% endif %}
 
          function explodePie(e) {
             for(var i = 0; i < e.dataSeries.dataPoints.length; i++) {

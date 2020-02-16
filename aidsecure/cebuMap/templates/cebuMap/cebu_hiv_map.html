@@ -356,6 +356,18 @@
                                 <td style="text-align:right;">{{brgy.hiv_pop.count}}</td>
                             </tr>
                         {% endfor%}
+			<tr id="inside-ceb-row-download">
+                            <td class="brgy-name" id="inside-ceb-download" style="text-align:left;">
+                                <b>All Patients In Cebu</b>
+                            </td>
+                            <td class="screening-count" id="in-ceb-screening-download"></td>
+                            <td class="stage-1-count"  id="in-ceb-s1-download"></td>
+                            <td class="stage-2-count" id="in-ceb-s2-download"></td>
+                            <td class="stage-3-count" id="in-ceb-s3-download"></td>
+                            <td class="deceased-count" id="in-ceb-deceased-download"></td>
+                            <td style="text-align:right;" id="in-ceb-all-download"></td>
+                        </tr>
+
                         <tr id="outside-ceb-row-download">
                             <td class="brgy-name" id="outside-ceb-download" style="text-align:left;">
                                 <b>Outside Cebu</b>
@@ -403,6 +415,19 @@
                             <td style="text-align:right;" id="pop-count-{{brgy.pk}}">{{brgy.hiv_pop.count}}</td>
                         </tr>
                     {% endfor%}
+		    <tr id="inside-ceb-row">
+                        <td class="brgy-name" id="inside-ceb" style="text-align:left;">
+                            <input class="stretched-link" type="checkbox"  value="All Patients In Cebu">
+                            <b>All Patients In Cebu</b>
+                        </td>
+                        <td class="screening-count" id="in-ceb-screening"></td>
+                        <td class="stage-1-count"  id="in-ceb-s1"></td>
+                        <td class="stage-2-count" id="in-ceb-s2"></td>
+                        <td class="stage-3-count" id="in-ceb-s3"></td>
+                        <td class="deceased-count" id="in-ceb-deceased"></td>
+                        <td style="text-align:right;" id="in-ceb-all"></td>
+                    </tr>
+			
                     <tr id="outside-ceb-row">
                         <td class="brgy-name" id="outside-ceb" style="text-align:left;">
                             <input class="stretched-link" type="checkbox"  value="Outside Cebu">
@@ -444,10 +469,37 @@
                 alert("Please choose what action to be done.");
             }
             else if (choice == 'all'){
+                document.getElementById("selected-count").value = "80 of 80 selected.";
                 downloadList = []; // clean list first to for special cases like user selects multiple brgy data but choses download all
-                {% for brgy in all_brgys %}
+                $("#brgy-data-table-download > tbody").html("");  //empty the tbody first
+		{% for brgy in all_brgys %}
                     downloadList.push("{{brgy.name_3}}");
-                {% endfor %}
+               	     $('#download-table-body').append( // add data in tbody, fill it with brgy data
+                            '<tr id="brgy-{{brgy.pk}}">' + 
+                                '<td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">' + 
+                                    '{{forloop.counter}}' + '. ' +  '{{brgy.name_3}}' +
+                                '</td>'  +
+                                '<td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">' + 
+                                    '{{brgy.for_screening.count}}' +
+                                '</td>' + 
+                                '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                                    '{{brgy.stage_1.count}}' + 
+                                '</td>' +
+                                '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                                    '{{brgy.stage_2.count}}' + 
+                                '</td>' +
+                                '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                                    '{{brgy.stage_3.count}}' +
+                                '</td>' + 
+                                '<td class="deceased">' +
+                                    '{{brgy.deceased.count}}' +
+                                '</td>' + 
+                                '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
+                                    '{{brgy.hiv_pop.count}}' +
+                                '</td>' + 
+                            '</tr>'
+                        ); 
+		 {% endfor %}
             } else if (choice == 'selected'){
 
                 $("#brgy-data-table-download > tbody").html("");  //empty the tbody first
@@ -676,6 +728,38 @@
         $('#out-ceb-all-download').html(outside_ceb_count);
 
 
+	 // for counting all patients inside of cebu
+        var inside_ceb_count = 0;
+        var screeningInCeb = 0;
+        var s1InCeb = 0;
+        var s2InCeb = 0;
+        var s3InCeb = 0;
+        var negInCeb = 0;
+        var deceasedInCeb = 0;
+
+        {% for brgy in all_brgys %}
+            inside_ceb_count += {{brgy.hiv_pop.count}}
+            screeningInCeb+={{brgy.for_screening.count}}
+            s1InCeb+={{brgy.stage_1.count}}
+            s2InCeb+={{brgy.stage_2.count}}
+            s3InCeb+={{brgy.stage_3.count}}
+            negInCeb+={{brgy.stage_0.count}}
+            deceasedInCeb+={{brgy.deceased.count}}
+        {% endfor %}    
+
+	 // assign the deceased and inside cebu count
+        $('#in-ceb-screening').html(screeningInCeb);
+        $('#in-ceb-s1').html(s1InCeb);
+        $('#in-ceb-s2').html(s2InCeb);
+        $('#in-ceb-s3').html(s3InCeb);
+        $('#in-ceb-deceased').html(deceasedInCeb);
+        $('#in-ceb-all').html(inside_ceb_count);
+        $('#in-ceb-screening-download').html(screeningInCeb);
+        $('#in-ceb-s1-download').html(s1InCeb);
+        $('#in-ceb-s2-download').html(s2InCeb);
+        $('#in-ceb-s3-download').html(s3InCeb);
+        $('#in-ceb-deceased-download').html(deceasedInCeb);
+        $('#in-ceb-all-download').html(inside_ceb_count);
 
         
         var allPatientsLayer = L.layerGroup(allPatientsObj);  // store array of markers to a layergroup 

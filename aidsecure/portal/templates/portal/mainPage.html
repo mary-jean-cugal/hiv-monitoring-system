@@ -47,7 +47,7 @@
 
       <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
          <div class="container">
-            <a class="navbar-brand" href="{% url 'portal' %}"><img src="{% static 'portal/images/logo-main.png' %}" id="mainLogo" alt=""></a>
+            <a class="navbar-brand" href="{% url 'portal' %}"><img src="{% static 'portal/images/logo-main.png' %}" style="height:60px;" id="mainLogo" alt=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
             </button>
@@ -85,19 +85,19 @@
                        
                         <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">
                            <h2>1. Facilitates Online Scheduling of Doctor to Patient Meetings</h2>
-                           <p style="font-size: 16px;">Aidsecure allows patients to schedule an appointment with doctors of their choice online for HIV screening.</p>
+                           <p style="font-size: 16px; padding-left:1.5rem;">Aidsecure allows patients to schedule an appointment with doctors of their choice online for HIV screening.</p>
                         </a>
                         <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">
                            <h2>2. Provides Editable and Downloadable Online Copy of HIV/Aids Forms Online</h2>
-                           <p style="font-size: 16px;">Aidsecure lets users edit  and download patient forms (e.g. Medical History, Individual Client Forms)</p>
+                           <p style="font-size: 16px; padding-left:1.5rem;">Aidsecure lets users edit  and download patient forms (e.g. Medical History, Individual Client Forms)</p>
                         </a>
                         <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">                           
                            <h2>3. Creates Incidence Visualization</h2>
-                           <p style="font-size: 16px;">Aidsecure features visualization on HIV/AIDS Incidence in Cebu City.</p>
+                           <p style="font-size: 16px; padding-left:1.5rem;">Aidsecure features visualization on HIV/AIDS Incidence in Cebu City.</p>
                         </a>
                         <a class="services-wrap ftco-animate" style="padding: 1rem;padding-left: 3rem;">                           
                            <h2>4. Assures Anonimity and Security Online</h2>
-                           <p style="font-size: 16px;">Aidsecure makes sure that your private information is handled properly.</p>
+                           <p style="font-size: 16px; padding-left:1.5rem;">Aidsecure makes sure that your private information is handled properly.</p>
                         </a>
                         
                      </div>
@@ -178,7 +178,7 @@
          <div class="container" style="margin-top:-70px;">
                <div class="row d-flex justify-content-center">
                   <div class="col-md-7 text-center heading-section heading-section-white ftco-animate fadeInUp ftco-animated">
-                     <p style="font-size:23px;">This website is developed and maintained by the BioInformatics and Research Interest Group (BRIG)</p>
+                     <p style="font-size:23px;">This web application is developed and maintained by the BioInformatics and Research Interest Group (BRIG)</p>
                      
                      <div style="color: rgba(255, 255, 255, 0.7); margin-top:4rem;">
                         <p style="font-size:18px; margin-bottom: 0rem;">Mary Jean V. Cugal  &emsp; &emsp; &emsp;&emsp; &emsp;&emsp;Prof. Demelo M. Lao</p>
@@ -347,17 +347,21 @@
                      </div>
                         
                      <div class="row">
+			 <div class="col-md-6">
+                           <div class="form-group">
+                              <label for="p-sex" class="text-black">Sex</label>
+                              <select class="form-control" id="p-sex" name="p-sex">
+			      <option value="female">female</option>
+			      <option value="male">male</option>
+			      </select>
+                           </div>
+                        </div>
+
                          <div class="col-md-6">
                            <div class="form-group">
                               <label for="p-phone-number" class="text-black">Cellphone Number</label>
                               <input type="text" class="form-control" id="p-phone-number" name="p-phone-number" placeholder= "11 digits e.g. 09120000000" pattern="09[0-9]{9}" required>
                            </div>
-                        </div>
-                        <div class="col-md-6">
-                           <div class="form-group">
-                              <label for="tel-number" class="text-black">Telephone Number</label>
-                              <input type="text" class="form-control" id="tel-number" name="tel-number" placeholder="7 digits e.g. 7654321" pattern="[0-9]{7}" required>
-                           </div> 
                         </div>
                      </div>
 
@@ -429,7 +433,7 @@
                            <div class="form-group">
                               <div class="form-group">
                                  <label for="p-username" class="text-black">Username <a style="font-size: 10px;">(only 1 word and letters only)</a></label>
-                                 <input type="text" class="form-control" id="p-username" name="p-username"  placeholder="e.g. josedelacruz123" pattern="^[a-zA-Z]+$"  required>
+                                 <input type="text" class="form-control" id="p-username" name="p-username"  placeholder="e.g. josedelacruz123" pattern="^[0-9a-zA-Z]+$"  required>
                               </div>
                            </div>
                         </div>

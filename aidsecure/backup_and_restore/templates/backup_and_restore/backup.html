@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Aidsecure Backup</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+
+	<input hidden id="dummy-data" value="request to backup data.">
+
+    <script>
+         $(document).ready(function() {
+                console.log("BACKING UP DATA...");
+//                e.preventDefault();
+
+                $.ajax({
+                        type:"GET",
+                        async:true,
+                        url:'/backup-data/',
+                        data:{
+                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                message: $('#dummy-data').val(),
+                        },
+                        success:function(){
+                                alert("DONE BACKING UP THE LATEST DATA. \n The backed up data is stored in the admin file system storage.")
+                                console.log("DONE BACK UP!!")
+                        }
+                });
+        });
+
+     </script>
+
+</body>
+</html>

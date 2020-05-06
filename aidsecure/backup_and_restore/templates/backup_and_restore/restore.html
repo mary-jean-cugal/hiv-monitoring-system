@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Aidsecure Backup</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+
+        <input hidden id="dummy-data" value="request to restore data.">
+
+    <script>
+         $(document).ready(function() {
+                console.log("RESTORING DATA...");
+
+                $.ajax({
+                        type:"GET",
+                        async:true,
+                        url:'/restore-data/',
+                        data:{
+                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                message: $('#dummy-data').val(),
+                        },
+                        success:function(){
+                                alert("DONE RESTORING THE ADMIN  TO THE LATEST BACKED UP DATA")
+                                console.log("DONE BACK UP!!")
+                        }
+                });
+        });
+
+     </script>
+
+</body>
+</html>
+

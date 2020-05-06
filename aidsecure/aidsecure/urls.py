@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^',  include('patient.urls')),
     url(r'^',  include('doctor.urls')),
     url(r'^', include('cebuMap.urls')),
+    url(r'^', include('backup_and_restore.urls')),
+
 ] 
 
 

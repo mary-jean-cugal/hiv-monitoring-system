@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 
 from doctor.models import Doctor, DoctorNotification, DoctorStats, Medicine, MonthlyStatistics
-from patient.models import Patient, ICRForm, ProfileForm, MedHistForm, PersonalRecord, PatientLocationDetails, PatientsMonthlyStatistics
+from patient.models import Patient, ICRForm,  MedHistForm, PersonalRecord, PatientLocationDetails, PatientsMonthlyStatistics
 from cebuMap.models import CebuBarangays 
 
 
@@ -171,7 +171,7 @@ def addPatient(request):
 		age = request.POST.get('p-age', "")
 		bdate = request.POST.get('p-birthdate', "")
 		phone_num = request.POST.get('p-phone-number', "")
-		tel_num = request.POST.get('tel-number', "")
+		sex = request.POST.get('p-sex', "")
 		work_add = request.POST.get('p-work-address', "")
 		email = request.POST.get('p-email', "")
 		password = request.POST.get('p_password', "")
@@ -203,8 +203,8 @@ def addPatient(request):
 			new_patient.birthdate = bdate.lower()
 		if len(phone_num) > 0:
 			new_patient.call_number = phone_num
-		if len(tel_num) > 0:
-			new_patient.tel_number = tel_num
+		if len(sex) > 0:
+			icr.sex = sex
 		if len(work_add) > 0:
 			new_patient.work_address = work_add.lower().title()
 		if len(email) > 0:
@@ -331,9 +331,9 @@ def addPatient(request):
 						brgy.stage_2.add(new_patient)
 					elif  new_patient.HIV_status == "stage 3":
 						brgy.stage_3.add(new_patient)
-				
+
 				brgy.save()
-			
+
 		doctors = Doctor.objects.all()
 		patients = Patient.objects.all()
 		context ={
@@ -342,7 +342,7 @@ def addPatient(request):
 		}
 		return render(request, 'portal/mainPage.html', context)
 	return render(request, 'portal/mainPage.html')
-			
+
 
 def addDoctor(request):
 	# .title() capitalize letter every after space
@@ -391,15 +391,15 @@ def addDoctor(request):
 		doc_stats.doctor_name = new_doctor.name
 		doc_stats.neg_patients = 0
 		doc_stats.stage_1 = 0
-  
-		monthly_stat = MonthlyStatistics.objects.create()
+
+		monthly_stat = MonthlyStatistics()
 		monthly_stat.created_on = datetime.now()
 		monthly_stat.doctor_name = new_doctor.name
-		monthly_stat.pk = new_doctor.pk
+		monthly_stat.pk = MonthlyStatistics.objects.latest().pk + 1
 		monthly_stat.year = datetime.now().year
 		monthly_stat.doctor_name = new_doctor.name
 		monthly_stat.save()
-		
+
 		doc_stats.save()
 		doc_stats.monthly_stats.add(monthly_stat)
 		

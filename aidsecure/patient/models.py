@@ -9,6 +9,33 @@ from django.urls import reverse
 
 from datetime import datetime, date
 
+
+class ProfileForm(models.Model):
+	uid = models.CharField(default="None", max_length = 100, blank=True)
+	code_name = models.CharField(default="None", max_length = 100, blank=True)
+	real_name = models.CharField(default="None", max_length = 100, blank=True)
+	mother_maiden_name = models.CharField(default="None", max_length = 100, blank=True)
+	address = models.CharField( default="None", max_length = 100, blank=True)
+	province = models.CharField(default="None", max_length = 100, blank=True)
+	age = models.CharField(default="0", max_length = 3, blank=True)
+	sex = models.CharField(default="None", max_length = 100, blank=True)
+	status = models.CharField(default="None",  max_length = 100, blank=True)
+	birthdate = models.CharField(default="None", max_length = 100, blank=True)
+	pdate = models.CharField(default="None", max_length = 100, blank=True)
+	nation = models.CharField(default="Filipino", max_length = 100, blank=True)
+	ed = models.CharField(default="None", max_length = 100, blank=True)
+	occupation = models.CharField(default="None",  max_length = 100, blank=True)
+	contact = models.CharField(default="None", max_length = 100, blank=True) #cellphone number 11 digits
+	philNum = models.CharField(default="None", max_length = 100, blank=True) # telephone 7 digits
+	#doctor_remarks = models.ManyToManyField(Remark, blank=True)
+
+	#docs_viewed = models.ManyToManyField(UsersViewed,  blank=True)
+
+	class Meta:
+		verbose_name_plural = "Profile Forms"
+	def __str__(self):
+	    return self.real_name;	
+
 # keeps count of the number of patients whenever added
 class PatientsMonthlyStatistics(models.Model):
 	created_on = models.DateTimeField(default=datetime.now, blank=True)
@@ -180,31 +207,6 @@ class ICRForm(models.Model):
 		return self.first_name;
 
 
-class ProfileForm(models.Model):
-	uid = models.CharField(default="None", max_length = 100, blank=True)
-	code_name = models.CharField(default="None", max_length = 100, blank=True)
-	real_name = models.CharField(default="None", max_length = 100, blank=True)
-	mother_maiden_name = models.CharField(default="None", max_length = 100, blank=True)
-	address = models.CharField( default="None", max_length = 100, blank=True)
-	province = models.CharField(default="None", max_length = 100, blank=True)
-	age = models.CharField(default="0", max_length = 3, blank=True)
-	sex = models.CharField(default="None", max_length = 100, blank=True)
-	status = models.CharField(default="None",  max_length = 100, blank=True)
-	birthdate = models.CharField(default="None", max_length = 100, blank=True)
-	pdate = models.CharField(default="None", max_length = 100, blank=True)
-	nation = models.CharField(default="Filipino", max_length = 100, blank=True)
-	ed = models.CharField(default="None", max_length = 100, blank=True)
-	occupation = models.CharField(default="None",  max_length = 100, blank=True)
-	contact = models.CharField(default="None", max_length = 100, blank=True) #cellphone number 11 digits
-	philNum = models.CharField(default="None", max_length = 100, blank=True) # telephone 7 digits
-	doctor_remarks = models.ManyToManyField(Remark, blank=True)
-
-	docs_viewed = models.ManyToManyField(UsersViewed,  blank=True)
-
-	class Meta:
-		verbose_name_plural = "Profile Forms"
-	def __str__(self):
-	    return self.real_name;	
 
 class Patient(models.Model):
 	slug = models.SlugField() #  patient-username for url
@@ -233,9 +235,9 @@ class Patient(models.Model):
 
 	medical_history = models.ManyToManyField(MedHistForm, blank=True)
 	icr = models.OneToOneField(ICRForm, on_delete="models.CASCADE", primary_key=True, unique=True, blank=True)
-	profile = models.OneToOneField(ProfileForm, on_delete="models.CASCADE", unique=True, null=True, blank=True)
 	personal_records = models.ManyToManyField(PersonalRecord, blank=True)
 	location_details = models.ManyToManyField(PatientLocationDetails, blank=True)
+#	profile = models.OneToOneField(ProfileForm, on_delete="models.CASCADE", unique=True, null=True, blank=True)
 	
 	meds = models.ManyToManyField(Medication, blank=True)
 	my_doctors = models.ManyToManyField(Doctor, blank=True) #unique=true has no effect since foreignkey is used

@@ -429,7 +429,7 @@
   
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
      <div class="container">
-         <a class="navbar-brand" href="{%url 'portal' %}"><img src= "{% static 'portal/images/logo-main.png' %}" id="mainLogo" alt=""></a>
+         <a class="navbar-brand" href="{%url 'portal' %}"><img src= "{% static 'portal/images/logo-main.png' %}" id="mainLogo" style="height:60px;" alt=""></a>
          <ul class="navbar-nav ml-auto">
             <li  class="nav-item cta" data-toggle="collapse" data-target="#demo">
                <a id="notification"  >
@@ -551,7 +551,7 @@
                });
             </script>
 
-            <div class="col-md-9 right-portal" style="padding-bottom:100px; font-family:Roboto, Arial, sans-serif;">            
+            <div class="col-md-9 right-portal" style="padding-bottom:500px; font-family:Roboto, Arial, sans-serif;">            
                <div class="tab-content pl-md-5" id="v-pills-tabContent">
                   <div class="tab-pane fade py-5" id="acc-info" role="tabpanel" aria-labelledby="v-pills-master-tab">
                      <div class="col-md-12" style="border-style: ridge;"> 
@@ -1290,7 +1290,7 @@
 
                                              <div class="modal-footer">
                                                 <button  class="btn btn-primary" id="send-request-{{forloop.counter}}" data-dismiss="modal">Send Request</button> 
-                                                <button class="btn btn-primary"  id="back-btn-req-sched-{{forloop.counter}}" data-dismiss="modal">back</button>
+                                                <button class="btn btn-primary"  id="back-btn-req-sched-{{forloop.counter}}" data-dismiss="modal">Back</button>
                                              </div>
                                           </form> 
                                        </div>
@@ -1613,7 +1613,7 @@
                                                             <div id="sched-notif-accepted">
                                                                <div id="done-notif-body-wrapper-{{forloop.counter}}" style="padding:1rem; border:1px solid lightgray">
                                                                   <div class="form-group">
-                                                                     <p style="margin-left: 0rem;color: #00ff55;"><b>Schedule Status: </b>Accepted</p>
+                                                                     <p style="margin-left: 0rem; color:green;"><b>Schedule Status: </b>Accepted</p>
                                                                   </div>
                                                                   <div class="form-group">
                                                                      <label><b>HIV Status: </b></label>
@@ -1657,13 +1657,13 @@
                                                       {% endif %}
 
                                                       <!-- Done schedule modal -->
-                                                      {% if notif.action_type == 'Done' or notif.action_type == 'Remark Finished' %}
+                                                      {% if notif.action_type == 'Done' or notif.action_type == 'Finished' %}
                                                          {% for schedule in patient.finished_schedules.all %}
                                                             {% if schedule.pk == notif.action_pk %}
                                                                <div id="sched-notif-accepted">
                                                                   <div id="done-notif-body-wrapper-{{forloop.counter}}" style="padding:1rem; border:1px solid lightgray">
                                                                      <div class="form-group">
-                                                                        <p style="margin-left: 0rem;color: #1a8cff;"><b>Schedule Status: </b>Accepted</p>
+                                                                        <p style="margin-left: 0rem;color: #1a8cff;"><b>Schedule Status: </b>Finished</p>
                                                                      </div>
                                                                      <div class="form-group">
                                                                         <label><b>HIV Status: </b></label>
@@ -1717,7 +1717,7 @@
                                                                <div id="sched-notif-declined-{{forloop.counter}}" >
                                                                   <div id="declined-notif-body-wrapper" style="padding:1rem; border:1px solid lightgray;">
                                                                      <div class="form-group">
-                                                                        <p style="margin-left: 0rem;color: #b35900;"><b>Schedule Status: </b>Pending</p>
+                                                                        <p style="margin-left: 0rem;color: #b35900;"><b>Schedule Status: </b>Declined</p>
                                                                      </div>
                                                                      <p  id="ongoing-patient-{{schedule.patient_hiv_status}}"><b>HIV Status: </b>{{schedule.patient_hiv_status}}</p>
 

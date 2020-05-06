@@ -4,9 +4,10 @@ from django.contrib.auth.models import User, Group
 from leaflet.admin import LeafletGeoAdmin
 from django.utils.html import format_html
 
-from patient.models import Patient, ICRForm, ProfileForm, MedHistForm, PatientNotification, PersonalRecord, PatientLocationDetails, Medication, PatientsMonthlyStatistics
+from patient.models import Patient, ICRForm,MedHistForm, PatientNotification, PersonalRecord, PatientLocationDetails, Medication, PatientsMonthlyStatistics
 from doctor.models import Doctor, DoctorNotification, DoctorSchedule, DoctorStats, Remark, UsersViewed, Medicine, MonthlyStatistics
 from cebuMap.models import CebuMap, Incidence, CebuBarangays
+from backup_and_restore.models import Backup, Restore
 from .models import AdminNotification
 
 
@@ -100,7 +101,14 @@ class CebuBarangaysAdmin(admin.ModelAdmin):
     search_fields = ('name_3',)
     list_display = ('name_3',)
     list_filter = ('name_3',)
+    def has_add_permission(self, request):
+        return False
 
+#    def has_change_permission(self, request, obj=None):
+ #       return False
+    # This will help you to disable delete functionaliyt
+    def has_delete_permission(self, request, obj=None):
+        return False
 class PatientsMonthlyStatisticsAdmin(admin.ModelAdmin):
     search_fields = ('year', 'patient_username',)
     list_display = ('year', 'patient_username',)
@@ -117,8 +125,58 @@ class CebuMapAdmin(LeafletGeoAdmin):
         )
 
     my_clickable_link.short_description = "Cebu Map"
+    def has_add_permission(self, request):
+        return False
 
-    
+    def has_change_permission(self, request, obj=None):
+        return False
+    # This will help you to disable delete functionaliyt
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+class BackupAdmin(admin.ModelAdmin):
+    list_display = ['backup_link']
+    readonly_fields = ('backup_link',)
+    exclude = ['name']
+
+    def backup_link(self, instance):
+        return format_html(
+            '<a href="http://202.92.153.70:80/backup-data" target="_blank">Backup Aidsecure Data</a>', 
+        )
+
+    backup_link.short_description = "Backup"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    # This will help you to disable delete functionaliyt
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+class RestoreAdmin(admin.ModelAdmin):
+    list_display = ['restore_link']
+    readonly_fields = ('restore_link',)
+    exclude = ['name']
+
+    def restore_link(self, instance):
+        return format_html(
+            '<a href="http://202.92.153.70:80/restore-data" target="_blank">Restore Aidsecure Data</a>',
+        )
+
+    restore_link.short_description = "Restore"
+    def has_add_permission(self, request):
+        return False
+
+    # This will help you to disable delete functionaliyt
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(DoctorNotification, DoctorNotificationAdmin)
 admin.site.register(DoctorSchedule, DoctorScheduleAdmin)
@@ -129,7 +187,7 @@ admin.site.register(MonthlyStatistics, DocMonthlyStatsAdmin)
 
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(ICRForm, ICRFormAdmin)
-admin.site.register(ProfileForm, ProfileFormAdmin)
+#admin.site.register(ProfileForm, ProfileFormAdmin)
 admin.site.register(MedHistForm, MedHistFormAdmin)
 admin.site.register(PersonalRecord, PersonalRecordAdmin)
 admin.site.register(UsersViewed, UsersViewedAdmin)
@@ -143,3 +201,5 @@ admin.site.register(PatientLocationDetails, PatientLocationDetailsAdmin)
 admin.site.register(CebuMap, CebuMapAdmin)
 admin.site.register(CebuBarangays, CebuBarangaysAdmin)
 
+admin.site.register(Backup, BackupAdmin)
+admin.site.register(Restore, RestoreAdmin)

@@ -1,4 +1,5 @@
-{% extends "portal/base.html" %}
+{% load static %}
+{% block content %}{% extends "portal/base.html" %}
 {% load static %}
 {% block content %}
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
@@ -404,8 +405,8 @@ p{
    display:none;
 }
 .canvasjs-chart-canvas{
- /*  height:230px;
-   width:728px;*/
+   height:230px;
+   width:728px;
    position:relative;
 }
 
@@ -433,7 +434,7 @@ p{
 
    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar" style="background:white;">
       <div class="container">
-         <a class="navbar-brand" href="{%url 'portal' %}"><img src= "{% static 'portal/images/logo-main.png' %}" id="mainLogo" style="height:60px;"  alt=""></a>
+         <a class="navbar-brand" href="{%url 'portal' %}"><img src= "{% static 'portal/images/logo-main.png' %}" id="mainLogo" alt=""></a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
          <span class="oi oi-menu"></span> Menu
          </button>
@@ -513,14 +514,14 @@ p{
                         </div>
                         <div class="modal-footer">
                            <input id="change-prof-pic-upload"  class="btn btn-primary" type="submit" data-dismiss="modal" value="Finish" readonly>
-                           <button id="change-prof-pic-back" class="btn btn-primary" type="button" data-dismiss="modal">Back</button>                           
+                           <button id="change-prof-pic-back" class="btn btn-primary" type="button" data-dismiss="modal">back</button>                           
                         </div>
                      </form>
                   </div>
                </div>
             </div>
 
-            <div class="col-md-9 right-portal" style="padding-bottom:500px;">            
+            <div class="col-md-9 right-portal" style="padding-bottom:100px;">            
             <div class="tab-content pl-md-5" id="v-pills-tabContent" >
                <!-- Doctor Schedules Tab -->
                <div class="tab-pane fade py-5" id="schedules" role="tabpanel" aria-labelledby="v-pills-fitness-tab">
@@ -599,16 +600,16 @@ p{
                                     
                                     <hr style="margin:0rem;">                                    
                                     <div class="form-group" style="margin-bottom:3px; margin-left:1rem;" id="btn-options-{{forloop.counter}}" >
-                                       <button hidden class="btn btn-primary"  type="submit" id="accept-btn-{{forloop.counter}}" style="font-size: 12px;">Accept</button>
-                                       <button class="btn btn-primary"  type="button" id="accept-btn-{{forloop.counter}}" style="font-size: 12px;">Accept</button>
-                                       <button class="btn btn-primary" type="button" id="attempt-reject-btn-{{forloop.counter}}" style="font-size: 12px;"  id="reject-button" data-toggle="modal" data-target="#reject-sched-{{schedule.pk}}">Decline</button>
+                                       <button hidden class="btn btn-primary"  type="submit" id="--accept-btn-{{forloop.counter}}" style="font-size: 12px;">accept</button>
+                                       <button class="btn btn-primary"  type="button" id="accept-btn-{{forloop.counter}}" style="font-size: 12px;">accept</button>
+                                       <button class="btn btn-primary" type="button" id="attempt-reject-btn-{{forloop.counter}}" style="font-size: 12px;"  id="reject-button" data-toggle="modal" data-target="#reject-sched-{{schedule.pk}}">decline</button>
                                     </div>
                                  </div>  
                               </form>
 
                               <script>
                                  $('#attempt-reject-btn-{{forloop.counter}}').click(function(){
-                                    console.log("attempt rejection.");
+                                    console.log("yep. attempt rejection.");
                                  });
                                  $('#accept-btn-{{forloop.counter}}').click(function(e){
                                     console.log("pending schedule!");
@@ -815,7 +816,7 @@ p{
                                     <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
                                     <p class="doc-remarks-header" ><b>Doctor(s) Remarks: </b></p>
                                     <hr style="margin:0.5rem;">
-                                    <input style="margin-left:1rem;" type="button" id="add-ongoing-remark-btn-{{forloop.counter}}" name="add-ongoing-remark-btn" data-toggle="modal" data-target="#add-ongoing-remark-modal-{{forloop.counter}}" value="Add a remark" readonly>
+                                    <input style="margin-left:1rem;" type="button" id="add-ongoing-remark-btn-{{forloop.counter}}" name="add-ongoing-remark-btn" data-toggle="modal" data-target="#add-ongoing-remark-modal-{{forloop.counter}}" value="add a remark" readonly>
 
                                     <div id="ongoing-remarks">
                                     {% for remark in schedule.doc_remark.all %}
@@ -968,7 +969,7 @@ p{
                                        <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
                                        <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
                                        <hr style="margin:0.5rem;">
-                                       <input style="margin-left:1rem;" type="button" id="add-finished-remark-btn-{{forloop.counter}}" name="add-finished-remark-btn" data-toggle="modal" data-target="#add-finished-remark-modal-{{forloop.counter}}" value="Add a remark" readonly>
+                                       <input style="margin-left:1rem;" type="button" id="add-finished-remark-btn-{{forloop.counter}}" name="add-finished-remark-btn" data-toggle="modal" data-target="#add-finished-remark-modal-{{forloop.counter}}" value="add a remark" readonly>
                                     
                                        <div id="finished-remarks">
                                           {% for remark in schedule.doc_remark.all %}
@@ -1204,6 +1205,7 @@ p{
                                                                {% endif %}
                                                                <p class="white center bold" style="margin-bottom:1rem;">{{patient.username}}</p>
                                                                <p class="white center" >Age: {{patient.age}}</p>
+                                                               <p class="white center" >Status: {{patient.profile.status}}</p>
                                                                <p class="white center">HIV Level: {{patient.HIV_status}}</p>
                                                                <p class="white center">Work: {{patient.work}}</p>  
                                                                <p class="white center" style="margin-bottom:1rem;">Email: {{patient.email}}</p>   
@@ -1393,11 +1395,9 @@ p{
                                                             </div>
                                                             <div class="modal-footer" style="padding-top: 0.5rem; padding-bottom: 0rem;">
                                                                <div class="form-group" style="margin-bottom: 0.5rem;">
-                                                                  <button class="btn btn-primary" id="notif-accept-btn-{{forloop.counter}}" data-dismiss="modal">Accept</button>
+                                                                  <button class="btn btn-primary" id="notif-accept-btn-{{forloop.counter}}" data-dismiss="modal">accept</button>
                                                                   <button class="btn btn-primary" id="notif-attempt-reject-btn-{{forloop.counter}}" >Decline</button>
                                                                   <button style="display:none;" class="btn btn-primary" id="notif-back-btn-{{forloop.counter}}">Back</button>
-								  <button id="appointment-sched-back" class="btn btn-primary" type="button" data-dismiss="modal">Back</button>                           
-
                                                                   <button style="display:none;" class="btn btn-primary" id="notif-reject-btn-{{forloop.counter}}" data-dismiss="modal">Continue to Decline</button>
                                                                </div>
                                                             </div>
@@ -1499,7 +1499,7 @@ p{
                                                                      <input hidden id="notif-pending-sched-pk-{{forloop.counter}}" name="pending-sched-pk" value="{{schedule.pk}}">
                                                                      
                                                                      <div class="form-group" style="padding:0rem;">
-                                                                        <p  style="margin-left: 0rem;color: green;"><b>Schedule Status: </b>Accepted</p>
+                                                                        <p  style="margin-left: 0rem;color: lightcoral;"><b>Schedule Status: </b>Accepted</p>
                                                                      </div>
 
                                                                      <div class="form-group">
@@ -1580,7 +1580,7 @@ p{
                                                                      <input hidden id="notif-pending-sched-pk-{{forloop.counter}}" name="pending-sched-pk" value="{{schedule.pk}}">
                                                                      
                                                                      <div class="form-group">
-                                                                        <p  style="margin-left: 0rem;color: #b35900;;"><b>Schedule Status: </b>Declined</p>
+                                                                        <p  style="margin-left: 0rem;color: lightcoral;"><b>Schedule Status: </b>Declined</p>
                                                                      </div>
 
                                                                      <div class="form-group">
@@ -1660,7 +1660,7 @@ p{
                                                                      <input hidden id="notif-pending-sched-pk-{{forloop.counter}}" name="pending-sched-pk" value="{{schedule.pk}}">
                                                                      
                                                                      <div class="form-group">
-                                                                        <p style="margin-left: 0rem; color: #1a8cff;;"><b>Schedule Status: </b>Finished</p>
+                                                                        <p style="margin-left: 0rem; color: lightcoral;"><b>Schedule Status: </b>Done</p>
                                                                      </div>
 
                                                                      <div class="form-group">
@@ -1835,7 +1835,7 @@ p{
                               <div class="row"  style="margin-bottom:2rem;">
             
                                  <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="card card-stats" style="max-width: 158px;">
+                                    <div class="card card-stats">
                                        <div class="card-header" style="padding:0.5rem; background-color: #ffb3b3;">
                                           <p style="padding:0rem; margin:0rem;font-size: 14.5px;">For Screening</p>
                                        </div>
@@ -1851,7 +1851,7 @@ p{
                                  </div>
          
                                  <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="card card-stats"  style="max-width: 158px;">
+                                    <div class="card card-stats">
                                        <div class="card-header" style="padding:0.5rem; background-color: #ff9999;">
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 1 HIV Patients</p>
                                        </div>
@@ -1867,7 +1867,7 @@ p{
                                  </div>
          
                                  <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="card card-stats"  style="max-width: 158px;">
+                                    <div class="card card-stats">
                                        <div class="card-header" style="padding:0.5rem; background-color: #ff8080;">
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 2 HIV Patients</p>
                                        </div>
@@ -1883,7 +1883,7 @@ p{
                                  </div>
          
                                  <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="card card-stats" style="max-width:158px;">
+                                    <div class="card card-stats">
                                        <div class="card-header" style="padding:0.5rem; background-color: #ff6666;">
                                           <p  style="padding:0rem; margin:0rem;font-size: 14.5px;">Stage 3 HIV Patients</p>
                                        </div>
@@ -1942,63 +1942,6 @@ p{
                                     yearFound = true;
                                     console.log('{{stat.year}} : {{stat.pk}}');
 
-					//assign to another variable for tweaking
-					//all patient
-       					var chosen_other_patients_jan = {{p_stat.january}};
-        				var chosen_other_patients_feb = {{p_stat.february}};// + other_patients_jan;
-        				var chosen_other_patients_mar = {{p_stat.march}};// + other_patients_feb;
-        				var chosen_other_patients_apr = {{p_stat.april}};// +  other_patients_mar;
-       					var chosen_other_patients_may = {{p_stat.may}};// +  other_patients_apr;
-        				var chosen_other_patients_jun = {{p_stat.june}};// +  other_patients_may;
-        				var chosen_other_patients_jul = {{p_stat.july}};// +  other_patients_jun;
-        				var chosen_other_patients_aug = {{p_stat.august}};// +  other_patients_jul;
-        				var chosen_other_patients_sep = {{p_stat.september}};// +  other_patients_aug;
-        				var chosen_other_patients_oct = {{p_stat.october}};// +  other_patients_sep;
-        				var chosen_other_patients_nov = {{p_stat.november}};// +  other_patients_oct;
-        				var chosen_other_patients_dec = {{p_stat.december}};// +  other_patients_nov;
-
-
-        				//doctor patients
-        				var chosen_doc_patients_jan = {{stat.january}};
-        				var chosen_doc_patients_feb = {{stat.february}};// + doc_patients_jan;
-        				var chosen_doc_patients_mar = {{stat.march}};// + doc_patients_feb;
-       	 				var chosen_doc_patients_apr = {{stat.april}};// + doc_patients_mar;
-        				var chosen_doc_patients_may = {{stat.may}};// + doc_patients_apr;
-        				var chosen_doc_patients_jun = {{stat.june}};// + doc_patients_may;
-        				var chosen_doc_patients_jul = {{stat.july}};// + doc_patients_jun;
-        				var chosen_doc_patients_aug = {{stat.august}};// + doc_patients_jul;
-        				var chosen_doc_patients_sep = {{stat.september}};// + doc_patients_aug;
-        				var chosen_doc_patients_oct = {{stat.october}};// + doc_patients_sep;
-        				var chosen_doc_patients_nov = {{stat.november}};// + doc_patients_oct;
-				        var chosen_doc_patients_dec = {{stat.december}};// + doc_patients_nov;
-
-					//get the total patients per month
-        				var chosen_latest_monthly_patient_count = [chosen_other_patients_jan, chosen_other_patients_feb, chosen_other_patients_mar, chosen_other_patients_apr, chosen_other_patients_may, chosen_other_patients_jun, chosen_other_patients_jul, chosen_other_patients_aug, chosen_other_patients_sep, chosen_other_patients_oct, chosen_other_patients_nov, chosen_other_patients_dec];
-        				var chosen_all_patients_monthly_count = [chosen_doc_patients_jan, chosen_doc_patients_feb, chosen_doc_patients_mar, chosen_doc_patients_apr, chosen_doc_patients_may, chosen_doc_patients_jun, chosen_doc_patients_jul, chosen_doc_patients_aug, chosen_doc_patients_sep, chosen_doc_patients_oct, chosen_doc_patients_nov, chosen_doc_patients_dec];
-        				var chosen_curr_date = new Date();
-        				var chosen_curr_month = chosen_curr_date.getMonth(); //gets the current numeric month 0-based
-        				let i = 0;
-
-
-				        while (i < chosen_curr_month){
-                				if (i+1 < 13){
-                        				//console.log(a + " before: " +  latest_monthly_patient_count[a]);
-                        				chosen_latest_monthly_patient_count[i+1]+=chosen_latest_monthly_patient_count[i];
-                        				//console.log(a + " after: " +  chosen_latest_monthly_patient_count[i+1]);
-                        				chosen_all_patients_monthly_count[i+1]+=chosen_all_patients_monthly_count[i];
-                        				console.log(chosen_all_patients_monthly_count[i] + " :: " + chosen_latest_monthly_patient_count[i]);
-                        				if (chosen_all_patients_monthly_count[i] < chosen_latest_monthly_patient_count[i]){
-                                				console.log(i + " before: " + chosen_all_patients_monthly_count[i] + " -- " +  chosen_latest_monthly_patient_count[i]);
-                                				chosen_latest_monthly_patient_count[i]-=chosen_all_patients_monthly_count[i];
-                                				console.log(i + " after: " + chosen_all_patients_monthly_count[a] + " -- " +  chosen_latest_monthly_patient_count[i]);
-                        				}
-                        				i++;
-                			}
-       				   }
-
-				   chosen_latest_monthly_patient_count[curr_month]-=chosen_all_patients_monthly_count[curr_month];
-
-
                                     columnChart2 = new CanvasJS.Chart("chartContainer", {
                                        animationEnabled: true, 	
                         
@@ -2022,18 +1965,18 @@ p{
                                           name: "Your Patients",
                                           dataPoints: [
                                           
-                                             { label: "January",  y: chosen_all_patients_monthly_count[0] },
-                                             { label: "February", y: chosen_all_patients_monthly_count[1]  },
-                                             { label: "March", y: chosen_all_patients_monthly_count[2]  },
-                                             { label: "April",  y: chosen_all_patients_monthly_count[3] },
-                                             { label: "May",  y: chosen_all_patients_monthly_count[4] },
-                                             { label: "June",  y: chosen_all_patients_monthly_count[5]  },
-                                             { label: "July",  y: chosen_all_patients_monthly_count[6]  },
-                                             { label: "August",  y: chosen_all_patients_monthly_count [7]  },
-                                             { label: "September",  y: chosen_all_patients_monthly_count[8] },
-                                             { label: "October",  y: chosen_all_patients_monthly_count[9]  },
-                                             { label: "November",  y: chosen_all_patients_monthly_count[10]  },
-                                             { label: "December",  y: chosen_all_patients_monthly_count[11] },
+                                             { label: "January",  y:{{stat.january}} },
+                                             { label: "February", y: {{stat.february}}  },
+                                             { label: "March", y: {{stat.march}}  },
+                                             { label: "April",  y: {{stat.april}} },
+                                             { label: "May",  y: {{stat.may}} },
+                                             { label: "June",  y: {{stat.june}}  },
+                                             { label: "July",  y: {{stat.july}}  },
+                                             { label: "August",  y: {{stat.august}}  },
+                                             { label: "September",  y: {{stat.september}}  },
+                                             { label: "October",  y: {{stat.october}}  },
+                                             { label: "November",  y: {{stat.november}}  },
+                                             { label: "December",  y:  {{stat.december}} },
                                           
                                           ]
                                        },
@@ -2044,21 +1987,21 @@ p{
                                           indexLabelPlacement: "inside",
                                           indexLabelFontSize: 15,
                                           indexLabelFontWeight: "bolder",
-                                          name: "Other Patients",
+                                          name: "All Patients",
                                           color: "#20e007", 
                                           dataPoints: [
-                                             { label: "January",  y: chosen_latest_monthly_patient_count[0] },
-                                             { label: "February", y: chosen_latest_monthly_patient_count[1] },
-                                             { label: "March", y: chosen_latest_monthly_patient_count[2] },
-                                             { label: "April",  y: chosen_latest_monthly_patient_count[3] },
-                                             { label: "May",  y: chosen_latest_monthly_patient_count[4]  },
-                                             { label: "June",  y: chosen_latest_monthly_patient_count[5] },
-                                             { label: "July",  y: chosen_latest_monthly_patient_count[6]  },
-                                             { label: "August",  y: chosen_latest_monthly_patient_count[7]  },
-                                             { label: "September",  y: chosen_latest_monthly_patient_count[8]  },
-                                             { label: "October",  y: chosen_latest_monthly_patient_count[9]  },
-                                             { label: "November",  y: chosen_latest_monthly_patient_count[10]  },
-                                             { label: "December",  y:  chosen_latest_monthly_patient_count[11] },
+                                             { label: "January",  y: {{p_stat.january}}  },
+                                             { label: "February", y: {{p_stat.february}}  },
+                                             { label: "March", y: {{p_stat.march}}  },
+                                             { label: "April",  y: {{p_stat.april}}  },
+                                             { label: "May",  y: {{p_stat.may}}  },
+                                             { label: "June",  y: {{p_stat.june}}  },
+                                             { label: "July",  y: {{p_stat.july}}  },
+                                             { label: "August",  y: {{p_stat.august}}  },
+                                             { label: "September",  y: {{p_stat.september}}  },
+                                             { label: "October",  y: {{p_stat.october}}  },
+                                             { label: "November",  y: {{p_stat.november}}  },
+                                             { label: "December",  y:  {{p_stat.december}} },
                                           ]
                                        },
                                        ]
@@ -2126,7 +2069,7 @@ p{
                               // Change type to "bar", "area", "spline", "pie",etc.
                               type: "stackedColumn",
                               showInLegend: true,
-                              name: "Other Patients",
+                              name: "All Patients",
                               color: "#20e007", 
                               dataPoints: [
                                  { label: "January",  y:0 },
@@ -2550,7 +2493,7 @@ p{
                                                 <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-top:.5rem; margin-bottom:0px;">  
                                                 <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
                                                 <hr style="margin-top:0.5rem;">
-                                                <p style="margin-bottom: 0rem;"><b>Add a remark:</b> </p>
+                                                <p style="margin-bottom: 0rem;"><b>add a remark:</b> </p>
                                                 <textarea class="med-hist-field"  style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="2" id="medhist-add-doc-remarks-{{forloop.counter}}" name="medhist-add-doc-remarks" readonly></textarea>                                                      
                                                
                                                 <div id="medhist-remarks">
@@ -2940,7 +2883,7 @@ p{
                                                 <hr style="border-top: 2px solid rgba(0, 0, 0, 0.1); margin-bottom:0px;">  
                                                 <p class="doc-remarks-header"><b>Doctor(s) Remarks: </b></p>
                                                 <hr style="margin:0rem 0rem;">
-                                                <p style="margin-bottom: 0rem;"><b>Add a remark:</b> </p>
+                                                <p style="margin-bottom: 0rem;"><b>add a remark:</b> </p>
                                                 <textarea class="icr-field" readonly style="margin-left:1rem;margin-top:0.5rem;"cols="50" rows="2" id="icr-add-doc-remarks-{{patient.username}}" name="icr-add-doc-remarks"></textarea>                                                      
                                                 
                                                 {% for remark in patient.icr.doctor_remarks.all %}
@@ -3384,7 +3327,7 @@ p{
                                                          <script>
                                                             // add a comment on patient personal journal
                                                             $('#add-comment-btn-{{post.pk}}').click(function(e){
-                                                               //alert('{{post.author}}');
+                                                               alert('{{post.author}}');
                                                                e.preventDefault();
                                                                $.ajax({
                                                                   type:"POST",
@@ -3530,8 +3473,6 @@ p{
    $('#schedules-tab').click(function(){
       $('#pending-scheds').show();
    });
-
-   //for collapsible tabs
    function openDetails(evt, cityName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("patient-tab-content");
@@ -3562,21 +3503,20 @@ p{
             content.style.display = "block";
          }
       });
-     }
-     //end
+      }
 
       // REMOVE PATIENTS
       var closebtns = document.getElementsByClassName("close");
       var i;
-      for (i = 0; i < closebtns.length; i++) {
-	 closebtns[i].addEventListener("click", function() {
-       	     this.parentElement.style.display = 'none';
-     	 });
-      }
-      //end
-   
 
+      for (i = 0; i < closebtns.length; i++) {
+      closebtns[i].addEventListener("click", function() {
+         this.parentElement.style.display = 'none';
+      });
+      }
+   
       //GET CURRENT USER
+
       function GetUserInforSessionStorage(key){
          var realName = sessionStorage.getItem(key);        
          return realName;    
@@ -3586,8 +3526,7 @@ p{
          var val = GetUserInforSessionStorage(key);
          $(document).find('#'+elementId).val(val); 
       }
-      // end
-
+      // END OF GETTING CURRENT USER
 
       //allow icr fields editable or not
       $("#edit-icr").click(function(){
@@ -3601,6 +3540,7 @@ p{
          $('#save-icr').hide();
       });   
       //end
+
 
      
        //allow med-hist fields editable or not
@@ -3616,19 +3556,15 @@ p{
       });   
       //end
 
-
       // log out
       $("#log-out").click(function(){
          sessionStorage.clear(); //use this when logging out
       });
 
-
       // NOTIFICATION BELL BADGE
       $('#notification').click(function(){
          $('.badge').hide();
-      });
-
- 
+      }); 
 
       // DOCTOR CHANGE PROFILE PICTURE
        //  post a preview of the uploaded image for profile picture
@@ -3640,7 +3576,8 @@ p{
                document.getElementById("userpic").src = oFREvent.target.result;
          };
       };
-    
+      
+
       $('#change-prof-pic-upload').click(function(e){
          event.preventDefault();
 
@@ -3666,66 +3603,8 @@ p{
          return false;
       });
 
-	
       // statistical data for Patients Handled
-      //bar graph
-	//all patient
-	var other_patients_jan = {{patients_stats.latest.january}};
-	var other_patients_feb = {{patients_stats.latest.february}};// + other_patients_jan;
-	var other_patients_mar = {{patients_stats.latest.march}};// + other_patients_feb;
-	var other_patients_apr = {{patients_stats.latest.april}};// +  other_patients_mar; 
-	var other_patients_may = {{patients_stats.latest.may}};// +  other_patients_apr;
-	var other_patients_jun = {{patients_stats.latest.june}};// +  other_patients_may;
-	var other_patients_jul = {{patients_stats.latest.july}};// +  other_patients_jun;
-	var other_patients_aug = {{patients_stats.latest.august}};// +  other_patients_jul;
-	var other_patients_sep = {{patients_stats.latest.september}};// +  other_patients_aug;
-	var other_patients_oct = {{patients_stats.latest.october}};// +  other_patients_sep;
-	var other_patients_nov = {{patients_stats.latest.november}};// +  other_patients_oct;
-	var other_patients_dec = {{patients_stats.latest.december}};// +  other_patients_nov;
-	
-
-	//doctor patients
-	var doc_patients_jan = {{doctor.p_handled_stats.monthly_stats.latest.january}};
-        var doc_patients_feb = {{doctor.p_handled_stats.monthly_stats.latest.february}};// + doc_patients_jan;
-        var doc_patients_mar = {{doctor.p_handled_stats.monthly_stats.latest.march}};// + doc_patients_feb;
-        var doc_patients_apr = {{doctor.p_handled_stats.monthly_stats.latest.april}};// + doc_patients_mar;
-        var doc_patients_may = {{doctor.p_handled_stats.monthly_stats.latest.may}};// + doc_patients_apr;
-        var doc_patients_jun = {{doctor.p_handled_stats.monthly_stats.latest.june}};// + doc_patients_may;
-        var doc_patients_jul = {{doctor.p_handled_stats.monthly_stats.latest.july}};// + doc_patients_jun;
-        var doc_patients_aug = {{doctor.p_handled_stats.monthly_stats.latest.august}};// + doc_patients_jul;
-        var doc_patients_sep = {{doctor.p_handled_stats.monthly_stats.latest.september}};// + doc_patients_aug;
-        var doc_patients_oct = {{doctor.p_handled_stats.monthly_stats.latest.october}};// + doc_patients_sep;
-        var doc_patients_nov = {{doctor.p_handled_stats.monthly_stats.latest.november}};// + doc_patients_oct;
-        var doc_patients_dec = {{doctor.p_handled_stats.monthly_stats.latest.december}};// + doc_patients_nov;
-
-
-	//get the total patients per month
-	var latest_monthly_patient_count = [other_patients_jan, other_patients_feb, other_patients_mar, other_patients_apr, other_patients_may, other_patients_jun, other_patients_jul,  other_patients_aug, other_patients_sep, other_patients_oct, other_patients_nov, other_patients_dec];
-	var all_patients_monthly_count = [doc_patients_jan, doc_patients_feb, doc_patients_mar, doc_patients_apr, doc_patients_may, doc_patients_jun, doc_patients_jul, doc_patients_aug, doc_patients_sep, doc_patients_oct, doc_patients_nov, doc_patients_dec];
-	var curr_date = new Date();
-	var curr_month = curr_date.getMonth(); //gets the current numeric month 0-based
-	let a = 0;
-
-
-	while (a < curr_month){
-		if (a+1 < 13){
-			//console.log(a + " before: " +  latest_monthly_patient_count[a]);
-			latest_monthly_patient_count[a+1]+=latest_monthly_patient_count[a];
-			//console.log(a + " after: " +  latest_monthly_patient_count[a+1]);
-			all_patients_monthly_count[a+1]+=all_patients_monthly_count[a];
-			console.log(all_patients_monthly_count[a] + " :: " + latest_monthly_patient_count[a]); 
-			if (all_patients_monthly_count[a] < latest_monthly_patient_count[a]){
-				console.log(a + " before: " + all_patients_monthly_count[a] + " -- " +  latest_monthly_patient_count[a]);
-				latest_monthly_patient_count[a]-=all_patients_monthly_count[a];
-				console.log(a + " after: " + all_patients_monthly_count[a] + " -- " +  latest_monthly_patient_count[a]);
-			}
-			a++;
-		}
-	}
-
-	latest_monthly_patient_count[curr_month]-=all_patients_monthly_count[curr_month];
-
-	window.onload = function() {
+      window.onload = function() {
          // upon loading,  the latest year's stat  is automatically placed
          var columnChart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true, 
@@ -3752,18 +3631,19 @@ p{
                name: "Your Patients",
                dataPoints: [
                   
-                  { label: "January",  y: all_patients_monthly_count[0] },
-                  { label: "February", y: all_patients_monthly_count[1] },
-                  { label: "March", y: all_patients_monthly_count[2] },
-                  { label: "April",  y: all_patients_monthly_count[3] },
-                  { label: "May",  y: all_patients_monthly_count[4] },
-                  { label: "June",  y: all_patients_monthly_count[5] },
-                  { label: "July",  y: all_patients_monthly_count[6] },
-                  { label: "August", y: all_patients_monthly_count[7]  },
-                  { label: "September", y: all_patients_monthly_count[8]  },
-                  { label: "October",  y: all_patients_monthly_count[9] },
-                  { label: "November",  y: all_patients_monthly_count[10] },
-                  { label: "December",  y: all_patients_monthly_count[11] },
+                  { label: "January",  y:{{doctor.p_handled_stats.monthly_stats.latest.january}} },
+                  { label: "February", y: {{doctor.p_handled_stats.monthly_stats.latest.february}}  },
+                  { label: "March", y: {{doctor.p_handled_stats.monthly_stats.latest.march}}  },
+                  { label: "April",  y: {{doctor.p_handled_stats.monthly_stats.latest.april}} },
+                  { label: "May",  y: {{doctor.p_handled_stats.monthly_stats.latest.may}} },
+                  { label: "June",  y: {{doctor.p_handled_stats.monthly_stats.latest.june}}  },
+                  { label: "July",  y: {{doctor.p_handled_stats.monthly_stats.latest.july}}  },
+                  { label: "August",  y: {{doctor.p_handled_stats.monthly_stats.latest.august}}  },
+                  { label: "September",  y: {{doctor.p_handled_stats.monthly_stats.latest.september}}  },
+                  { label: "October",  y: {{doctor.p_handled_stats.monthly_stats.latest.october}}  },
+                  { label: "November",  y: {{doctor.p_handled_stats.monthly_stats.latest.november}}  },
+                  { label: "December",  y:  {{doctor.p_handled_stats.monthly_stats.latest.december}} },
+                  
                ]
             },
             {
@@ -3773,109 +3653,31 @@ p{
                indexLabelPlacement: "inside",
                indexLabelFontSize: 15,
                indexLabelFontWeight: "bolder",
-               name: "Other Patients",
+               name: "All Patients",
                color: "#20e007", 
                dataPoints: [
-                  { label: "January",  y: latest_monthly_patient_count[0]  },
-                  { label: "February", y: latest_monthly_patient_count[1] },
-                  { label: "March", y: latest_monthly_patient_count[2] },
-                  { label: "April",  y: latest_monthly_patient_count[3] },
-                  { label: "May",  y: latest_monthly_patient_count[4] },
-                  { label: "June",  y: latest_monthly_patient_count[5] },
-                  { label: "July",  y: latest_monthly_patient_count[6] },
-                  { label: "August",  y: latest_monthly_patient_count[7] },
-                  { label: "September",  y: latest_monthly_patient_count[8] },
-                  { label: "October",  y: latest_monthly_patient_count[9]},
-                  { label: "November",  y: latest_monthly_patient_count[10] },
-                  { label: "December",  y:  latest_monthly_patient_count[11] },
+                  { label: "January",  y: {{patients_stats.latest.january}}  },
+                  { label: "February", y: {{patients_stats.latest.february}}  },
+                  { label: "March", y: {{patients_stats.latest.march}}  },
+                  { label: "April",  y: {{patients_stats.latest.april}}  },
+                  { label: "May",  y: {{patients_stats.latest.may}} },
+                  { label: "June",  y: {{patients_stats.latest.june}}  },
+                  { label: "July",  y: {{patients_stats.latest.july}}  },
+                  { label: "August",  y: {{patients_stats.latest.august}}  },
+                  { label: "September",  y: {{patients_stats.latest.september}}  },
+                  { label: "October",  y: {{patients_stats.latest.october}}  },
+                  { label: "November",  y: {{patients_stats.latest.november}}  },
+                  { label: "December",  y:  {{patients_stats.latest.december}} },
                ]
             },
             ]
          });
          columnChart.render();
 
-       	 var for_screening_female = 0;
-         var for_screening_male = 0;
-         var stage_1_female = 0;
-         var stage_1_male = 0;
-         var stage_2_female = 0;
-         var stage_2_male = 0;
-         var stage_3_female = 0;
-         var stage_3_male = 0;
-       //  var patient_shell;
-	 var p_status = "";
-	 var p_sex = "";
-         {% for p in patients %}
-            p_status = "{{p.HIV_status}}";
-	    p_sex = "{{p.icr.sex}}";
-
-            if (p_status == "for screening" && p_sex == "female"){
-               for_screening_female+=1;
-            }else if (p_status == "for screening" && p_sex == "male"){
-               for_screening_male+=1;
-            }
-
-            if (p_status == "stage 1" && p_sex == "female"){
-               stage_1_female+=1;
-            }else if (p_status == "stage 1" && p_sex == "male"){
-               stage_1_male+=1;
-            }
-
-            if (p_status == "stage 2" && p_sex == "female"){
-               stage_2_female+=1;
-            }else if (p_status == "stage 2" && p_sex == "male"){
-               stage_2_male+=1;
-            }
-
-            if (p_status == "stage 3" && p_sex == "female"){
-               stage_3_female+=1;
-            }else if (p_status == "stage 3" && p_sex == "male"){
-               stage_3_male+=1;
-            }
-         {% endfor%}
-
-
-
-
 	{% if doctor.p_handled_stats.doc_patients_count != 0 %}
             var stage1Chart = new CanvasJS.Chart("stage1-patients", {
+            {% if doctor.p_handled_stats.stage_1 != 0 %}
 	    maintainAspectRatio: false,
-            responsive:true,
-	    animationEnabled: true,
-            height: 180,
-            width:158,
-            data: [
-               {
-		  type: "pie",
-                  showInLegend: true,
-                  indexLabel: "{y}",
-                  indexLabelPlacement: "inside",
-                  indexLabelFontSize: 15,
-                  indexLabelFontWeight: "bolder",
-                  toolTipContent: "{legendText}: {y}",
-                  dataPoints: [
-			{  y: stage_1_female, legendText: "female" },
-	                {  y: stage_1_male, legendText: "male" },
-                  ]
-               }
-            ]	  
-            });
-
-	    showDefaultText(stage1Chart, "No Data Found!");
-       	    if (!(stage_1_female==0 && stage_1_male==0) && (stage_1_female == 0 || stage_1_male == 0)){
-	    	if (stage1Chart.options.data[0].dataPoints[0].y == 0){
-			stage1Chart.options.data[0].dataPoints[0].indexLabel = " ";
-	   	 }
-	   	 if (stage1Chart.options.data[0].dataPoints[1].y == 0){
-           	   	 stage1Chart.options.data[0].dataPoints[1].indexLabel = " ";
-           	 }
-	    }
-	    stage1Chart.render();
-	
-
-            var stage2Chart = new CanvasJS.Chart("stage2-patients", {
-	    maintainAspectRatio: false,
-	    responsive: true,
             animationEnabled: true,
             height: 180,
             width:158,
@@ -3887,28 +3689,88 @@ p{
                   indexLabelPlacement: "inside",
                   indexLabelFontSize: 15,
                   indexLabelFontWeight: "bolder",
-                  toolTipContent:  "{legendText}: {y}",                  
+                  toolTipContent: "{legendText}: {y}",
                   dataPoints: [
-			{  y: stage_2_female, legendText: "female" },
-	                {  y: stage_2_male, legendText: "male" },
-                  ],
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled  patients" },
+		  {  y: '{{doctor.p_handled_stats.stage_1}}', legendText: "stage 1 patients" },
+
+                  ]
                }
             ]
+	{%endif%}
+	    {% if doctor.p_handled_stats.stage_1 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
+	  
             });
-	    showDefaultText(stage2Chart, "No Data Found!");
-            if (!(stage_2_female==0 && stage_2_male==0) && (stage_2_female == 0 || stage_2_male == 0) ){
-                if (stage2Chart.options.data[0].dataPoints[0].y == 0){
-                        stage2Chart.options.data[0].dataPoints[0].indexLabel = " ";
-                 }
-                 if (stage2Chart.options.data[0].dataPoints[1].y == 0){
-                        stage2Chart.options.data[0].dataPoints[1].indexLabel = " ";
-                 }
-            }
-	    stage2Chart.render();
+            stage1Chart.render();
+	
+            var stage2Chart = new CanvasJS.Chart("stage2-patients", {
+            {% if doctor.p_handled_stats.stage_2 != 0 %}
+	    maintainAspectRatio: false,
+            animationEnabled: true,
+            height: 180,
+            width:158,
+            data: [
+               {
+                  type: "pie",
+                  showInLegend: true,
+                  indexLabel: "{y}",
+                  indexLabelPlacement: "inside",
+                  indexLabelFontSize: 15,
+                  indexLabelFontWeight: "bolder",
+                  toolTipContent:  "{legendText}: {y}",
+                  
+                  dataPoints: [
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+		  {  y:'{{doctor.p_handled_stats.stage_2}}', legendText: "stage 2 patients" },
 
+                  ],
+               
+               }
+            ]
+	   {%endif%}
+	    {% if doctor.p_handled_stats.stage_2 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
+            });
+            stage2Chart.render();
 
             var stage3Chart = new CanvasJS.Chart("stage3-patients", {
-            responsive: true,
+            {% if doctor.p_handled_stats.stage_3 != 0 %}
+	    // theme: "light2",
             maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
@@ -3922,29 +3784,39 @@ p{
                   indexLabelFontSize: 15,
                   indexLabelFontWeight: "bolder",
                   toolTipContent: "{legendText}: {y}",
-
                   dataPoints: [
-			{  y: stage_3_female, legendText: "female" },
-	                {  y: stage_3_male, legendText: "male" },
+		  {  y: '{{doctor.p_handled_stats.stage_3}}', legendText: "stage 3 patients" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+
                   ]
                }
-	    ]            
+	    {%endif%}
+		{% if doctor.p_handled_stats.stage_3 == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        // indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                        ]
+                     }
+                  ]
+               {% endif %}
+            ]
             });
-	    if (!(stage_3_female==0 && stage_3_male==0) && (stage_3_female == 0 || stage_3_male == 0)){
-                if (stage3Chart.options.data[0].dataPoints[0].y == 0){
-                        stage3Chart.options.data[0].dataPoints[0].indexLabel = " ";
-                 }
-                 if (stage3Chart.options.data[0].dataPoints[1].y == 0){
-                         stage3Chart.options.data[0].dataPoints[1].indexLabel = " ";
-                 }
-	    }
-	    showDefaultText(stage3Chart, "No Data Found!");
             stage3Chart.render();
 
-
             var negativePatientChart = new CanvasJS.Chart("for-screening-patients", {
-	    maintainAspectRatio: false,
-            responsive: true,
+            {% if doctor.p_handled_stats.for_screening != 0 %}
+            maintainAspectRatio: false,
             animationEnabled: true,
             height: 180,
             width:158,
@@ -3958,58 +3830,37 @@ p{
                   indexLabelFontWeight: "bolder",
                   toolTipContent: "{legendText}: {y}",
                   dataPoints: [
-			{  y: for_screening_female, legendText: "female" },
-	                {  y: for_screening_male, legendText: "male" },
+                  {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all handled patients" },
+		  {  y: '{{doctor.p_handled_stats.for_screening}}', legendText: "for screening patients" },
+
                   ]
                }
-              ]
+            ]
+	   {%endif%}
+           {% if doctor.p_handled_stats.for_screening == 0 %}
+                  animationEnabled: true,
+                  height: 180,
+                  width:158,
+                  data: [
+                     {
+                        type: "pie",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        // indexLabelPlacement: "inside",
+                        // indexLabelFontSize: 15,
+                        indexLabelFontWeight: "bolder",
+                        toolTipContent: "{legendText}: {y}",
+                        dataPoints: [
+                        {  y: '{{doctor.p_handled_stats.doc_patients_count}}', legendText: "all patients" },
+                        ]
+                     }
+                  ]
+             {% endif %}
             });
-	    showDefaultText(negativePatientChart, "No Data Found!");
-	      if (!(for_screening_female==0 && for_screening_male==0) && (for_screening_female == 0 || for_screening_male == 0)){
-                if (negativePatientChart.options.data[0].dataPoints[0].y == 0){
-                        negativePatientChart.options.data[0].dataPoints[0].indexLabel = " ";
-                 }
-                 if (negativePatientChart.options.data[0].dataPoints[1].y == 0){
-                         negativePatientChart.options.data[0].dataPoints[1].indexLabel = " ";
-                 }
-           }
-
             negativePatientChart.render();
 	{%endif%}
 
-
-	  function showDefaultText(chart, text){
-                var dataPoints = chart.options.data[0].dataPoints;
-                var isEmpty = !(dataPoints && dataPoints.length > 0);
-		var only1 = false;
-                if(!isEmpty){
-                        for(var i = 0; i < dataPoints.length; i++){
-//				if ((dataPoints[i].y == 0) && (i == 0 || i == 1)){
-//					chart.options.data[0].indexLabel = " ";
-//                                }
-                                isEmpty = dataPoints[i].y;
-                                if(isEmpty > 0){ break;}
-                        }
-                }
-		
-                if(!chart.options.subtitles)
-                        chart.options.subtitles = [];
-                if(isEmpty == 0){
-			chart.options.data[0].dataPoints = [];
-			chart.options.data[0].dataPoints.push({y: "1", legendText: "no patients yet", color: "#008080"});
-			chart.options.data[0].showInLegend = true;
-			chart.options.data[0].indexLabel = " ";
-			chart.options.data[0].indexLabelFontSize = 15;
-			chart.options.data[0].indexLabelFontWeight = "bolder";
-			chart.options.data[0].indexLabelPlacement = "inside";
-			chart.options.data[0].toolTipContent = "{legendText}: 0";
-		}
-
-                else
-                        chart.options.subtitles = [];
-        }
-
-
+	
 	{% if doctor.p_handled_stats.doc_patients_count == 0 %}
 		CanvasJS.addColorSet("greenShades",
         	        [//colorSet Array
@@ -4021,9 +3872,7 @@ p{
 
          	var noPatient1Chart = new CanvasJS.Chart("no-patients1", {
             	colorSet: "greenShades",
-		maintainAspectRatio: false,
-                responsive: true,
-
+            	maintainAspectRatio: false,
             	animationEnabled: true,
             	height: 180,
             	width:158,
@@ -4047,8 +3896,7 @@ p{
 	
 	    var noPatient2Chart = new CanvasJS.Chart("no-patients2", {
                colorSet: "greenShades",
-               responsive:true,
-	       maintainAspectRatio: false,
+               maintainAspectRatio: false,
                animationEnabled: true,
                height: 180,
                width:158,
@@ -4073,7 +3921,6 @@ p{
 
             var noPatient3Chart = new CanvasJS.Chart("no-patients3", {
                colorSet: "greenShades",
-               responsive:true,
                maintainAspectRatio: false,
                animationEnabled: true,
                height: 180,
@@ -4099,7 +3946,6 @@ p{
 
             var noPatient4Chart = new CanvasJS.Chart("no-patients4", {
                colorSet: "greenShades",
-               responsive:true,
                maintainAspectRatio: false,
                animationEnabled: true,
                height: 180,

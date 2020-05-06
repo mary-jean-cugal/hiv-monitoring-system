@@ -160,17 +160,17 @@ def addSeenDoc(request):
 					patient.icr.save()
 					patient.save()
 					return HttpResponse("ICR success!")
-		#elif viewed_type == "Profile Form":
-		#	new_view.viewed_type="Profile Form"
-		#	if Patient.objects.all().filter(username=file_owner).exists():
-		#		
-		#		patient = Patient.objects.all().get(username=file_owner)
-		#		if not patient.profile.docs_viewed.all().filter(viewer_name=doc_name).exists():
-		#			new_view.save()
-		#			patient.profile.docs_viewed.add(new_view)
-		#			patient.profile.save()
-		#			patient.save()
-		#			return HttpResponse("Profile Form success!")
+		elif viewed_type == "Profile Form":
+			new_view.viewed_type="Profile Form"
+			if Patient.objects.all().filter(username=file_owner).exists():
+				
+				patient = Patient.objects.all().get(username=file_owner)
+				if not patient.profile.docs_viewed.all().filter(viewer_name=doc_name).exists():
+					new_view.save()
+					patient.profile.docs_viewed.add(new_view)
+					patient.profile.save()
+					patient.save()
+					return HttpResponse("Profile Form success!")
 		elif viewed_type == "Medical History":
 			new_view.viewed_type="Medical History"
 			if Patient.objects.all().filter(username=file_owner).exists():
@@ -323,11 +323,9 @@ def docEditICR(request):
 			patient.icr.work_number = work_num
 		if len(visit_purpose) > 0:
 			patient.icr.purpose_of_visit = visit_purpose #exempt this
-		patient.icr.save()
-
 		if len(p_remark) > 0:
 			remark = p_remark		
-#		if len(remark) > 0:
+		if len(remark) > 0:
 			new_remark =  Remark()
 			new_remark.author = curr_doctor
 			new_remark.text = remark
@@ -364,7 +362,6 @@ def docEditICR(request):
 		notif.status = True
 		notif.save()
 		patient.patient_notifications.add(notif)
-
 		patient.icr.save()
 		patient.pk = patient.icr.pk
 		patient.save()
@@ -380,7 +377,6 @@ def docEditICR(request):
 			'doctor' : doctor,
 			'patients': patient_arr,
 		}
-		print("ICR Form success")
 		return render(request, 'doctor/doctor.html',  context)
 	return render(request, 'doctor/doctor.html')	
 
@@ -733,7 +729,6 @@ def acceptSched(request):
 				doctor.removePendingSched(sched)
 				
 
-				if doctor.doctorNotifs.all().filter(action_pk = sched_pk).exists():
 					edited_notif = doctor.doctorNotifs.all().get(action_pk = sched_pk)
 					edited_notif.action_taken = 1
 					edited_notif.save()

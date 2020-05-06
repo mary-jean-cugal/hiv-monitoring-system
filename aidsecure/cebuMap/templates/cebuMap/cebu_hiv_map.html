@@ -58,6 +58,8 @@
   }
 }
 
+
+       
         .collapsible {
             background-color: white;
             border:1px solid rgba(0, 0, 0, 0.125);
@@ -348,11 +350,11 @@
                             <tr id="brgy-{{brgy.pk}}">
                             
                                 <td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">{{forloop.counter}}. {{brgy.name_3}}</td>
-                                <td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
-                                <td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
-                                <td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
-                                <td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
-                                <td class="deceased">{{brgy.deceased.count}}</td>
+                                <td style="text-align: center;" class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
+                                <td style="text-align: center;" class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
+                                <td style="text-align: center;" class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
+                                <td style="text-align: center;" class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
+                                <td style="text-align: center;" class="deceased">{{brgy.deceased.count}}</td>
                                 <td style="text-align:right;">{{brgy.hiv_pop.count}}</td>
                             </tr>
                         {% endfor%}
@@ -360,11 +362,11 @@
                             <td class="brgy-name" id="inside-ceb-download" style="text-align:left;">
                                 <b>All Patients In Cebu</b>
                             </td>
-                            <td class="screening-count" id="in-ceb-screening-download"></td>
-                            <td class="stage-1-count"  id="in-ceb-s1-download"></td>
-                            <td class="stage-2-count" id="in-ceb-s2-download"></td>
-                            <td class="stage-3-count" id="in-ceb-s3-download"></td>
-                            <td class="deceased-count" id="in-ceb-deceased-download"></td>
+                            <td style="text-align: center;"  class="screening-count" id="in-ceb-screening-download"></td>
+                            <td style="text-align: center;" class="stage-1-count"  id="in-ceb-s1-download"></td>
+                            <td style="text-align: center;" class="stage-2-count" id="in-ceb-s2-download"></td>
+                            <td style="text-align: center;" class="stage-3-count" id="in-ceb-s3-download"></td>
+                            <td style="text-align: center;" class="deceased-count" id="in-ceb-deceased-download"></td>
                             <td style="text-align:right;" id="in-ceb-all-download"></td>
                         </tr>
 
@@ -372,11 +374,11 @@
                             <td class="brgy-name" id="outside-ceb-download" style="text-align:left;">
                                 <b>Outside Cebu</b>
                             </td>
-                            <td class="screening-count" id="out-ceb-screening-download"></td>
-                            <td class="stage-1-count"  id="out-ceb-s1-download"></td>
-                            <td class="stage-2-count" id="out-ceb-s2-download"></td>
-                            <td class="stage-3-count" id="out-ceb-s3-download"></td>
-                            <td class="deceased-count" id="out-ceb-deceased-download"></td>
+                            <td style="text-align: center;" class="screening-count" id="out-ceb-screening-download"></td>
+                            <td style="text-align: center;" class="stage-1-count"  id="out-ceb-s1-download"></td>
+                            <td style="text-align: center;" class="stage-2-count" id="out-ceb-s2-download"></td>
+                            <td style="text-align: center;" class="stage-3-count" id="out-ceb-s3-download"></td>
+                            <td style="text-align: center;" class="deceased-count" id="out-ceb-deceased-download"></td>
                             <td style="text-align:right;" id="out-ceb-all-download"></td>
                         </tr>
                         
@@ -407,11 +409,11 @@
                                 <input class="stretched-link" type="checkbox"  value="{{brgy.name_3}}">
                                 {{forloop.counter}}. {{brgy.name_3}}
                             </td>
-                            <td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
-                            <td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
-                            <td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
-                            <td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
-                            <td class="brgy-name" id="deceased-{{brgy.pk}}" style="text-align:left;">{{brgy.deceased.count}}</td>
+                            <td style="text-align: center;" class="screening-count" id="brgy-for-screening-{{brgy.pk}}">{{brgy.for_screening.count}}</td>
+                            <td style="text-align: center;" class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">{{brgy.stage_1.count}}</td>
+                            <td style="text-align: center;" class="stage-2-count" id="brgy-s2-{{brgy.pk}}">{{brgy.stage_2.count}}</td>
+                            <td style="text-align: center;" class="stage-3-count" id="brgy-s3-{{brgy.pk}}">{{brgy.stage_3.count}}</td>
+                            <td style="text-align: center;" class="brgy-name" id="deceased-{{brgy.pk}}" style="text-align:left;">{{brgy.deceased.count}}</td>
                             <td style="text-align:right;" id="pop-count-{{brgy.pk}}">{{brgy.hiv_pop.count}}</td>
                         </tr>
                     {% endfor%}
@@ -420,12 +422,12 @@
                             <input class="stretched-link" type="checkbox"  value="All Patients In Cebu">
                             <b>All Patients In Cebu</b>
                         </td>
-                        <td class="screening-count" id="in-ceb-screening"></td>
-                        <td class="stage-1-count"  id="in-ceb-s1"></td>
-                        <td class="stage-2-count" id="in-ceb-s2"></td>
-                        <td class="stage-3-count" id="in-ceb-s3"></td>
-                        <td class="deceased-count" id="in-ceb-deceased"></td>
-                        <td style="text-align:right;" id="in-ceb-all"></td>
+                        <td style="text-align: center;" class="screening-count brow" id="in-ceb-screening"></td>
+                        <td style="text-align: center;" class="stage-1-count brow"  id="in-ceb-s1"></td>
+                        <td style="text-align: center;" class="stage-2-count brow" id="in-ceb-s2"></td>
+                        <td style="text-align: center;" class="stage-3-count brow" id="in-ceb-s3"></td>
+                        <td style="text-align: center;" class="deceased-count brow" id="in-ceb-deceased"></td>
+                        <td style="text-align:right;" id="in-ceb-all" class="brow"></td>
                     </tr>
 			
                     <tr id="outside-ceb-row">
@@ -433,12 +435,12 @@
                             <input class="stretched-link" type="checkbox"  value="Outside Cebu">
                             <b>Outside Cebu</b>
                         </td>
-                        <td class="screening-count" id="out-ceb-screening"></td>
-                        <td class="stage-1-count"  id="out-ceb-s1"></td>
-                        <td class="stage-2-count" id="out-ceb-s2"></td>
-                        <td class="stage-3-count" id="out-ceb-s3"></td>
-                        <td class="deceased-count" id="out-ceb-deceased"></td>
-                        <td style="text-align:right;" id="out-ceb-all"></td>
+                        <td style="text-align: center;" class="screening-count brow" id="out-ceb-screening"></td>
+                        <td style="text-align: center;" class="stage-1-count brow"  id="out-ceb-s1"></td>
+                        <td style="text-align: center;" class="stage-2-count brow" id="out-ceb-s2"></td>
+                        <td style="text-align: center;" class="stage-3-count brow" id="out-ceb-s3"></td>
+                        <td style="text-align: center;" class="deceased-count brow" id="out-ceb-deceased"></td>
+                        <td class="brow" style="text-align:right;" id="out-ceb-all"></td>
                     </tr>
             
                 </tbody>
@@ -450,6 +452,7 @@
     <script>
         
       
+        document.getElementById("selected-count").value = "0 out of 80 selected.";
         var downloadList = []; //empty list for storing the checked items
 
         $('input[type="checkbox"]').on('change', function() {
@@ -459,6 +462,11 @@
             document.getElementById("selected-count").value = downloadList.length + " out of 80 selected.";
         });
 
+	 $('#data-choice').on('change', function(){
+            if ($(this).val() == "all"){
+                document.getElementById("selected-count").value = "80 out of 80 selected.";
+            }
+        });
         // download data from barangays
         $("#download-btn").click(function(e){
             e.preventDefault();
@@ -469,8 +477,8 @@
                 alert("Please choose what action to be done.");
             }
             else if (choice == 'all'){
-                document.getElementById("selected-count").value = "80 of 80 selected.";
                 downloadList = []; // clean list first to for special cases like user selects multiple brgy data but choses download all
+		$('#brgy-data-table-download tbody').empty();
                 $("#brgy-data-table-download > tbody").html("");  //empty the tbody first
 		{% for brgy in all_brgys %}
                     downloadList.push("{{brgy.name_3}}");
@@ -479,19 +487,19 @@
                                 '<td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">' + 
                                     '{{forloop.counter}}' + '. ' +  '{{brgy.name_3}}' +
                                 '</td>'  +
-                                '<td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">' + 
+                                '<td class="screening-count"  id="brgy-for-screening-{{brgy.pk}}">' + 
                                     '{{brgy.for_screening.count}}' +
                                 '</td>' + 
-                                '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                                '<td class="stage-1-count"  style="text-align: center;"  id="brgy-s1-{{brgy.pk}}">' + 
                                     '{{brgy.stage_1.count}}' + 
                                 '</td>' +
-                                '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                                '<td class="stage-2-count" style="text-align: center;" id="brgy-s2-{{brgy.pk}}">' + 
                                     '{{brgy.stage_2.count}}' + 
                                 '</td>' +
-                                '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                                '<td class="stage-3-count" style="text-align: center;"  id="brgy-s3-{{brgy.pk}}">' +
                                     '{{brgy.stage_3.count}}' +
                                 '</td>' + 
-                                '<td class="deceased">' +
+                                '<td class="deceased" style="text-align: center;">' +
                                     '{{brgy.deceased.count}}' +
                                 '</td>' + 
                                 '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
@@ -500,8 +508,37 @@
                             '</tr>'
                         ); 
 		 {% endfor %}
-            } else if (choice == 'selected'){
 
+		 $('#download-table-body').append( // add data in tbody, fill it with brgy data
+                        '<tr id="brgy-{{brgy.pk}}">' + 
+                            '<td class="brgy-name brow" id="in-ceb" style="text-align:left;">' + 
+                                 '<b>' + 'All Patients In Cebu' + '</b>' +
+                            '</td>'  +
+                            '<td class="screening-count brow" style="text-align: center;" id="in-ceb-for-screening">' + 
+                                $('#in-ceb-screening').text() +
+                            '</td>' + 
+                            '<td class="stage-1-count brow"  style="text-align: center;" id="in-ceb-stage1">' + 
+                                $('#in-ceb-s1').text() + 
+                            '</td>' +
+                            '<td class="stage-2-count brow" style="text-align: center;" id="in-ceb-stage2">' + 
+                                $('#in-ceb-s2').text() + 
+                            '</td>' +
+                            '<td class="stage-3-count brow" style="text-align: center;" id="in-ceb-stage3">' +
+                                $('#in-ceb-s3').text() +
+                            '</td>' + 
+                            '<td class="deceased brow" style="text-align: center;">' +
+                                $('#in-ceb-deceased').text() +
+                            '</td>' + 
+                            '<td class="brow" style="text-align:right; id="pop-count-in-ceb">' +
+                                $('#in-ceb-all').text() +
+                            '</td>' + 
+                        '</tr>'
+                    );  
+
+
+            } else if (choice == 'selected'){
+		document.getElementById("selected-count").value = downloadList.length + " of 80 selected.";
+		$('#brgy-data-table-download tbody').empty();
                 $("#brgy-data-table-download > tbody").html("");  //empty the tbody first
                 let brgyCounter = 0;
                 {% for brgy in all_brgys %}
@@ -513,19 +550,19 @@
                                 '<td class="brgy-name" id="brgy-name-{{brgy.pk}}" style="text-align:left;">' + 
                                     brgyCounter + '. ' +  '{{brgy.name_3}}' +
                                 '</td>'  +
-                                '<td class="screening-count" id="brgy-for-screening-{{brgy.pk}}">' + 
+                                '<td class="screening-count" style="text-align: center;" id="brgy-for-screening-{{brgy.pk}}">' + 
                                     '{{brgy.for_screening.count}}' +
                                 '</td>' + 
-                                '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                                '<td class="stage-1-count" style="text-align: center;"  id="brgy-s1-{{brgy.pk}}">' + 
                                     '{{brgy.stage_1.count}}' + 
                                 '</td>' +
-                                '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                                '<td class="stage-2-count" style="text-align: center;"  id="brgy-s2-{{brgy.pk}}">' + 
                                     '{{brgy.stage_2.count}}' + 
                                 '</td>' +
-                                '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                                '<td class="stage-3-count" style="text-align: center;" id="brgy-s3-{{brgy.pk}}">' +
                                     '{{brgy.stage_3.count}}' +
                                 '</td>' + 
-                                '<td class="deceased">' +
+                                '<td class="deceased" style="text-align: center;">' +
                                     '{{brgy.deceased.count}}' +
                                 '</td>' + 
                                 '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
@@ -535,29 +572,57 @@
                         );  
                     }
                 {% endfor %}
-                // for outside of cebu patients
+		
+		if (downloadList.includes("All Patients In Cebu")){
+                    $('#download-table-body').append( // add data in tbody, fill it with brgy data
+                        '<tr id="brgy-{{brgy.pk}}">' + 
+                            '<td class="brgy-name brow" id="in-ceb" style="text-align:left;">' + 
+                                 '<b>' + 'All Patients' + '</b>' +
+                            '</td>'  +
+                            '<td class="screening-count brow" style="text-align: center;"  id="in-ceb-for-screening">' + 
+                                $('#in-ceb-screening').text() +
+                            '</td>' + 
+                            '<td class="stage-1-count brow" style="text-align: center;"  id="in-ceb-stage1">' + 
+                                $('#in-ceb-s1').text() + 
+                            '</td>' +
+                            '<td class="stage-2-count brow" style="text-align: center;" id="in-ceb-stage2">' + 
+                                $('#in-ceb-s2').text() + 
+                            '</td>' +
+                            '<td class="stage-3-count brow" style="text-align: center;" id="in-ceb-stage3">' +
+                                $('#in-ceb-s3').text() +
+                            '</td>' + 
+                            '<td class="deceased brow" style="text-align: center;">' +
+                                $('#in-ceb-deceased').text() +
+                            '</td>' + 
+                            '<td class="brow" style="text-align:right; id="pop-count-in-ceb">' +
+                                $('#in-ceb-all').text() +
+                            '</td>' + 
+                        '</tr>'
+                    );  
+                }               
+		 // for outside of cebu patients
                 if (downloadList.includes("Outside Cebu")){
                     $('#download-table-body').append( // add data in tbody, fill it with brgy data
                         '<tr id="brgy-{{brgy.pk}}">' + 
-                            '<td class="brgy-name" id="out-ceb" style="text-align:left;">' + 
+                            '<td class="brgy-name brow" id="out-ceb" style="text-align:left;">' + 
                                  '<b>' + 'Outside Cebu' + '</b>' +
                             '</td>'  +
-                            '<td class="screening-count" id="out-ceb-for-screening">' + 
+                            '<td class="screening-count brow" style="text-align: center;"  id="out-ceb-for-screening">' + 
                                 $('#out-ceb-screening').text() +
                             '</td>' + 
-                            '<td class="stage-1-count"  id="brgy-s1-{{brgy.pk}}">' + 
+                            '<td class="stage-1-count brow" style="text-align: center;"  id="brgy-s1-{{brgy.pk}}">' + 
                                 $('#out-ceb-s1').text() + 
                             '</td>' +
-                            '<td class="stage-2-count" id="brgy-s2-{{brgy.pk}}">' + 
+                            '<td class="stage-2-count brow" style="text-align: center;" id="brgy-s2-{{brgy.pk}}">' + 
                                 $('#out-ceb-s2').text() + 
                             '</td>' +
-                            '<td class="stage-3-count" id="brgy-s3-{{brgy.pk}}">' +
+                            '<td class="stage-3-count brow" style="text-align: center;" id="brgy-s3-{{brgy.pk}}">' +
                                 $('#out-ceb-s3').text() +
                             '</td>' + 
-                            '<td class="deceased">' +
+                            '<td class="deceased brow" style="text-align: center;">' +
                                 $('#out-ceb-deceased').text() +
                             '</td>' + 
-                            '<td style="text-align:right; id="pop-count-{{brgy.pk}}">' +
+                            '<td class="brow" style="text-align:right; style="text-align: center;" id="pop-count-{{brgy.pk}}">' +
                                 $('#out-ceb-all').text() +
                             '</td>' + 
                         '</tr>'
@@ -592,6 +657,19 @@
                     margin: {
                         top: 30
                     },
+		    styles: {
+        		halign: 'center'
+    		    },
+		    columnStyles:{
+        		0: {halign:'left'},
+			//6: {halign: 'right'}
+		    },
+		    didParseCell: function(data) {
+			var tdElement = data.cell.raw;
+       			if (tdElement.classList.contains('brow')) {
+            			data.cell.styles.fontStyle = 'bold';
+        		}
+  		    },
                     html: '#brgy-data-table-download'
                 });
 
@@ -605,6 +683,11 @@
             else if (downloadList.length == 0 && choice != "---"){
                 alert("you have not chosen any barangay data. please choose again.");
             }
+
+	     $('input[type="checkbox"]'). prop("checked", false);
+            document.getElementById("selected-count").value = "0 out of 80 selected.";
+            $("#brgy-data-table-download > tbody").html(""); 
+            downloadList = [];		
            
         });
 
@@ -689,8 +772,18 @@
                 + "Username: {{info.username}}<br/>"
                 + "Location: {{info.location}} <br/>" 
                 + "Work: {{info.work}}";
-            console.log("username: {{info.username}} -- {{info.location}}")
-            i = L.marker([{{info.lat}}, {{info.lon}}]);
+            console.log("username: {{info.username}} -- {{info.location}}");
+
+	    var redIcon = new L.Icon({
+  		iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  		shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  		iconSize: [25, 41],
+  		iconAnchor: [12, 41],
+  		popupAnchor: [1, -34],
+  		shadowSize: [41, 41]
+	    });
+	
+            i = L.marker( [{{info.lat}}, {{info.lon}}], {icon: redIcon});
             $(".leaflet-popup-content-wrapper").addClass("popUpWrapper");
             {% if info.hiv_level == 'stage 1'%}
                 i.bindPopup(patientInfo, customOption1).openPopup();

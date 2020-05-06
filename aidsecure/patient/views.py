@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import F
 from django.http import HttpResponse, HttpResponseRedirect
-from patient.models import ProfileForm, Patient, ICRForm,  PersonalRecord, PatientNotification, PatientLocationDetails
+from patient.models import Patient, ICRForm,  PersonalRecord, PatientNotification, PatientLocationDetails
 from doctor.models import Doctor, DoctorNotification, DoctorSchedule, DoctorStats, UsersViewed, MonthlyStatistics
 
 from datetime import datetime, date
@@ -90,12 +90,12 @@ def seenRemark(request):
 				remark.remark_seen = True
 				remark.seen_date = datetime.now()
 				remark.save()
-	elif viewed_type == "Profile Form Remark":
-		for remark in patient.profile.doctor_remarks.all():
-			if remark.remark_seen == False:
-				remark.remark_seen = True
-				remark.seen_date = datetime.now()
-				remark.save()
+	#elif viewed_type == "Profile Form Remark":
+	#	for remark in patient.profile.doctor_remarks.all():
+	#		if remark.remark_seen == False:
+	#			remark.remark_seen = True
+	#			remark.seen_date = datetime.now()
+	#			remark.save()
 	elif viewed_type == "Consultation Schedule Remark":
 		schedule = DoctorSchedule.objects.all().get(pk=viewed_parent_pk)
 		for remark in schedule.doc_remark.all():
@@ -458,7 +458,7 @@ def addDr(request): # add doctor/s from the list of doctors but still under pend
 	if len(docsChosen) > 0:
 		for doctor in docsChosen:
 			doc_exists = doctors.filter(name=doctor).exists()
-			if doc_exists:
+			if doctors.filter(name=doctor).exists() and not patient.my_doctors.filter(name=doctor).exists():
 				new_doctor = Doctor.objects.get(name=doctor)
 				# send a notif to the doctor 
 				patient.my_doctors.add(new_doctor)			# for development purposes only 
@@ -482,7 +482,7 @@ def addDr(request): # add doctor/s from the list of doctors but still under pend
 				else:
 					monthly_stat = new_doctor.p_handled_stats.monthly_stats.all().latest()
 					monthly_stat.pk = MonthlyStatistics.objects.latest().pk + 1 # add 1 to create a new instance of monthly stat with the same data but diff key
-				
+				#print("doctor: ", new_doctor.name)
 				monthly_stat.doctor_name = new_doctor.name
 				monthly_stat.created_on = datetime.now()
 				monthly_stat.doc_pk = new_doctor.pk

@@ -1824,10 +1824,17 @@ p{
                         <div class="card-header" style="border:1px solid rgba(0, 0, 0, 0.125);">
                            <h4 class="card-title">Patients Handled Statistics 
                               <a> 
-                                 <i class="fa fa-download" id="download-stat-btn" style="margin-left: 56%;" data-toggle="modal" data-target="#download-stat-doc">
+                                 <i class="fa fa-download" id="download-stat-btn" style="margin-left: 53%;" data-toggle="modal" data-target="#download-stat-doc">
                                  </i>
                               </a>
                            </h4>
+			   <a id="stat-curr-date"  style="font-size:12; color:grey;">Data as of </a>
+			   <script>
+                              var today = new Date();
+                              var mm = today.toLocaleString("en", { month: "long"  });
+                              var yyyy = today.getFullYear();
+                              $('#stat-curr-date').append(" " + mm + " " + yyyy);
+                           </script>
                         </div>
                         <div class="card-body" style="margin-bottom: 1rem;">
                            
@@ -1916,6 +1923,11 @@ p{
                                           </div>
                                           <div class="card-body " style="padding:0px;">
                                              <div id="chartContainer" style="display: block;height:230px; width:728px;" width="400" height="100"></div>
+                                          </div>
+					  <div class="card-footer" style="font-style: italic;font-size: 70%;padding-top:0rem;padding-left: 0.5rem;                                          ">
+                                             <p style="margin-bottom:0rem; margin-left:0rem;margin-top:0rem;">Notes:</p>
+                                             <p style="margin-bottom:0rem">Data reflected include those patients handled by the doctor that tested negative for HIV.</p>
+                                             <p  style="margin-bottom:0rem">'Other Patients' data may include patients that have yet to add preferred doctor(s) to handle their respective cases.</p>
                                           </div>
                                        </div>
                                     </div>

@@ -676,9 +676,8 @@ def finishSched(request):
 			doctor.finished_scheds.add(sched)
 			doctor.save()
 
-			
-			if doctor.doctorNotifs.all().filter(action_pk = sched_pk).exists():
-				edited_notif = doctor.doctorNotifs.all().get(action_pk = sched_pk)
+			if doctor.doctorNotifs.all().filter(action_pk = sched_pk, patient_username=curr_patient, action_type="Schedule Request").exists():
+				edited_notif = doctor.doctorNotifs.all().get(action_pk = sched_pk, patient_username=curr_patient, action_type="Schedule Request")
 				edited_notif.action_taken = 3
 				edited_notif.save()
 

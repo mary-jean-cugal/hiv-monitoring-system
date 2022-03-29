@@ -7,7 +7,7 @@ django-geojson==2.12.0
 django-leaflet==0.25.0
 django-storages==1.9.1
 html5lib==1.0.1
-paramiko==2.7.1
+paramiko==2.10.1
 Pillow==7.0.0
 psycopg2==2.8.4
 pycparser==2.19
